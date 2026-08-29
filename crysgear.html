@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crysgear — fresh</title>
+<meta name="description" content="Cores and Aspects: a combat ability system for Paper 1.21.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="crysgear">
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Details</a>
+  </nav>
+</header>
+
+<div class="phead">
+  <h1>Crysgear</h1>
+  <p class="lede">Cores and Aspects for Crysgear SMP. A combat system built around one item you
+    carry, four elements you can put inside it, and the choice of whether to keep that power in your
+    hand or burn it into your gear.</p>
+</div>
+<p class="stack">
+  <span>Java 21</span><span>Paper 1.21</span><span>38 classes</span>
+  <span>custom resource pack</span><span>no database</span>
+</p>
+
+<h2>The idea</h2>
+
+<p class="first">A player carries a <strong>Core</strong>. The core holds one <strong>Aspect</strong>
+at a tier from one to three. There are four aspects — Strength, Mirror, Light and Fire — and each
+one gives you passives that are always on plus abilities you fire by clicking with the core in
+hand. Higher tiers don't just scale numbers; they unlock new abilities and move the old ones onto
+different click slots, so a tier 3 player has a genuinely different kit from a tier 1 player.</p>
+
+<p>Then there's the second decision. You can <strong>infuse</strong> an aspect into a sword or a
+piece of armour. When you do, the core goes quiet — you lose the whole ability kit — and the gear
+takes over with its own passives and, at tier 3, its own ability. It's a real trade rather than an
+upgrade: burst power in your hand, or something quieter that works while you're holding a weapon.</p>
+
+<div class="scroll">
+<table>
+  <tr><th class="mono">Command</th><th>What it does</th></tr>
+  <tr><td class="mono">/cores open</td><td>Open your core and socket or swap the aspect inside it</td></tr>
+  <tr><td class="mono">/cores withdraw</td><td>Take the aspect back out</td></tr>
+  <tr><td class="mono">/cores infuse armour|sword</td><td>Burn the aspect into what you're wearing or holding</td></tr>
+  <tr><td class="mono">/cores cast 1|2|3</td><td>Fire an ability by number, so it can be bound to a key</td></tr>
+  <tr><td class="mono">/cores info</td><td>Everything your current aspect does at your current tier</td></tr>
+  <tr><td class="mono">/cores cooldown</td><td>What's on cooldown and how long is left</td></tr>
+  <tr><td class="mono">/cores items</td><td>The item menu — cores and aspects, op only</td></tr>
+</table>
+</div>
+<p class="src">command/CoresCommand.java · aliases /core, /aspect, /aspects · permissions crysgear.use (default true) and crysgear.items (op)</p>
+
+<h2>The four aspects</h2>
+
+<p class="first">Everything in these tables is the live data the plugin ships — the same strings
+<code>/cores info</code> prints in chat, read out of a single catalog class so the chat text, the
+item lore and the HUD can never disagree with each other.</p>
+
+<h3>Strength <span class="tier">red</span></h3>
+<p>Straight-ahead melee. It's the aspect that removes your weaknesses as much as it adds damage.</p>
+<div class="scroll">
+<table>
+  <tr><th>Ability</th><th>Trigger</th><th>CD</th><th>What it does</th></tr>
+  <tr><td class="mono">Brawl <span class="tier">T1</span></td><td>Right click, core in main hand — off hand from T2</td><td class="cd">30s</td><td>A ball of unbreakable crimson hyphae 5 blocks across. Lasts 10 seconds, then every block reverts. Anyone stood inside gets Weakness II.</td></tr>
+  <tr><td class="mono">Fury <span class="tier">T2</span></td><td>Right click, core in main hand</td><td class="cd">60s</td><td>20 seconds of black sparks and a red crown. Each crit you land multiplies your damage by another 1.25x. Taking two hits wipes the stacks.</td></tr>
+  <tr><td class="mono">Hunger <span class="tier">T3</span></td><td>Left click air, core in main hand</td><td class="cd">120s</td><td>Sharpness VI on that sword for 30 seconds, draining your food bar as it burns.</td></tr>
+  <tr><td class="mono">Fear <span class="tier">T3</span></td><td>Left click a target, core in main hand</td><td class="cd">50s</td><td>Nausea, Blindness, Slowness I and Weakness I on the target for 10 seconds.</td></tr>
+  <tr><td class="mono">Revenge <span class="tier">infused</span></td><td>Right click, infused sword</td><td class="cd">45s</td><td>A 30 second window. Land 3 crits without being hit and every swing crits on its own. Being hit, or 5 quiet seconds, drops you back.</td></tr>
+</table>
+</div>
+<p><strong>Passives:</strong> Strength I at all times, II from tier 2. Weakness can't be applied to
+you; from tier 3 neither can Wither or Poison.<br>
+<strong>Infused:</strong> armour gives a 1 in 10 chance that a hit you take hands the attacker
+Weakness I for 6s (T2). A tier 3 sword rages you into Strength III at 4 hearts or below.</p>
+
+<h3>Mirror <span class="tier">yellow</span></h3>
+<p>Turns other people's advantages into yours. Copies effects, reflects projectiles, and throws out
+decoys that look exactly like you.</p>
+<div class="scroll">
+<table>
+  <tr><th>Ability</th><th>Trigger</th><th>CD</th><th>What it does</th></tr>
+  <tr><td class="mono">Afterimage <span class="tier">T1</span></td><td>Right click, core in main hand — off hand from T2</td><td class="cd">30s</td><td>A decoy takes your place and you turn invisible. It pops in pale yellow when struck, or fades on its own after 5 seconds.</td></tr>
+  <tr><td class="mono">Visualize <span class="tier">T2</span></td><td>Right click, core in main hand</td><td class="cd">35s</td><td>A 6 block field that follows you for 15 seconds, copying the potion effects of everyone inside it onto you.</td></tr>
+  <tr><td class="mono">Shatter <span class="tier">T3</span></td><td>Left click air, core in main hand</td><td class="cd">100s</td><td>Five clones batter the target in turn for two hearts each, with knockback, then vanish together.</td></tr>
+  <tr><td class="mono">Replicate <span class="tier">infused</span></td><td>Right click, infused sword</td><td class="cd">20s</td><td>Land two knockback hits without being hit and you start replicating. Every hit after adds a clone beside your target, up to five, and the whole set strikes with you. Taking a knockback hit breaks the chain.</td></tr>
+</table>
+</div>
+<p><strong>Passives:</strong> 10% chance to copy an attacker's effects onto you for 8s, 20% chance to
+reflect a projectile back at whoever fired it, and from tier 2 a 20% chance to throw out an
+afterimage whenever you're hit.<br>
+<strong>Infused:</strong> armour gives a 12% chance that a clone of your attacker turns their own hit
+back on them (T2).</p>
+
+<h3>Light <span class="tier">gold</span></h3>
+<p>Ranged and disruptive. The only aspect that changes how you fight at distance.</p>
+<div class="scroll">
+<table>
+  <tr><th>Ability</th><th>Trigger</th><th>CD</th><th>What it does</th></tr>
+  <tr><td class="mono">Reflection <span class="tier">T1</span></td><td>Right click, core in main hand — off hand from T2</td><td class="cd">30s</td><td>Coat yourself in light for 5 seconds. The next hit you take lands on your attacker instead.</td></tr>
+  <tr><td class="mono">Bolt <span class="tier">T2</span></td><td>Right click, core in main hand</td><td class="cd">45s</td><td>Throw a yellow bolt. Whatever it hits gets struck by lightning for 3 hearts.</td></tr>
+  <tr><td class="mono">Beams <span class="tier">T3</span></td><td>Left click air, core in main hand</td><td class="cd">80s</td><td>Summon 3 runes that angle wherever you aim. Each left click fires one beam — left, right, then middle — and spends that rune.</td></tr>
+</table>
+</div>
+<p><strong>Passives:</strong> 10% chance to call lightning when you hit with a bow or crossbow, and
+tridents too from tier 2. Your body gives off torch light. Blindness can't be applied to you from
+tier 2.<br>
+<strong>Infused:</strong> armour gives a 15% chance an attacker gains yellow glow for 8s plus Nausea
+and Slowness I — Mining Fatigue I instead at tier 3. A tier 3 sword has a 15% chance to mark a
+target with 6s of glow and Slowness I.</p>
+
+<h3>Fire <span class="tier">orange</span></h3>
+<p>The one that changes where you can go. Lava stops being terrain and starts being cover.</p>
+<div class="scroll">
+<table>
+  <tr><th>Ability</th><th>Trigger</th><th>CD</th><th>What it does</th></tr>
+  <tr><td class="mono">Ember <span class="tier">T1</span></td><td>Right click, core in off hand</td><td class="cd">45s</td><td>For 10 seconds anything you land a hit with sets the target alight, with no fire aspect enchant involved.</td></tr>
+  <tr><td class="mono">Fry <span class="tier">T2</span></td><td>Right click, core in main hand</td><td class="cd">35s</td><td>A 6 block ring that follows you, cooking anyone inside and boiling away water. Fire resistance does not save them.</td></tr>
+  <tr><td class="mono">Fireball <span class="tier">T3</span></td><td>Left click air, core in main hand</td><td class="cd">100s</td><td>Charges over 60 seconds, growing as it goes. Release any time for 2 hearts and a 3 block crater, up to 6 hearts and 8 blocks at full.</td></tr>
+</table>
+</div>
+<p><strong>Passives:</strong> fire resistance at all times and no lava fog. From tier 2 you swim
+through lava like water; at tier 3 standing in it gives your hits a 1.10x boost.<br>
+<strong>Infused:</strong> armour regenerates you while you stand in lava. A tier 3 sword carries Fire
+Aspect II for as long as it stays infused.</p>
+
+<h2>How it works</h2>
+
+<details>
+<summary>Adding a fifth aspect takes three lines</summary>
+<div class="body">
+<p>Aspects are registered into an <code>EnumMap&lt;AspectType, AspectHandler&gt;</code> at startup.
+Every other system in the plugin — the HUD, the cooldown tracker, the core GUI, the item lore
+builder, <code>/cores info</code>, both tick loops — goes through that registry rather than
+switching on a type. So a new element is one enum constant, one class implementing
+<code>AspectHandler</code>, and one <code>register()</code> call. Nothing else has to be told it
+exists.</p>
+
+<figure>
+<svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Aspect registry with four registered handlers and one empty slot">
+  <style>
+    .cg-box{fill:#151922;stroke:#232936;stroke-width:1.5}
+    .cg-hub{fill:#1c1712;stroke:#ffa726;stroke-width:1.5}
+    .cg-ghost{fill:none;stroke:#39445a;stroke-width:1.5;stroke-dasharray:5 5}
+    .cg-t{font:600 13px 'JetBrains Mono',monospace;fill:#e8ecf3}
+    .cg-m{font:400 11.5px 'JetBrains Mono',monospace;fill:#8b96ab}
+    .cg-g{font:400 11.5px 'JetBrains Mono',monospace;fill:#5d687d}
+    .cg-ln{stroke:#39445a;stroke-width:1.5}
+    .cg-lnd{stroke:#39445a;stroke-width:1.5;stroke-dasharray:4 4}
+  </style>
+  <line class="cg-ln" x1="270" y1="118" x2="180" y2="52"/>
+  <line class="cg-ln" x1="270" y1="144" x2="180" y2="208"/>
+  <line class="cg-ln" x1="430" y1="118" x2="520" y2="52"/>
+  <line class="cg-ln" x1="430" y1="144" x2="520" y2="208"/>
+  <line class="cg-lnd" x1="350" y1="157" x2="350" y2="196"/>
+
+  <rect class="cg-hub" x="270" y="105" width="160" height="52" rx="10"/>
+  <text class="cg-t" x="350" y="128" text-anchor="middle" style="fill:#ffa726">AspectRegistry</text>
+  <text class="cg-g" x="350" y="145" text-anchor="middle">EnumMap</text>
+
+  <rect class="cg-box" x="40" y="28" width="140" height="46" rx="9"/>
+  <text class="cg-t" x="110" y="49" text-anchor="middle">StrengthAspect</text>
+  <text class="cg-m" x="110" y="65" text-anchor="middle">4 abilities</text>
+
+  <rect class="cg-box" x="40" y="186" width="140" height="46" rx="9"/>
+  <text class="cg-t" x="110" y="207" text-anchor="middle">MirrorAspect</text>
+  <text class="cg-m" x="110" y="223" text-anchor="middle">3 abilities</text>
+
+  <rect class="cg-box" x="520" y="28" width="140" height="46" rx="9"/>
+  <text class="cg-t" x="590" y="49" text-anchor="middle">LightAspect</text>
+  <text class="cg-m" x="590" y="65" text-anchor="middle">3 abilities</text>
+
+  <rect class="cg-box" x="520" y="186" width="140" height="46" rx="9"/>
+  <text class="cg-t" x="590" y="207" text-anchor="middle">FireAspect</text>
+  <text class="cg-m" x="590" y="223" text-anchor="middle">3 abilities</text>
+
+  <rect class="cg-ghost" x="280" y="196" width="140" height="42" rx="9"/>
+  <text class="cg-g" x="350" y="222" text-anchor="middle">your aspect here</text>
+</svg>
+<figcaption>Every consumer reads the registry. Handlers never know about each other.</figcaption>
+</figure>
+
+<pre><code><span class="c">// onEnable</span>
+registry.register(<span class="k">new</span> StrengthAspect(...));
+registry.register(<span class="k">new</span> MirrorAspect(...));
+registry.register(<span class="k">new</span> LightAspect(...));
+registry.register(<span class="k">new</span> FireAspect(...));</code></pre>
+<p class="src">aspect/AspectRegistry.java · aspect/AspectHandler.java · Crysgear.java</p>
+</div>
+</details>
+
+<details>
+<summary>There is no database — the item is the save file</summary>
+<div class="body">
+<p>Nothing about a player's aspect is stored server-side. The aspect id, its tier, the stored tier
+for a withdrawn aspect and the infusion flag all live in the item's own
+<code>PersistentDataContainer</code>, under namespaced keys registered once at startup.</p>
+
+<p>That buys a lot for free. State survives restarts without a save routine. It survives a world
+transfer or a server move, because it's inside the item file Minecraft already writes. Hand the core
+to someone else and the power goes with it, which is exactly the behaviour you want on an SMP —
+cores get looted, traded and fought over as objects, rather than as a row in a table with someone's
+name on it.</p>
+
+<p>The same container drives the visuals. <code>CustomModelData</code> is computed from the aspect
+type and tier, so the resource pack shows a different model for each of the twelve
+aspect-and-tier combinations, plus the empty core, without the plugin knowing anything about
+textures.</p>
+
+<pre><code>modelData(tier) = baseModelData + (tier - 1)
+
+STRENGTH  8101   MIRROR  8201
+LIGHT     8301   FIRE    8401</code></pre>
+
+<p>The cost is the obvious one: if an item can be duplicated, the state duplicates with it. That's
+why every GUI in the plugin works on clones and writes back deliberately, rather than moving the
+real stack around inside an inventory the player can reach into.</p>
+<p class="src">item/Keys.java · item/CoreItems.java · aspect/AspectType.java · util/Clones.java</p>
+</div>
+</details>
+
+<details>
+<summary>Two tick loops, and why the slow one isn't enough</summary>
+<div class="body">
+<p>Passive effects, infusion sweeps and the cooldown display run every 10 ticks — half a second.
+That's plenty for reapplying Strength or checking whether someone still has the right armour on, and
+it keeps the per-player cost low on a full server.</p>
+
+<p>Anything that has to track movement gets its own loop at one tick. A charging fireball grows and
+follows the aim; Light's runes stay angled where the player is looking; Mirror's afterimage has to
+be in the right place the moment it's struck. At half-second granularity all of those visibly
+stutter.</p>
+
+<p>Both loops resolve the aspect the same way, and both fall back to the <strong>stowed</strong>
+core rather than the held one. That's deliberate: an ability already in flight has to keep running
+after you switch to your sword. Putting the core away shouldn't cancel a fireball that's already in
+the air.</p>
+<p class="src">Crysgear.java — runTaskTimer at 10L and at 1L</p>
+</div>
+</details>
+
+<details>
+<summary>Which aspect is actually active</summary>
+<div class="body">
+<p>At any moment a player might have a core in the main hand, a core in the off hand, an infused
+sword, infused armour, or several of those at once. Everything that fires an ability, draws the HUD
+or checks a cooldown asks one method which aspect is live, and gets a single answer.</p>
+
+<p>The rule: <strong>infused gear wins</strong>. If an aspect has been burned into gear it has left
+the core, so the core stops acting entirely and the infused item is the only thing that can. If
+nothing is infused, the core has to be in one of your two hands. Sitting in your inventory does
+nothing.</p>
+
+<figure>
+<svg viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Resolution order: infused gear first, then held core, otherwise nothing is active">
+  <style>
+    .cr-box{fill:#151922;stroke:#232936;stroke-width:1.5}
+    .cr-on{fill:#1c1712;stroke:#ffa726;stroke-width:1.5}
+    .cr-t{font:600 13px 'JetBrains Mono',monospace;fill:#e8ecf3}
+    .cr-m{font:400 11.5px 'JetBrains Mono',monospace;fill:#8b96ab}
+    .cr-a{font:600 11.5px 'JetBrains Mono',monospace;fill:#ffa726}
+    .cr-ln{stroke:#39445a;stroke-width:1.5;marker-end:url(#cr-ar)}
+  </style>
+  <defs><marker id="cr-ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#39445a"/></marker></defs>
+
+  <line class="cr-ln" x1="174" y1="105" x2="248" y2="105"/>
+  <line class="cr-ln" x1="402" y1="105" x2="476" y2="105"/>
+  <line class="cr-ln" x1="99" y1="76" x2="99" y2="50"/>
+  <line class="cr-ln" x1="327" y1="134" x2="327" y2="158"/>
+
+  <rect class="cr-box" x="24" y="76" width="150" height="58" rx="10"/>
+  <text class="cr-t" x="99" y="100" text-anchor="middle">gear infused?</text>
+  <text class="cr-m" x="99" y="119" text-anchor="middle">sword or armour</text>
+
+  <rect class="cr-box" x="252" y="76" width="150" height="58" rx="10"/>
+  <text class="cr-t" x="327" y="100" text-anchor="middle">core in hand?</text>
+  <text class="cr-m" x="327" y="119" text-anchor="middle">main or off</text>
+
+  <rect class="cr-box" x="480" y="76" width="150" height="58" rx="10"/>
+  <text class="cr-m" x="555" y="110" text-anchor="middle">nothing active</text>
+
+  <rect class="cr-on" x="24" y="16" width="150" height="34" rx="8"/>
+  <text class="cr-a" x="99" y="37" text-anchor="middle">the gear acts</text>
+
+  <rect class="cr-on" x="252" y="158" width="150" height="34" rx="8"/>
+  <text class="cr-a" x="327" y="179" text-anchor="middle">the core acts</text>
+</svg>
+<figcaption>One method answers this. Nothing else is allowed to guess.</figcaption>
+</figure>
+
+<p>The part that took the most care is that the infusion flag lives on the <strong>core</strong>,
+not on the sword — one authority — and a background sweep keeps the two honest when a player drops
+the gear, dies, or has it broken. Two independent sources of truth about whether something is
+infused is exactly the kind of thing that drifts apart on a live server and ends with someone
+holding the sword bonuses and the full core kit at the same time.</p>
+<p class="src">core/CoreService.java · listener/InfusionListener.java · infuse/Infusions.java</p>
+</div>
+</details>
+
+<details>
+<summary>The resource pack</summary>
+<div class="body">
+<p>Crysgear ships its own pack rather than reusing vanilla items with a rename. It carries a model
+and texture per aspect per tier, driven off the custom model data above, and a bitmap font used to
+draw ability icons inline in chat and on the action-bar HUD — so a cooldown readout shows the actual
+ability glyph instead of a letter.</p>
+
+<p>The build script compiles the plugin and zips the pack side by side, so a release is always a
+matched pair. A jar that ships without its pack shows everyone a stick.</p>
+
+<pre><code>build/
+  Crysgear-1.0.0.jar
+  Crysgear-Resources.zip</code></pre>
+<p class="src">resourcepack/assets/crysgear/{models,textures,font} · build.sh</p>
+</div>
+</details>
+
+<!-- Screenshot slots. Drop the files into assets/img/ and uncomment.
+<figure>
+  <img src="assets/img/core-gui.png" alt="The core GUI with an aspect socketed">
+  <figcaption>The core GUI. Socket, swap or withdraw an aspect.</figcaption>
+</figure>
+-->
+
+<footer>
+  <span><a href="index.html">← everything else</a></span>
+  <span>Crysgear · Paper 1.21</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>

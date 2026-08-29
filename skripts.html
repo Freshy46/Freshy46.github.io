@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Skript tooling — fresh</title>
+<meta name="description" content="Admin commands and server glue written in Skript.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="skripts">
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Details</a>
+  </nav>
+</header>
+
+<div class="phead">
+  <h1>Skript tooling</h1>
+  <p class="lede">Not everything deserves a plugin. These are the tools a live server runs on day to
+    day — handing out crate keys, letting staff post as another player, printing the rules. Small
+    surface, written to sit on top of the plugins rather than duplicate them.</p>
+</div>
+<p class="stack"><span>Skript</span><span>LuckPerms</span><span>3 scripts</span><span>5 commands</span></p>
+
+<div class="cards">
+
+  <a class="card" href="sk-keys.html" style="--c:#4ade80">
+    <div class="rule"></div>
+    <h2>keys.sk</h2>
+    <p class="hook">Crate key handouts for staff. Three commands wrapping KyronCrates so nobody has
+      to remember internal crate ids, with every handout logged.</p>
+    <div class="chips">
+      <span class="chip">/givekey</span>
+      <span class="chip">/keyall</span>
+      <span class="chip">/keys</span>
+    </div>
+    <p class="stack"><span>3 commands</span><span>audit log</span><span>defers to the plugin</span></p>
+  </a>
+
+  <a class="card" href="sk-makesay.html" style="--c:#4ade80">
+    <div class="rule"></div>
+    <h2>makesay.sk</h2>
+    <p class="hook">Posts a chat line as another player, formatted so it matches the server's real
+      chat exactly — rank prefix included, read live from LuckPerms.</p>
+    <div class="chips">
+      <span class="chip">/makesay</span>
+      <span class="chip">LuckPerms</span>
+      <span class="chip">audit log</span>
+    </div>
+    <p class="stack"><span>1 command</span><span>rank-aware formatting</span></p>
+  </a>
+
+  <a class="card" href="sk-rules.html" style="--c:#4ade80">
+    <div class="rule"></div>
+    <h2>rules.sk</h2>
+    <p class="hook">The Spear SMP rules in chat. Six numbered sections, formatted to stay readable
+      in a scrolling chat window and editable without a restart.</p>
+    <div class="chips">
+      <span class="chip">/rules</span>
+      <span class="chip">6 sections</span>
+    </div>
+    <p class="stack"><span>1 command</span><span>players + console</span></p>
+  </a>
+
+</div>
+
+<h2>The thread running through all three</h2>
+
+<p><strong>Never duplicate what a plugin already owns.</strong> <code>keys.sk</code> could mint its
+own key items and doesn't — it calls KyronCrates and lets the plugin stay the only thing that
+decides what a valid key is. A script that reimplements a plugin's data format works right up until
+the day the plugin changes it.</p>
+
+<p><strong>Anything that can be abused gets logged.</strong> Handing out loot and speaking as
+another player are both things people argue about afterwards. Both write to their own file with who
+did it, to whom, and what was sent — because chat scrollback is not evidence.</p>
+
+<p><strong>Wrong input should teach you the right input.</strong> Run these with no arguments and
+you get the list of valid crates, or the list of online players — not a usage string and not an
+error. The most common reason staff mistype one of these is that they're half-remembering a name.</p>
+
+<footer>
+  <span><a href="index.html">← everything else</a></span>
+  <span>Skript · LuckPerms</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>

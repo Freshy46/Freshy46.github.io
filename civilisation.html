@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Civilisation — fresh</title>
+<meta name="description" content="Towns, borders, treasuries and war for Minecraft.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="civ">
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Details</a>
+  </nav>
+</header>
+
+<div class="phead">
+  <h1>Civilisation</h1>
+  <p class="lede">The biggest thing I've built. Players found towns, claim land, run a treasury, tax
+    their citizens, sign alliances and go to war over borders. A server-wide political layer sitting
+    on top of survival.</p>
+</div>
+<p class="stack">
+  <span>Java</span><span>Paper</span><span>land claims</span><span>economy</span><span>warfare</span>
+</p>
+
+<h2>What it does</h2>
+
+<p class="first">A player founds a settlement and claims the land around it. Inside those borders
+they decide who can build, who can break and who can come in at all. Outsiders can't touch it.</p>
+
+<p>From there it stops being about blocks. A civilisation has a treasury, and it fills it by taxing
+the people who live there. It has neighbours it can trade with, ally with, or refuse to speak to.
+And when diplomacy fails it can declare war, and territory changes hands — the borders on the map
+are the scoreboard.</p>
+
+<div class="scroll">
+<table>
+  <tr><th>System</th><th>What it covers</th></tr>
+  <tr><td class="mono">Towns &amp; claims</td><td>Founding a settlement, claiming and unclaiming land, and controlling who can build, break or enter inside your borders</td></tr>
+  <tr><td class="mono">Economy</td><td>A treasury per civilisation, taxes on citizens, resource stockpiles, and trade between nations</td></tr>
+  <tr><td class="mono">Diplomacy</td><td>Alliances, and the standing relationships that decide who can walk into your land without a fight</td></tr>
+  <tr><td class="mono">War</td><td>Declaring on another civilisation, fighting over territory, and taking land off the loser</td></tr>
+</table>
+</div>
+
+<figure>
+  <img src="assets/img/civilisation.png" alt="Claimed territory borders shown in game">
+  <figcaption>Borders on the ground.</figcaption>
+</figure>
+
+<h2>How it works</h2>
+
+<details>
+<summary>Claims are a permission system pretending to be a map</summary>
+<div class="body">
+<p>Underneath the borders, every claim is answering one question thousands of times a second: is
+this player allowed to do this here? Every block placed, every block broken, every chest opened,
+every piston, every explosion, every fire tick inside claimed land has to be checked against who
+owns it and what that person's relationship to the owner is.</p>
+
+<p>Which means the answer has to be cheap. Claim lookups sit in the hottest path in the whole plugin
+— they run on events that fire constantly, on every player, forever. Everything else in the system
+can afford to be clever; this part has to be fast, and it has to be right, because the moment claim
+protection is wrong someone loses a base.</p>
+</div>
+</details>
+
+<details>
+<summary>War is the interesting problem, because it has to break the rules</summary>
+<div class="body">
+<p>Claims exist to say <em>no</em>. War exists to say <em>sometimes yes</em>. The entire protection
+system is built to stop outsiders touching your land, and then war has to carve a hole in exactly
+that, for exactly the right people, for exactly as long as the war lasts.</p>
+
+<p>That's the tension the whole feature lives in. Open it too far and a declaration of war becomes a
+griefing tool — declare, level someone's town, walk away. Keep it too closed and war is two people
+hitting each other in a field while the borders never move and nothing is at stake.</p>
+
+<p>The answer has to make territory the thing you win and lose, so the fighting has a point beyond
+the fight, while leaving the loser with a civilisation still standing at the end of it. A player who
+logs off after a war having lost land will be back. A player who logs off having lost everything
+they built will not.</p>
+</div>
+</details>
+
+<details>
+<summary>Taxes are the part players feel most</summary>
+<div class="body">
+<p>An economy where money only ever comes in isn't an economy — it inflates until the numbers stop
+meaning anything. Taxes are the drain that keeps the treasury worth filling and gives leadership an
+actual decision to make.</p>
+
+<p>It's also the most politically loaded thing in the plugin. A tax rate is a leader making a
+decision that costs their citizens something, and citizens can leave. That single number does more
+to generate server drama than every other feature combined, which is precisely why it's in there.</p>
+</div>
+</details>
+
+<!-- ADD YOUR SPECIFICS HERE — commands, permissions, claim sizes, tax intervals, war rules,
+     ranks inside a civilisation. Match the table style used on the KyronCrates page. -->
+
+<footer>
+  <span><a href="index.html">← everything else</a></span>
+  <span>Civilisation</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>

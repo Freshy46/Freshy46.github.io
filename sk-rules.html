@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>rules.sk — fresh</title>
+<meta name="description" content="The Spear SMP rules, printed in chat.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="skripts">
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Details</a>
+  </nav>
+</header>
+
+<p class="crumb"><a href="skripts.html">← Skript tooling</a></p>
+
+<div class="phead">
+  <h1>rules.sk</h1>
+  <p class="lede">The Spear SMP rules, printed in chat on demand. Deliberately boring, and one of
+    the most-used commands on the server.</p>
+</div>
+<p class="stack"><span>Skript</span><span>1 command</span><span>6 sections</span><span>players + console</span></p>
+
+<h2>What it does</h2>
+
+<div class="scroll">
+<table>
+  <tr><th class="mono">Command</th><th>Who</th><th>What it does</th></tr>
+  <tr><td class="mono">/rules</td><td>anyone with the permission</td><td>Prints all six rule sections into chat</td></tr>
+</table>
+</div>
+
+<p>Six numbered sections, each with a heading and its own rules underneath:</p>
+
+<div class="scroll">
+<table>
+  <tr><th>#</th><th>Section</th><th>Covers</th></tr>
+  <tr><td class="mono">1</td><td>Respect</td><td>Harassment, discrimination, hate speech, toxicity and personal attacks</td></tr>
+  <tr><td class="mono">2</td><td>Combat</td><td>PvP is fully allowed; combat logging is an instant death</td></tr>
+  <tr><td class="mono">3</td><td>Griefing &amp; Stealing</td><td>Griefing is allowed — stated plainly so nobody argues it later</td></tr>
+  <tr><td class="mono">4</td><td>Cheating</td><td>Hacks, X-ray, autoclickers, dupes, exploits and unfair mods — bannable</td></tr>
+  <tr><td class="mono">5</td><td>Server Performance</td><td>Deliberate lag machines and builds that hurt performance may be removed</td></tr>
+  <tr><td class="mono">6</td><td>Other</td><td>Report bugs instead of abusing them; staff have the final say on anything not covered</td></tr>
+</table>
+</div>
+
+<h2>Decisions</h2>
+
+<details>
+<summary>Written to survive a scrolling chat window</summary>
+<div class="body">
+<p>Chat is a hostile place to put a document. It scrolls, it's narrow, it has no headings, and
+anything longer than a few lines gets pushed off the top by whoever is talking. So the layout does
+the work that formatting normally would: a horizontal rule top and bottom to mark where the block
+starts and ends, a centred title, numbered headings with an icon on each, blank lines between
+sections, and bullets under the sections that carry more than one rule.</p>
+
+<p>The result is something you can find the middle of after it's scrolled — a player looking for the
+combat rule can spot section 2 without re-reading from the top. That's the entire design goal.</p>
+</div>
+</details>
+
+<details>
+<summary>The wording is the point, not the code</summary>
+<div class="body">
+<p>Rules only work if staff can point at the exact sentence during an argument, which means the text
+has to say precisely what it means. Rule 3 is a single line saying griefing is allowed, because a
+vaguer version invites a debate every time it comes up. Rule 6 explicitly covers loophole-hunting
+and gives staff the final say on anything unlisted, which is the clause that stops the other five
+being lawyered.</p>
+
+<p>Keeping it in a script rather than in a pinned Discord message means it can be corrected and
+reloaded live, in the moment, without a restart and without anyone going to find the message.</p>
+</div>
+</details>
+
+<details>
+<summary>Small things that make it behave like a real command</summary>
+<div class="body">
+<p>It carries a description and usage line, so it shows up properly in the server's help output
+instead of being an undocumented command people only know about by word of mouth.</p>
+
+<p>It's permission-backed with its own denial message rather than the default one, and it runs from
+console as well as in game — so it can be fired from a control panel or a scheduled announcement,
+not just by a player typing it.</p>
+</div>
+</details>
+
+<footer>
+  <span><a href="skripts.html">← Skript tooling</a></span>
+  <span>rules.sk</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JARVIS — fresh</title>
+<meta name="description" content="A voice-driven AI assistant with its own interface.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="jarvis">
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Details</a>
+  </nav>
+</header>
+
+<div class="phead">
+  <h1>JARVIS</h1>
+  <p class="lede">A voice assistant I built and gave a real interface to. You talk to it, it talks
+    back, and it can actually do things — read and write files, search the web, take notes, work
+    through a study plan or a schedule. Seventy-five tools behind one conversation.</p>
+</div>
+<p class="stack">
+  <span>Gemini Flash-Lite</span><span>speech in / voice out</span><span>75 tools</span>
+  <span>persistent memory</span><span>custom HUD</span>
+</p>
+
+<figure>
+  <img src="assets/img/jarvis.png" alt="The JARVIS interface: a particle sphere in the centre, diagnostics panels down both sides, and a row of mode buttons along the bottom.">
+  <figcaption>The main screen. Everything on it is live — the panels are reading real state, not
+    decoration.</figcaption>
+</figure>
+
+<h2>What it does</h2>
+
+<p class="first">It listens, it answers out loud, and it remembers. Speech goes in, the language
+model decides whether it needs a tool to answer properly, and the reply comes back as synthesised
+voice as well as on screen. Memory persists across sessions, so it holds context from things you
+told it days ago rather than starting cold every time.</p>
+
+<p>The row along the bottom switches what it's set up to do. Each mode changes what it has access to
+and how it behaves, rather than just filtering a menu:</p>
+
+<div class="scroll">
+<table>
+  <tr><th class="mono">Mode</th><th>What it's for</th></tr>
+  <tr><td class="mono">STUDY</td><td>Working through material — explanations, questioning you back, tracking what you've covered</td></tr>
+  <tr><td class="mono">PLANNING</td><td>Schedules, task breakdowns, working out the order things need to happen in</td></tr>
+  <tr><td class="mono">SYSTEM</td><td>The machine it's running on — diagnostics, resource use, the state on the side panels</td></tr>
+  <tr><td class="mono">WEB</td><td>Searching and pulling in things it doesn't already know</td></tr>
+  <tr><td class="mono">FILES</td><td>Reading and writing on disk</td></tr>
+  <tr><td class="mono">NOTES</td><td>Capturing things mid-conversation without breaking out of it</td></tr>
+  <tr><td class="mono">CHAT</td><td>Plain conversation with no particular job attached</td></tr>
+  <tr><td class="mono">SETTINGS</td><td>Voice, model, mode and memory configuration</td></tr>
+  <tr><td class="mono">STANDBY</td><td>Drops it to idle without shutting it down</td></tr>
+</table>
+</div>
+
+<h2>The interface</h2>
+
+<p class="first">The interface was as much of the work as the assistant behind it. A voice assistant
+with no screen gives you nothing to look at while it thinks, and no way to tell the difference
+between working, waiting and broken. So everything it's doing is on the wall.</p>
+
+<p>The sphere in the middle is the assistant itself — thousands of particles that react to what it's
+doing, so idle, listening, thinking and speaking all look different from across the room. Around it,
+four groups of live readouts:</p>
+
+<div class="scroll">
+<table>
+  <tr><th>Panel</th><th>Shows</th></tr>
+  <tr><td class="mono">SYSTEM DIAGNOSTICS</td><td>Core load, memory allocation, GPU thermal, uptime</td></tr>
+  <tr><td class="mono">NEURAL ACTIVITY</td><td>Synaptic rate, GPU load, VRAM, and whether inference is idle or running</td></tr>
+  <tr><td class="mono">VOICE PROCESSING</td><td>Live input waveform, signal strength, and recognition state</td></tr>
+  <tr><td class="mono">NETWORK TRAFFIC</td><td>Up and down throughput, packets per second, latency</td></tr>
+  <tr><td class="mono">ACTIVE MODULES</td><td>Language model, voice synth, speech input, link, mode, encryption</td></tr>
+  <tr><td class="mono">ENVIRONMENT</td><td>Ambient temperature, pressure, location, conditions</td></tr>
+</table>
+</div>
+
+<p>The status block in the corner is the one that matters day to day — mode, whether the voice is
+currently speaking, whether memory is on, how many tools are loaded, which model is answering, and
+round-trip latency. When something feels slow, that block tells you whether it's the model, the
+network or the speech layer without opening a log.</p>
+
+<h2>Decisions</h2>
+
+<details>
+<summary>Why Flash-Lite and not the biggest model available</summary>
+<div class="body">
+<p>It's a voice assistant, so the thing being optimised is the gap between you finishing a sentence
+and it starting to answer. Past about a second that gap stops feeling like a conversation and starts
+feeling like a form submission, and no amount of extra answer quality buys that back.</p>
+
+<p>Flash-Lite is the cheapest, fastest tier, which is the right default for the overwhelming majority
+of what gets asked — a question, a reminder, a file, a lookup. The model is exposed in settings
+rather than hardcoded, so anything that genuinely needs more reasoning can be moved up deliberately
+instead of everything paying for it all the time.</p>
+</div>
+</details>
+
+<details>
+<summary>Seventy-five tools behind one conversation</summary>
+<div class="body">
+<p>The assistant isn't a chat window with a search box bolted on. It has real capability — the
+filesystem, the web, notes, system state — and the model picks which one it needs rather than the
+user picking a feature first.</p>
+
+<p>That's the whole design bet: you shouldn't have to know which mode a request belongs to before
+you make it. Modes exist to shape behaviour and narrow the tool surface when you already know what
+you're doing, not as a menu you have to navigate before you're allowed to ask a question.</p>
+</div>
+</details>
+
+<details>
+<summary>Memory that survives the session</summary>
+<div class="body">
+<p>Memory is on by default and persists between runs, which is the difference between an assistant
+and a search bar. It's a toggle rather than a permanent fixture — it's on the settings panel and the
+status block always shows whether it's enabled — because an assistant that quietly remembers
+everything and never tells you is a worse thing to live with than one that forgets.</p>
+</div>
+</details>
+
+<!-- More screenshots: drop them in assets/img/ and uncomment.
+     A figure with a missing image hides itself, so a broken file won't show on the page.
+<figure>
+  <img src="assets/img/jarvis-listening.png" alt="The sphere reacting while listening">
+  <figcaption>Listening — the sphere reacts to the input signal.</figcaption>
+</figure>
+<figure>
+  <img src="assets/img/jarvis-settings.png" alt="The settings panel">
+  <figcaption>Settings — voice, model, mode and memory.</figcaption>
+</figure>
+-->
+
+<footer>
+  <span><a href="index.html">← everything else</a></span>
+  <span>JARVIS · Starter Kit v1.0</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>

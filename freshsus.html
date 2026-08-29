@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fresh's Sus — fresh</title>
+<meta name="description" content="Catches players tunnelling down to find bases, and hides those bases from ESP.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="sus">
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Details</a>
+  </nav>
+</header>
+
+<div class="phead">
+  <h1>Fresh's Sus</h1>
+  <p class="lede">Catches base-hunters two ways at once. It scores players on <em>how</em> they mine
+    to spot the ones hunting rather than digging, and it stops ESP clients seeing underground bases
+    at all — server-side, so no cheat client can work around it.</p>
+</div>
+<p class="stack">
+  <span>Java 21</span><span>Paper 1.21</span><span>behavioural scoring</span>
+  <span>server-side anti-ESP</span><span>anticheat bridge</span>
+</p>
+
+<h2>The problem</h2>
+
+<p class="first">On a survival server the thing that ruins bases isn't combat, it's people finding
+them. Two ways that happens: someone runs a cheat client that draws chests through walls, or someone
+just tunnels methodically downward across the map until they hit something.</p>
+
+<p>An anticheat catches the first if the client is one it knows about. Nothing catches the second,
+because digging down isn't cheating — it's just mining, done with intent. This plugin goes after
+both.</p>
+
+<div class="cmd">/espsus</div>
+<p class="src">aliases /sus and /suspects · opens the suspect list, spectate or dismiss from it</p>
+
+<h2>How it works</h2>
+
+<details>
+<summary>Scoring the shape of someone's mining</summary>
+<div class="body">
+<p>The signal is a <strong>descent</strong>: a block broken directly beneath the player. Doing that
+once is completely normal. Doing it over and over in a row is the pattern people use when they're
+sweeping for someone else's base rather than actually collecting anything.</p>
+
+<p>So each descent adds a point — but once a run of consecutive descents passes a streak length,
+every further one is worth several times more. That multiplier is the whole heuristic. It's what
+separates "dug down to a cave" from "systematically tunnelling", without needing to know anything
+about the player's intent. Breaking anything that <em>isn't</em> below you resets the streak.</p>
+
+<p>Points bleed away every minute, so ordinary mining fades to nothing and only sustained behaviour
+accumulates. Cross the score threshold and you land on the list.</p>
+
+<p>There's a second, independent rule for volume: a large number of descents within a rolling window
+puts someone on the list on its own, whatever the decaying score happens to be doing. Digging at
+that rate for that long isn't ordinary mining regardless of how it's scored.</p>
+
+<p>Falling and soft blocks — gravel, sand, dirt, grass, water, lava — are ignored entirely, since
+they aren't tunnelling and would otherwise generate constant noise.</p>
+</div>
+</details>
+
+<details>
+<summary>Anti-ESP that a cheat client can't defeat</summary>
+<div class="body">
+<p>The important part: <strong>the client is never sent the data.</strong> This isn't obfuscation or
+a client-side check that a modified client can ignore — the information simply doesn't leave the
+server, so there is nothing for a cheat to read.</p>
+
+<p>To anyone above ground, containers and spawners below a depth threshold are sent as plain stone,
+and deepslate below Y=0 so the fake block never looks out of place for the depth it's at. Item
+frames, armour stands, minecarts, dropped items and mobs below the threshold aren't sent at all.
+Everything is restored the instant a player descends past the threshold themselves — so the base
+owner sees their own base normally, and only someone hovering above it is looking at a lie.</p>
+
+<p>The concealed list is the set of things base ESP actually hunts for: chests, barrels, shulkers,
+hoppers, furnaces, brewing stands, beacons, spawners, trial spawners, vaults. These are found
+through the chunk's block-entity list, which is also its limitation — plain blocks like ores don't
+have block entities, so hiding those is Paper's own anti-xray's job, not this plugin's. The config
+says so directly rather than letting someone add ores to the list and assume it worked.</p>
+
+<p>A margin above the threshold stops the effect flickering for someone hovering right on the
+boundary, and the conceal radius is meant to sit near the server's view distance — going wider costs
+work for no benefit, since the client isn't sent those chunks anyway.</p>
+
+<p>Players are never hidden, because hiding them would break PvP and look like a bug. The ender
+dragon and the wither are never hidden either.</p>
+</div>
+</details>
+
+<details>
+<summary>Suspects never learn they're suspects</summary>
+<div class="body">
+<p>Alerts are hidden from the person they're about, even if that person holds the alert permission
+themselves. Staff get pinged when someone is added, and pinged again each time an already-listed
+player climbs another chunk of score.</p>
+
+<p>This matters more than it sounds. A watchlist that tells you you're on it converts a detection
+tool into a training tool — the person adjusts their pattern, stays under the threshold, and you've
+taught them exactly where the line is. The config note for the setting says to turn it off only
+while testing alone, since otherwise you flag yourself and see nothing.</p>
+
+<p>There's an exempt permission for players who should never be listed at all.</p>
+</div>
+</details>
+
+<details>
+<summary>One list, two kinds of evidence</summary>
+<div class="body">
+<p>If AxyronAC is installed, the plugin pulls violation levels out of it so anticheat verdicts sit
+in the same list as the mining heuristics. A high enough total across all checks puts someone on the
+list on anticheat evidence alone, and individual checks that are noisy on a given server can be
+ignored without silencing the rest.</p>
+
+<p>It's a soft dependency. With no anticheat present the plugin carries on as a pure mining
+watchlist rather than failing to load — the integration is a bonus, not a requirement.</p>
+
+<p>Having both in one place is the point. Neither signal is conclusive by itself; someone who trips
+the anticheat occasionally <em>and</em> tunnels like a base-hunter is a much stronger case than
+either on its own, and that's only visible if they're on the same screen.</p>
+</div>
+</details>
+
+<details>
+<summary>Everything is tunable, and the config explains itself</summary>
+<div class="body">
+<p>Points per descent, streak length and bonus, the threshold, the decay rate, the volume rule, the
+depth cutoff and the ignored blocks are all configurable — because the right numbers depend on the
+server. A skyblock server and a 5000-block-radius survival map have completely different ideas of
+what normal mining looks like.</p>
+
+<p>Each setting carries a comment explaining what it's for and what changing it does, including the
+ones where the obvious change is wrong. The depth cutoff defaults to counting everything, with a
+note explaining why: base-hunters start digging from wherever they're standing, and spawn can easily
+be high up a mountain, so a "sensible" lower cutoff would miss them.</p>
+
+<p>There's a debug mode that logs why each individual block break was or wasn't counted, for tuning
+the thresholds against a real server's mining habits rather than guessing.</p>
+</div>
+</details>
+
+<footer>
+  <span><a href="index.html">← everything else</a></span>
+  <span>Fresh's Sus · Paper 1.21</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>

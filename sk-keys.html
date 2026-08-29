@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>keys.sk — fresh</title>
+<meta name="description" content="Crate key handouts for staff, wrapping KyronCrates.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="skripts">
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Details</a>
+  </nav>
+</header>
+
+<p class="crumb"><a href="skripts.html">← Skript tooling</a></p>
+
+<div class="phead">
+  <h1>keys.sk</h1>
+  <p class="lede">Crate key handouts for staff. Three commands sitting on top of KyronCrates so
+    nobody running an event has to remember what a crate is called internally.</p>
+</div>
+<p class="stack"><span>Skript</span><span>3 commands</span><span>audit log</span><span>needs KyronCrates</span></p>
+
+<h2>What it does</h2>
+
+<div class="scroll">
+<table>
+  <tr><th class="mono">Command</th><th>Who</th><th>What it does</th></tr>
+  <tr><td class="mono">/givekey &lt;crate&gt; [player] [amount]</td><td>staff</td><td>Hands keys to one player. Leave the player off and they go to you</td></tr>
+  <tr><td class="mono">/keyall &lt;crate&gt; [amount]</td><td>staff</td><td>Gives everyone currently online a key, and announces it in chat</td></tr>
+  <tr><td class="mono">/keys</td><td>everyone</td><td>Lists the crates that exist and how to open one</td></tr>
+</table>
+</div>
+
+<p>Staff type a plain word — <code>kyron</code>, <code>netherite</code> — and the script translates
+it to the crate id the plugin actually uses. Both mappings live in a block at the top of the file
+alongside the crate's display name, so adding a fourth crate is a short edit in one place rather
+than a search through the body of the script.</p>
+
+<h2>Decisions</h2>
+
+<details>
+<summary>It refuses to make a key itself</summary>
+<div class="body">
+<p>This is the whole reason the script is worth talking about. It would have been easier to build
+the key item here — name it, colour it, hand it over. It doesn't. It asks KyronCrates to do it and
+passes on the result.</p>
+
+<p>A key is only valid because of the tag the plugin writes inside it. If this script minted its
+own, there would be two separate definitions of what a key is, sitting in two files that nobody
+would think to keep in sync. The day the plugin's format changed, staff would start handing out
+keys that look perfect in the inventory and open nothing — and the reports would come in as
+"crates are broken", not "the script is out of date".</p>
+
+<p>Going through the plugin means there is exactly one answer to what a key is, and this file stays
+a convenience layer that physically cannot drift out of sync with it.</p>
+</div>
+</details>
+
+<details>
+<summary>Getting it wrong tells you what's right</summary>
+<div class="body">
+<p>Run <code>/givekey</code> with nothing after it and you don't get a usage string — you get the
+list of crates you can actually name, each with its display name next to it. Name a crate that
+doesn't exist and the error lists the valid ones rather than just saying no.</p>
+
+<p>That's built around the real failure case. Staff don't mistype these because they don't know the
+command; they mistype them because they're half-remembering whether it's <code>nether</code> or
+<code>netherite</code>. Answering that question inside the error is faster than making someone go
+and look.</p>
+
+<p>The amount is optional and defaults to one, and anything below one is pulled back up to one, so a
+typo hands out a key instead of silently doing nothing. Console has to name a player, since there's
+no sensible default when there's nobody running the command.</p>
+</div>
+</details>
+
+<details>
+<summary>Every handout is written down</summary>
+<div class="body">
+<p>Both admin commands are permission-gated, and both append a line to their own log file recording
+who ran it, who received, which crate and how many. <code>/keyall</code> also broadcasts to the
+server, so a mass handout is public by default.</p>
+
+<p>Free loot is the thing staff end up accused of afterwards — who got keys, who didn't, who gave
+themselves a stack during an event. Chat scrollback doesn't survive a restart and nobody screenshots
+the moment it matters. A log file does, and it costs one line per command to keep.</p>
+</div>
+</details>
+
+<footer>
+  <span><a href="skripts.html">← Skript tooling</a></span>
+  <span>keys.sk</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AegisStaff — fresh</title>
+<meta name="description" content="A full staff and punishment system for Paper 1.21.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="aegis">
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Details</a>
+  </nav>
+</header>
+
+<div class="phead">
+  <h1>AegisStaff</h1>
+  <p class="lede">The whole staff side of a server in one plugin. Punishments with an escalation
+    ladder, staff mode, vanish, freeze, reports, notes, an audit log of what staff themselves have
+    been doing, Discord feeds and a local web dashboard.</p>
+</div>
+<p class="stack">
+  <span>Java 21</span><span>Paper 1.21</span><span>124 classes</span>
+  <span>SQLite or MySQL</span><span>zero dependencies</span><span>v3.0.0</span>
+</p>
+
+<p>It's the largest thing on this site. Forty-odd commands, five staff ranks, its own database
+layer, and a set of rules designed around the assumption that the people using it can also abuse
+it.</p>
+
+<h2>The five ranks</h2>
+
+<p class="first">Ranks stack downward — each one includes everything below it, and a person gets
+exactly one. They're composed in LuckPerms rather than hardcoded, because every single feature is
+its own permission node and every node defaults to <code>false</code>. Nothing is implicit, and a
+server that wants a different shape of team can build one.</p>
+
+<div class="scroll">
+<table>
+  <tr><th>Rank</th><th>Gains</th></tr>
+  <tr><td class="mono">Helper</td><td>Chat moderation and reports. Warn, kick, mute, tempmute, the punish GUI, player history, notes, staff chat, staff mode. No inspection tools and no bans</td></tr>
+  <tr><td class="mono">Mod</td><td>Tempban, unmute, unwarn, the ban list, spectate, <code>/tphere</code>, direct player alerts, resolving reports</td></tr>
+  <tr><td class="mono">Admin</td><td>Freeze, <code>/tp</code>, the staff audit GUI, deleting notes and reports. First rank that can review other staff — and the first that's punish-exempt and freeze-exempt from them</td></tr>
+  <tr><td class="mono">Manager</td><td>Permanent bans, unbans, IP bans, IP addresses visible in <code>/seen</code>, and forcing another staff member off duty</td></tr>
+  <tr><td class="mono">Head Manager</td><td>Vanish including on others, silent join and quit, config reload, diagnostic dump</td></tr>
+</table>
+</div>
+
+<p>A deliberate gap: mods can pull a player to them with <code>/tphere</code> but cannot
+<code>/tp</code> to a player. Teleporting <em>to</em> someone lets you drop into a fight or a base
+unannounced; pulling them to you doesn't. That distinction is the difference between a moderation
+tool and a way to cheat at survival.</p>
+
+<p>Three commands sit on no rank at all — <code>/invsee</code>, <code>/endersee</code> and
+<code>/spawnstash</code>. They're op-only and have to be granted by hand, one player at a time,
+because reading someone's inventory is a different category of power from muting them.</p>
+
+<h2>Commands</h2>
+
+<div class="scroll">
+<table>
+  <tr><th>Group</th><th class="mono">Commands</th></tr>
+  <tr><td>Punishments</td><td class="mono">/warn /kick /mute /tempmute /ban /tempban /banip /unban /unmute /unbanip /unwarn /offend /punish</td></tr>
+  <tr><td>Records</td><td class="mono">/history /warnings /banlist /seen /staffhistory /note /notes</td></tr>
+  <tr><td>Staff tools</td><td class="mono">/staffmode /staffhelp /vanish /freeze /invsee /endersee /spectate /tp /tphere /back /playeralert /staffchat /spawnstash</td></tr>
+  <tr><td>Reports</td><td class="mono">/report /reports</td></tr>
+</table>
+</div>
+
+<p>Every punishment takes an optional <code>-s</code> flag to issue it silently, so a ban during an
+event doesn't have to become an announcement. Any command that clashes with another plugin can be
+switched off in config, and <code>/staff &lt;command&gt;</code> always works regardless of what else
+is installed.</p>
+
+<h2>How it works</h2>
+
+<details>
+<summary>Punishment guidelines as config, and a ladder that escalates on its own</summary>
+<div class="body">
+<p>The feature I'd point at first. Staff don't decide durations — they name what happened, and the
+plugin works out the punishment.</p>
+
+<p><code>/offend &lt;player&gt; &lt;offence&gt;</code> looks the offence up in a guidelines file that
+holds its type (ban, mute, kick or warn), what a first offence costs, whether it's severe enough to
+always be permanent, shorthand aliases staff can type instead of the full id, and a category for
+browsing. The plugin then applies it, and escalates repeat offenders by itself.</p>
+
+<p>The ladder is keyed by which number punishment it is, and only the numbers that change need
+listing — set 2 and 5, and punishments 2 through 4 all take the first value while 5 onward take the
+second. <strong>Bans and mutes count separately</strong>, so someone who talks too much never creeps
+toward a ban. Every ban counts toward the ladder, including expired ones, lifted ones, and ones
+typed by hand.</p>
+
+<p>What this buys is consistency. The oldest problem in server moderation is two staff members
+handing out wildly different punishments for the same thing, and every argument that follows.
+Encoding the guidelines means the answer doesn't depend on who was online. <code>/offend</code> is
+still gated by the permission for whatever punishment it would issue, so a helper naming a bannable
+offence doesn't get to issue a ban through the back door.</p>
+</div>
+</details>
+
+<details>
+<summary>Staff mode: on duty is a different mode of play, not a hat</summary>
+<div class="body">
+<p>Going on duty puts you in spectator and stores your inventory. Coming off duty returns you to
+spawn and gives it back. While you're on duty you cannot change gamemode.</p>
+
+<p><strong>No staff command works off duty.</strong> Not one — and being op doesn't bypass it. The
+only exception is <code>/report</code>, which any player can use. That single rule is what stops the
+staff toolkit leaking into normal play, and it means "was this person on duty" is always a
+meaningful question with a recorded answer.</p>
+
+<p>Creative mode is blocked for anyone not on an explicit bypass list, which closes the other
+obvious route to the same problem.</p>
+</div>
+</details>
+
+<details>
+<summary>Combat locks staff out of their own tools</summary>
+<div class="body">
+<p>For fifteen seconds after another player hits you, every staff command is refused. Including
+<code>/staffmode</code> — <em>especially</em> <code>/staffmode</code>, because going on duty was the
+escape route. Only <code>/report</code> still works.</p>
+
+<p>Without this, staff tools are an "I win" button in a fight: you're losing, you vanish or flip to
+spectator, and you take nothing. The lock means a staff member in a fight is a player in a fight
+until it's over.</p>
+
+<p>The same combat tracking punishes ordinary combat logging. Disconnect within the window of
+trading blows and you're punished automatically — routed through the offence system, so it uses the
+same published guidelines and the same escalation ladder as everything else rather than being a
+special case bolted on the side.</p>
+
+<figure>
+<svg viewBox="0 0 700 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Being hit starts a fifteen second window in which staff commands are refused and disconnecting is punished">
+  <style>
+    .ag-box{fill:#151922;stroke:#232936;stroke-width:1.5}
+    .ag-hot{fill:#241318;stroke:#f87171;stroke-width:1.5}
+    .ag-ok{fill:#13211a;stroke:#4ade80;stroke-width:1.5}
+    .ag-t{font:600 12.5px 'JetBrains Mono',monospace;fill:#e8ecf3}
+    .ag-m{font:400 11.5px 'JetBrains Mono',monospace;fill:#8b96ab}
+    .ag-r{font:600 11.5px 'JetBrains Mono',monospace;fill:#f87171}
+    .ag-g{font:600 11.5px 'JetBrains Mono',monospace;fill:#4ade80}
+    .ag-ln{stroke:#39445a;stroke-width:1.5;fill:none;marker-end:url(#ag-ar)}
+  </style>
+  <defs><marker id="ag-ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#39445a"/></marker></defs>
+
+  <line class="ag-ln" x1="160" y1="60" x2="232" y2="60"/>
+  <line class="ag-ln" x1="392" y1="60" x2="464" y2="60"/>
+  <line class="ag-ln" x1="312" y1="92" x2="312" y2="128"/>
+
+  <rect class="ag-box" x="24" y="38" width="136" height="44" rx="9"/>
+  <text class="ag-t" x="92" y="58" text-anchor="middle">a player hits you</text>
+  <text class="ag-m" x="92" y="74" text-anchor="middle">combat starts</text>
+
+  <rect class="ag-hot" x="236" y="34" width="152" height="52" rx="10"/>
+  <text class="ag-r" x="312" y="55" text-anchor="middle">15 second lock</text>
+  <text class="ag-m" x="312" y="72" text-anchor="middle">staff commands refused</text>
+
+  <rect class="ag-ok" x="464" y="38" width="150" height="44" rx="9"/>
+  <text class="ag-g" x="539" y="58" text-anchor="middle">window closes</text>
+  <text class="ag-m" x="539" y="74" text-anchor="middle">tools return</text>
+
+  <rect class="ag-box" x="236" y="128" width="152" height="62" rx="10"/>
+  <text class="ag-t" x="312" y="148" text-anchor="middle">disconnect here</text>
+  <text class="ag-m" x="312" y="165" text-anchor="middle">punished automatically,</text>
+  <text class="ag-m" x="312" y="180" text-anchor="middle">through the ladder</text>
+</svg>
+<figcaption>Staff mode was the escape route, so it's the first thing the lock takes away.</figcaption>
+</figure>
+</div>
+</details>
+
+<details>
+<summary>Watching the staff, not just the players</summary>
+<div class="body">
+<p>Most staff plugins record what was done to players. This one also records what staff did, and
+puts it in front of the rest of the team.</p>
+
+<p>Every staff action goes into an audit log, browsable in a GUI by admins and above. On top of
+that sits a bias check: if a staff member punishes someone they were fighting inside the last
+minute, the rest of the team is warned about it automatically. Nothing is blocked — the punishment
+still lands, because sometimes the person you're fighting genuinely is cheating — but it can't
+happen quietly.</p>
+
+<p>There's also a weekly digest posted to Discord summarising what each staff member did. Both
+features exist because the failure mode on a real server is almost never a staff member who can't
+find the ban command; it's one who uses it on someone they lost a fight to.</p>
+
+<p>The permission structure backs this up. Admins and above are punish-exempt and freeze-exempt, so
+the tools can't be turned sideways on the people meant to be reviewing them.</p>
+</div>
+</details>
+
+<details>
+<summary>Storage: SQLite by default, MySQL when you actually need it</summary>
+<div class="body">
+<p>Default is SQLite, and it needs no setup whatsoever — Paper already ships the driver, and the
+database is one file in the plugin folder. Drop the jar in, restart, done. MySQL is there for the
+one case that genuinely requires it: several servers sharing one punishment list.</p>
+
+<p>Access goes through a set of DAOs — punishments, reports, notes, profiles, player state, audit —
+over a versioned schema, so a table change is a migration rather than a wipe.</p>
+
+<p>Two things sit on top of that. Unknown names can be looked up against Mojang, so someone can be
+banned pre-emptively before they've ever joined. And on first start it can import punishments and
+player records from an older FreshStaff v2 install — reading that folder only, never moving or
+changing anything in it, so the old install stays a working rollback if the migration goes wrong.</p>
+
+<p>The whole plugin ships with no shaded libraries at all. Paper provides Adventure, the
+annotations and the SQLite driver, so the jar in the plugins folder is the entire plugin.</p>
+</div>
+</details>
+
+<details>
+<summary>Four Discord feeds, none of which can lag the server</summary>
+<div class="body">
+<p>Punishments, reports, staff actions and staff chat each post to their own webhook, so they can
+go to four different channels with four different sets of people able to read them. Staff chat in a
+channel the team can reach from their phones; punishments somewhere players can see them; the audit
+feed somewhere only management looks.</p>
+
+<p>Leave a URL blank and that feed is simply off — there's no separate enable toggle per feed to
+get out of sync with itself.</p>
+
+<p>Everything posts asynchronously. A webhook that's been deleted, or a Discord outage, cannot slow
+the server down or stop a punishment going through. The ban lands whether or not anyone gets told
+about it, which is the correct priority.</p>
+</div>
+</details>
+
+<details>
+<summary>A dashboard that can't be reached from the internet</summary>
+<div class="body">
+<p>There's a read-only web panel for the owner, and it binds to <code>127.0.0.1</code> — not
+<code>0.0.0.0</code>. It's reachable from the machine the server runs on and from nowhere else: not
+the LAN, and not the internet even if someone forwards the port.</p>
+
+<p>That's a deliberate ceiling on the blast radius. A staff panel holding punishment records, IP
+addresses and player notes is a genuinely attractive target, and the safest version of that is one
+that was never listening on a public interface in the first place. An optional token can be required
+in the URL for anyone who wants to tunnel to it.</p>
+</div>
+</details>
+
+<details>
+<summary>The bait chest</summary>
+<div class="body">
+<p><code>/spawnstash</code> builds a decoy stash from a schematic — a convincing little base with
+chests in it, placed to catch people who are stealing from others. The plugin reads and pastes the
+structure itself, including the block entities, rather than depending on a world-edit plugin being
+installed.</p>
+
+<p>It's op-only and granted by hand, like the other inspection tools.</p>
+</div>
+</details>
+
+<details>
+<summary>How it was tested</summary>
+<div class="body">
+<p>Staff tooling is miserable to test by hand. Half the features need a second player, several need
+that player to do something specific at a specific moment, and the interesting cases are the ones
+where someone disconnects at exactly the wrong time.</p>
+
+<p>So the tests are scripted. A headless Minecraft client connects to a local server and plays out
+each scenario — get hit and then try to open staff mode, log out mid-fight, tunnel downward, walk
+into a frozen state, click through a GUI — while watching what the server sends back. Around twenty
+of them, one per scenario, each runnable on its own.</p>
+
+<p>It means the awkward paths get exercised on every build instead of the first time a player finds
+them.</p>
+</div>
+</details>
+
+<h2>Messages and configuration</h2>
+
+<p class="first">Every piece of player-facing text lives in its own messages file, separate from
+configuration, so retheming the plugin for a server never means touching a setting. Durations use
+one format everywhere — <code>30m</code>, <code>14h</code>, <code>2d</code>, <code>1w</code>,
+<code>perm</code> — in commands, in the guidelines file and in the GUI presets alike.</p>
+
+<footer>
+  <span><a href="index.html">← everything else</a></span>
+  <span>AegisStaff 3.0.0 · Paper 1.21</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>

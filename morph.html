@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Morph — fresh</title>
+<meta name="description" content="A Minecraft plugin that turns players into mobs.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="morph">
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Details</a>
+  </nav>
+</header>
+
+<div class="phead">
+  <h1>Morph</h1>
+  <p class="lede">Turns a player into a mob. Pick a form and everyone on the server sees a zombie, a
+    creeper, an enderman — walking around, doing whatever you're doing.</p>
+</div>
+<p class="stack"><span>Java</span><span>Paper</span><span>Minecraft plugin</span></p>
+
+<h2>What it does</h2>
+
+<p class="first">You choose a mob and you become it. Not a skin on a player model — other players
+see the actual mob, moving where you move, doing what you do. Your own view stays normal so you can
+still play; it's everyone else's screen that changes.</p>
+
+<p>The point is the reaction. A zombie that stops and looks at you does not read as a mob for very
+long, and the moment someone works out that one of the mobs in the room is a person, the whole
+space changes. That's a fundamentally different experience from a cosmetic that only changes what
+you look like standing still.</p>
+
+<figure>
+  <img src="assets/img/morph.png" alt="A player morphed into a mob, seen from another player's view">
+  <figcaption>What everyone else sees.</figcaption>
+</figure>
+
+<h2>How it works</h2>
+
+<details>
+<summary>Your screen and everyone else's screen disagree, on purpose</summary>
+<div class="body">
+<p>The morphed player has to stay playable. If you replace someone with a mob on their own client
+too, they lose their hands, their hotbar and their camera, and the feature stops being usable for
+anything except standing still and being looked at.</p>
+
+<p>So the illusion is built for other people. The morphed player keeps a normal first-person view
+and normal controls, while everyone else's client is told there's a mob there instead. Two versions
+of the same player, and the only one that has to be convincing is the one you can't see yourself.</p>
+</div>
+</details>
+
+<details>
+<summary>The hard part is everything that isn't standing still</summary>
+<div class="body">
+<p>A static disguise is easy. Keeping it right through movement is where the work is — the form has
+to follow every position and rotation update, survive sprinting, sneaking, swimming and falling, and
+handle the moments where a player does something a mob has no animation for.</p>
+
+<p>Then there's every other system that assumes a player is shaped like a player: combat reach,
+hitboxes, nametags, what happens when you take damage, and what other people see when you die. A
+disguise that breaks the first time someone hits you is worse than no disguise, because it teaches
+people exactly how to test for it.</p>
+</div>
+</details>
+
+<!-- ADD YOUR SPECIFICS HERE — commands, permissions, which mobs are supported, config.
+     Match the table style used on the KyronCrates page:
+
+<h2>Commands</h2>
+<div class="scroll">
+<table>
+  <tr><th class="mono">Command</th><th>Perm</th><th>What it does</th></tr>
+  <tr><td class="mono">/morph &lt;mob&gt;</td><td>everyone</td><td>Become that mob</td></tr>
+</table>
+</div>
+-->
+
+<footer>
+  <span><a href="index.html">← everything else</a></span>
+  <span>Morph</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>

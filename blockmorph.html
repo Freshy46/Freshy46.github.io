@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Block Morph — fresh</title>
+<meta name="description" content="Prop hunt for Minecraft: become a solid block and hide in plain sight.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="blockmorph">
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Details</a>
+  </nav>
+</header>
+
+<div class="phead">
+  <h1>Block Morph</h1>
+  <p class="lede">Become a block. Any block, anywhere — or in a round of prop hunt, where one team
+    hides in the scenery and the other team has to work out which crafting table is breathing.</p>
+</div>
+<p class="stack">
+  <span>Java</span><span>Paper</span><span>minigame + free-roam</span><span>solid disguises</span>
+</p>
+
+<h2>What it does</h2>
+
+<p class="first">Turn into a block and you stop being a player-shaped thing standing in a room. You
+become part of the room. Pick the right block and stand somewhere it belongs and people walk past
+you — which is the entire game.</p>
+
+<p>Two ways to use it. <strong>Free roam:</strong> morph anywhere on the server, whenever you like,
+and use it however you want — ambushes, hiding, or just being a very confusing chest.
+<strong>Prop hunt:</strong> a proper round with hiders, seekers and a clock.</p>
+
+<figure>
+  <img src="assets/img/blockmorph.png" alt="A player disguised as a block among identical real blocks">
+  <figcaption>One of these is a person.</figcaption>
+</figure>
+
+<h2>The rules that make it work</h2>
+
+<p class="first">Two design decisions carry the whole thing, and they're both about taking something
+away from the player who's hiding.</p>
+
+<div class="scroll">
+<table>
+  <tr><th>Rule</th><th>Why it's there</th></tr>
+  <tr><td class="mono">You're locked in place</td><td>Movement is what gives a hider away, so removing it makes the disguise nearly perfect — and makes committing to a hiding spot a real decision you can't take back</td></tr>
+  <tr><td class="mono">You're a solid block</td><td>People bump into you, stand on you and try to break you. The disguise has to survive being touched, not just being looked at</td></tr>
+</table>
+</div>
+
+<h2>How it works</h2>
+
+<details>
+<summary>Being solid is what makes it a game instead of a costume</summary>
+<div class="body">
+<p>A disguise you can walk through is a cosmetic. The moment a seeker's first instinct — run at the
+suspicious block and see what happens — actually collides with something, the disguise is load
+bearing, and it can be tested, probed and caught out.</p>
+
+<p>It cuts the other way too. Being solid means a hidden player changes the shape of the map: they
+can be stood on, they can plug a gap, they can be in the way. A hider who picks a spot that makes
+the room subtly wrong gets found, and that's a skill worth having.</p>
+</div>
+</details>
+
+<details>
+<summary>Locked in place is a cost, not a limitation</summary>
+<div class="body">
+<p>Being unable to move is the price of being almost invisible, and the trade is what makes the
+hiding interesting. You commit before the seekers arrive, and once you're committed you can only sit
+there and find out whether you chose well.</p>
+
+<p>It also removes the failure mode that ruins prop hunt: a hider who can move freely just runs away
+forever and the round never ends. Taking movement away means the round always resolves — either
+they're found or the clock runs out.</p>
+</div>
+</details>
+
+<details>
+<summary>Blending in is on the player, not the plugin</summary>
+<div class="body">
+<p>The plugin's job is to make you a convincing block. Whether you're a convincing block <em>in that
+spot</em> is on you. A stone brick in a stone brick wall is invisible. The same stone brick alone in
+the middle of a wheat field is a person, and everyone knows it.</p>
+
+<p>That's deliberate — it's where the skill lives. If the plugin picked a sensible block for you the
+game would play itself, and the fun of watching someone stare directly at you from two blocks away
+would be gone.</p>
+</div>
+</details>
+
+<!-- ADD YOUR SPECIFICS HERE — commands, permissions, round length, team sizes, map setup.
+     Match the table style used on the KyronCrates page. -->
+
+<footer>
+  <span><a href="index.html">← everything else</a></span>
+  <span>Block Morph</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>

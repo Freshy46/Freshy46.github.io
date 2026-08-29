@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kyron SMP store — fresh</title>
+<meta name="description" content="A Minecraft server storefront built five times over from one data file.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="store">
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Details</a>
+  </nav>
+</header>
+
+<div class="phead">
+  <h1>Kyron SMP store</h1>
+  <p class="lede">The storefront for a Java 1.21 server — twelve ranks across two game modes, gift
+    cards, Stripe checkout and a live player count. Then built four more times in four different
+    visual directions, off the same data, so the owner could pick one by looking at it rather than
+    by describing it.</p>
+</div>
+<p class="stack">
+  <span>Vanilla JS</span><span>no framework</span><span>no build step</span>
+  <span>Stripe Payment Links</span><span>Node dev server</span>
+</p>
+
+<h2>What's on it</h2>
+
+<p class="first">Nine SMP ranks from £1 to £10, three FFA ranks, and two gift card denominations.
+Every rank carries the same four perks — custom prefix on tab, a rank kit, a chat tag and a Discord
+role — so the page has to sell the difference between them on identity rather than on a feature
+list. The £1 tier lets you write your own prefix, subject to staff approval.</p>
+
+<p>Around the store: a hero with the live player count and a one-click IP copy, a "what happens
+after I pay" section, gift card redemption steps, the rules, and the terms and privacy pages a
+payment processor expects to see. Light and dark toggle throughout.</p>
+
+<div class="scroll">
+<table>
+  <tr><th>SMP rank</th><th class="mono">Price</th><th>FFA rank</th><th class="mono">Price</th></tr>
+  <tr><td>Custom Rank of Choice</td><td class="cd">£1.00</td><td>Kyron +</td><td class="cd">£2.50</td></tr>
+  <tr><td>Sargelaw</td><td class="cd">£1.50</td><td>VIP</td><td class="cd">£3.00</td></tr>
+  <tr><td>Flame</td><td class="cd">£2.50</td><td>Kyron ++</td><td class="cd">£5.00</td></tr>
+  <tr><td>Eggchan</td><td class="cd">£3.00</td><td></td><td></td></tr>
+  <tr><td>Clown</td><td class="cd">£3.50</td><td>Gift card</td><td class="cd">£5.00</td></tr>
+  <tr><td>Jaden</td><td class="cd">£6.50</td><td>Gift card</td><td class="cd">£10.00</td></tr>
+  <tr><td>Minutetech</td><td class="cd">£7.00</td><td></td><td></td></tr>
+  <tr><td>Shoebilly</td><td class="cd">£8.00</td><td></td><td></td></tr>
+  <tr><td>Wemmbu</td><td class="cd">£10.00</td><td></td><td></td></tr>
+</table>
+</div>
+
+<h2>How it works</h2>
+
+<details>
+<summary>One data file, five complete rebuilds</summary>
+<div class="body">
+<p>Every rank, price, checkout link, perk list, colour code and blurb lives in a single
+<code>data.js</code> that assigns one object to <code>window.KYRON</code>. Nothing is written into
+the markup. Each theme reads that object and renders itself from it.</p>
+
+<pre><code>window.KYRON = {
+  ip: <span class="s">"kyron.mygame.host"</span>,
+  version: <span class="s">"Java 1.21+"</span>,
+  perks: [<span class="s">"Custom prefix on tab"</span>, <span class="s">"Rank kit"</span>, ...],
+  ranks: [
+    { name: <span class="s">"Flame"</span>, price: 2.50, tag: <span class="s">"Flame"</span>,
+      colour: <span class="s">"#FFAA00"</span>, mc: <span class="s">"&amp;6"</span>, blurb: ... },
+    ...
+  ]
+}</code></pre>
+
+<p>Each rank carries its hex colour <em>and</em> the Minecraft colour code the prefix actually
+renders in, so the chat preview on the site shows the tag in the same colour the player will see it
+in game. Getting that wrong is the fastest way to a refund request.</p>
+
+<p>A price change is one number, once. Five themes follow. That mattered more than it sounds like it
+should: the whole point of building five was that the client could change their mind about the look
+without anyone re-entering nine ranks by hand.</p>
+<p class="src">kyron-site/data.js</p>
+</div>
+</details>
+
+<details>
+<summary>Why five versions, and what each one was testing</summary>
+<div class="body">
+<p>Asking someone to describe the site they want gets you adjectives. Showing them five finished
+sites gets you a decision. Each one commits properly to a direction rather than hedging, and each
+lays the ranks out differently, because the rank list is where the whole page lives or dies.</p>
+
+<div class="scroll">
+<table>
+  <tr><th>Theme</th><th>Direction</th><th>Ranks laid out as</th></tr>
+  <tr><td class="mono">Nightfall</td><td>Dark violet, glass cards, glow — the modern gaming-server look</td><td>3-up card grid with chat previews</td></tr>
+  <tr><td class="mono">Parchment</td><td>Warm paper, serif headlines, editorial and quiet</td><td>A priced list, not cards</td></tr>
+  <tr><td class="mono">Terminal</td><td>Mono, green on black, sharp corners, scanlines</td><td>A data table</td></tr>
+  <tr><td class="mono">Aurora</td><td>Bright, soft gradients, rounded and friendly</td><td>Wide rows with big pricing</td></tr>
+  <tr><td class="mono">Shipped build</td><td>The direction that won, finished out</td><td>—</td></tr>
+</table>
+</div>
+
+<p>A small Node server puts each theme on its own port so all five can sit open in five tabs and be
+flipped between, rather than compared from memory. It's about sixty lines, no dependencies, and it
+refuses to serve anything outside the site directory.</p>
+
+<pre><code>http://localhost:8000  ->  kyron.html
+http://localhost:8001  ->  nightfall.html
+http://localhost:8002  ->  parchment.html
+http://localhost:8003  ->  terminal.html
+http://localhost:8004  ->  aurora.html</code></pre>
+<p class="src">kyron-site/server.js</p>
+</div>
+</details>
+
+<details>
+<summary>Taking money without a backend</summary>
+<div class="body">
+<p>The site is static. There is no server holding card details, no database of orders, and nothing
+of mine sitting between a player and their bank — checkout is a Stripe Payment Link per product, so
+the card form is Stripe's page on Stripe's domain.</p>
+
+<p>For a server store that's the right trade. The alternative is running a payment backend for the
+sake of eleven fixed-price products, and taking on the liability that comes with it. This way the
+riskiest thing the site does is redirect.</p>
+
+<p>What that leaves is the part players actually get confused by: what happens between paying and
+having the rank. So the page answers it directly — a "what happens after I pay" section, gift card
+redemption steps written out, and a support email on every page. Most store tickets are that
+question, and answering it on the page is cheaper than answering it eleven times a week.</p>
+</div>
+</details>
+
+<details>
+<summary>Live player count</summary>
+<div class="body">
+<p>The hero shows how many people are on right now, which is the single most persuasive thing a
+server store can put above the fold, and the fastest way to look dead if it breaks. It degrades to
+the plain IP rather than to a zero or a spinner when the query fails.</p>
+
+<p>Next to it, one button that copies the IP to the clipboard — <code>kyron.mygame.host</code>, with
+the raw <code>46.249.47.73:25006</code> as the fallback for clients that don't resolve the hostname
+— and one that opens the Discord. Those two buttons are what the page is for; everything else is
+underneath them.</p>
+</div>
+</details>
+
+<footer>
+  <span><a href="index.html">← everything else</a></span>
+  <span>Kyron SMP · Java 1.21+</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>

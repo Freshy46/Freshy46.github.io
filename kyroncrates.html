@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KyronCrates — fresh</title>
+<meta name="description" content="Physical crates and keys for Kyron FFA. Paper 1.21.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="crates">
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Details</a>
+  </nav>
+</header>
+
+<div class="phead">
+  <h1>KyronCrates</h1>
+  <p class="lede">Physical crates and keys for Kyron FFA. Bind a crate to any block in the world,
+    build its loot table in a menu, and let players spin it. Built so an admin never has to open a
+    config file and a player never loses a key they paid for.</p>
+</div>
+<p class="stack">
+  <span>Java 21</span><span>Paper 1.21</span><span>17 classes</span>
+  <span>NBT-tagged keys</span><span>in-game editor</span>
+</p>
+
+<h2>What it does</h2>
+
+<p class="first">A crate is a real block — a chest, a beacon, whatever you're looking at when you run
+the command. A hologram floats above it. Right-click it holding the right key and the key is
+consumed, the roulette spins, and the prize goes into your inventory, or onto the floor at your feet
+if it's full. Right-click without a key, or left-click at all, and you get the reward preview with
+the real odds instead of a guess.</p>
+
+<p>Keys are tagged with the crate id in NBT, so a renamed lookalike opens nothing. They can't be
+placed as blocks. They drop on death like any other item — which is the entire point on an FFA
+server, where a key in someone's inventory is a reason to fight them.</p>
+
+<p>Placed crate blocks can't be broken, blown up, or moved by a piston.</p>
+
+<div class="cmd">/crates create legendary &amp;6&amp;lLegendary Crate</div>
+<div class="cmd">/crates edit legendary</div>
+<div class="cmd">/crates set legendary</div>
+
+<h2>Commands</h2>
+
+<div class="scroll">
+<table>
+  <tr><th class="mono">Command</th><th>Perm</th><th>What it does</th></tr>
+  <tr><td class="mono">/crates list</td><td>everyone</td><td>Every crate, its reward count, and how many are placed</td></tr>
+  <tr><td class="mono">/crates preview &lt;crate&gt;</td><td>everyone</td><td>Reward list with odds</td></tr>
+  <tr><td class="mono">/crates edit [crate]</td><td>admin</td><td>The editor. No argument opens a picker of all crates</td></tr>
+  <tr><td class="mono">/crates create &lt;id&gt; &lt;display&gt;</td><td>admin</td><td>New crate. Display name takes <code>&amp;</code> colour codes</td></tr>
+  <tr><td class="mono">/crates delete &lt;crate&gt;</td><td>admin</td><td>Removes it and its blocks</td></tr>
+  <tr><td class="mono">/crates set &lt;crate&gt;</td><td>admin</td><td>Binds the block you're looking at</td></tr>
+  <tr><td class="mono">/crates unset</td><td>admin</td><td>Unbinds the block you're looking at</td></tr>
+  <tr><td class="mono">/crates key &lt;crate&gt; [player] [amount]</td><td>admin</td><td>Hands out keys</td></tr>
+  <tr><td class="mono">/crates hologram &lt;crate&gt; add|clear|list</td><td>admin</td><td>Floating text over that crate's blocks</td></tr>
+  <tr><td class="mono">/crates reload</td><td>admin</td><td>Re-reads <code>crates.yml</code> from disk</td></tr>
+</table>
+</div>
+<p class="src">command/CrateCommand.java · aliases /crate, /kcrates · permissions kyroncrates.use (default true) and kyroncrates.admin (op)</p>
+
+<h2>How it works</h2>
+
+<details>
+<summary>The editor is the config file</summary>
+<div class="body">
+<p><code>crates.yml</code> exists, but nobody is meant to open it. It's an output. Everything about
+a crate is built in a menu instead.</p>
+
+<p>The top four rows are the loot table. Pick an item up in your inventory and click an empty slot
+to add it as a reward, or shift-click it straight across. Click a reward with an empty cursor to
+remove it. A comparator toggles into odds mode, where clicking a reward raises or lowers its weight
+— left for +1, shift-left +10, right −1, shift-right −10 — and the live chance percentage updates on
+every item in the table as you go. Weights are relative, so a reward at 10 is ten times as likely as
+one at 1, and you never have to make them add up to anything.</p>
+
+<p>Next to the name tag is the key slot. Drop any item in there and it becomes this crate's key,
+keeping its name, lore and enchants. Leave it alone and it uses the default. There's a toggle for
+whether a win from this crate broadcasts to the server.</p>
+
+<p>Closing the menu saves. So does a plugin disable while the editor is open, which is a two-line
+guard that stops a server restart eating twenty minutes of loot-table work.</p>
+
+<p><strong>Every slot in that menu holds a copy.</strong> Nothing ever leaves or enters your real
+inventory while you're editing. That isn't a detail — it's the whole reason the editor can exist. An
+admin menu that moves live item stacks around is a dupe waiting to be found, and on an FFA server it
+will be found.</p>
+<p class="src">gui/EditGui.java · gui/WeightsGui.java · crate/Reward.java</p>
+</div>
+</details>
+
+<details>
+<summary>The spin is theatre — the winner is already decided</summary>
+<div class="body">
+<p>The prize is rolled from the weighted table <em>before</em> the menu even opens. The animation is
+handed that result and its only job is to arrive at it convincingly.</p>
+
+<p>It's a 27-slot inventory with a nine-slot strip across the middle row. Every step shifts the
+strip one slot left and feeds a new random reward in at the right-hand end. The real prize is
+inserted at exactly the step that leaves it coasting into the centre slot on the final shift. The
+gap between steps stretches as it goes — one tick, then two, then four, seven, eleven — so it slows
+into place rather than stopping dead.</p>
+
+<pre><code>step   0-19   20-29   30-35   36-39   40+
+delay  1t     2t      4t      7t      11t</code></pre>
+
+<p>Because the outcome is fixed up front, the animation is disposable. It can be cut short at any
+frame — by a close, a disconnect, or the server going down — without changing what the player wins
+or leaving the outcome undecided.</p>
+<p class="src">gui/SpinGui.java · crate/CrateManager.java roll()</p>
+</div>
+</details>
+
+<details>
+<summary>A consumed key is never left unpaid</summary>
+<div class="body">
+<p>The key is taken from the player's hand only once the spin has actually started, so a failed
+open — wrong key, unknown crate, no rewards configured — costs nothing.</p>
+
+<p>From that moment the plugin owes them a prize, and there are three ways the spin can end: it
+finishes normally, the menu closes, or the plugin disables underneath it. All three route into the
+same <code>award()</code> method, which guards on a flag so it can be called from anywhere, more
+than once, in any order. Whichever path gets there first pays out; the rest do nothing.</p>
+
+<figure>
+<svg viewBox="0 0 700 235" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three paths - spin finished, menu closed, plugin disabled - all lead into one award method">
+  <style>
+    .kc-box{fill:#151922;stroke:#232936;stroke-width:1.5}
+    .kc-on{fill:#17132a;stroke:#8b5cf6;stroke-width:1.5}
+    .kc-t{font:600 12.5px 'JetBrains Mono',monospace;fill:#e8ecf3}
+    .kc-m{font:400 11.5px 'JetBrains Mono',monospace;fill:#8b96ab}
+    .kc-a{font:600 12.5px 'JetBrains Mono',monospace;fill:#8b5cf6}
+    .kc-ln{stroke:#39445a;stroke-width:1.5;fill:none;marker-end:url(#kc-ar)}
+  </style>
+  <defs><marker id="kc-ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#39445a"/></marker></defs>
+
+  <path class="kc-ln" d="M204 43 H300 Q330 43 330 73 V96"/>
+  <path class="kc-ln" d="M204 117 H326"/>
+  <path class="kc-ln" d="M204 191 H300 Q330 191 330 161 V138"/>
+  <line class="kc-ln" x1="452" y1="117" x2="524" y2="117"/>
+
+  <rect class="kc-box" x="24" y="22" width="180" height="42" rx="9"/>
+  <text class="kc-t" x="114" y="41" text-anchor="middle">spin finishes</text>
+  <text class="kc-m" x="114" y="56" text-anchor="middle">42 steps done</text>
+
+  <rect class="kc-box" x="24" y="96" width="180" height="42" rx="9"/>
+  <text class="kc-t" x="114" y="115" text-anchor="middle">menu closes</text>
+  <text class="kc-m" x="114" y="130" text-anchor="middle">click away, disconnect</text>
+
+  <rect class="kc-box" x="24" y="170" width="180" height="42" rx="9"/>
+  <text class="kc-t" x="114" y="189" text-anchor="middle">plugin disables</text>
+  <text class="kc-m" x="114" y="204" text-anchor="middle">restart, shutdown</text>
+
+  <rect class="kc-on" x="330" y="92" width="122" height="50" rx="10"/>
+  <text class="kc-a" x="391" y="112" text-anchor="middle">award()</text>
+  <text class="kc-m" x="391" y="130" text-anchor="middle">runs once</text>
+
+  <rect class="kc-box" x="524" y="96" width="152" height="42" rx="9"/>
+  <text class="kc-t" x="600" y="115" text-anchor="middle">prize delivered</text>
+  <text class="kc-m" x="600" y="130" text-anchor="middle">inventory, else floor</text>
+</svg>
+<figcaption>One payout path, three entry points, guarded so it can only fire once.</figcaption>
+</figure>
+
+<p>If the inventory is full the prize drops at the player's feet rather than vanishing. The win
+message uses the reward's real display name where it has one and falls back to the item's
+translation key where it doesn't, so it reads correctly in whatever language the client is set to.
+Broadcasts are per-crate, so a common crate doesn't spam chat.</p>
+<p class="src">gui/SpinGui.java award() · listener/GuiListener.java onClose · KyronCrates.java onDisable</p>
+</div>
+</details>
+
+<details>
+<summary>Holograms that can't be orphaned</summary>
+<div class="body">
+<p>Floating crate text is the classic way to leave permanent litter in a world. Entities get saved
+into the chunk, the plugin gets removed or crashes before it can clean up, and the text stays there
+forever with nothing left that knows how to delete it.</p>
+
+<p>These are non-persistent display entities. They're never written to the region file at all —
+they're spawned when the chunk loads and destroyed on disable. A hard crash leaves nothing behind,
+because there was never anything on disk to leave. Remove the plugin entirely and the world is
+clean the moment it next loads.</p>
+<p class="src">crate/HologramManager.java</p>
+</div>
+</details>
+
+<!-- Screenshot slots. Drop the files into assets/img/ and uncomment.
+<figure>
+  <img src="assets/img/crate-editor.png" alt="The crate editor with weights showing">
+  <figcaption>The editor in odds mode — live percentages on every reward.</figcaption>
+</figure>
+-->
+
+<h2>Install</h2>
+<p class="first">Drop the jar in <code>plugins/</code> and restart. Config is written by the editor,
+so there's nothing to set up first. Rebuild after code changes with <code>bash build.sh</code>.</p>
+
+<footer>
+  <span><a href="index.html">← everything else</a></span>
+  <span>KyronCrates · Paper 1.21</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>makesay.sk — fresh</title>
+<meta name="description" content="Post a chat line as another player, formatted to match the real thing.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="skripts">
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Details</a>
+  </nav>
+</header>
+
+<p class="crumb"><a href="skripts.html">← Skript tooling</a></p>
+
+<div class="phead">
+  <h1>makesay.sk</h1>
+  <p class="lede">Posts a line in chat as though a named player typed it — with their real rank
+    prefix, in their real colours, in the server's real chat format.</p>
+</div>
+<p class="stack"><span>Skript</span><span>1 command</span><span>LuckPerms</span><span>audit log</span></p>
+
+<h2>What it does</h2>
+
+<div class="scroll">
+<table>
+  <tr><th class="mono">Command</th><th>Who</th><th>What it does</th></tr>
+  <tr><td class="mono">/makesay &lt;player&gt; &lt;message&gt;</td><td>staff</td><td>Broadcasts the message formatted as that player's chat line</td></tr>
+  <tr><td class="mono">/makesay</td><td>staff</td><td>Prints the online players, with a count, so you can copy a name exactly</td></tr>
+</table>
+</div>
+
+<p>Used for running events in character, covering for a player who's dropped mid-scene, and staff
+announcements that need to come from a specific name rather than from the server.</p>
+
+<h2>Decisions</h2>
+
+<details>
+<summary>The formatting is the entire job</summary>
+<div class="body">
+<p>A fake chat line that doesn't match real chat isn't a fake chat line — it's an obviously fake
+chat line, and it gets spotted in under a second. Players read chat format as a shape long before
+they read the words in it. Wrong prefix spacing, a missing colour reset, the tag in the wrong place,
+and the illusion is gone.</p>
+
+<p>So the script rebuilds the server's exact chat format rather than approximating it: rank prefix,
+then the player's name, then a colour reset, then the message. It reads the target's rank live from
+their LuckPerms group permission at the moment the command runs, so someone who was promoted an hour
+ago shows up with the right tag without anyone editing the script.</p>
+
+<p>The rank checks are ordered deliberately, with the highest rank last so it overwrites everything
+below it. A player who holds several groups gets the one that outranks the others, which is what
+their real chat line would show.</p>
+</div>
+</details>
+
+<details>
+<summary>Adding a rank is meant to be a one-line change</summary>
+<div class="body">
+<p>Each rank is a single line mapping a group to the prefix text it renders as, kept together in one
+clearly marked block with a comment explaining the ordering rule. Adding a new rank is copying one
+line and putting it in the right position.</p>
+
+<p>The prefix strings have to match the chat plugin's configured output character for character, so
+the comment above the block also records how to look the exact text up rather than guessing at it.
+That note is the difference between the next person getting it right first time and them shipping a
+prefix that's one space off.</p>
+</div>
+</details>
+
+<details>
+<summary>A tool that can put words in someone's mouth needs a paper trail</summary>
+<div class="body">
+<p>It's permission-gated, and every use writes a line recording who ran it, who it was attributed
+to, and the full message that went out.</p>
+
+<p>Not because staff are expected to misuse it — because the first time a player insists they never
+said something, the log is the only thing that can settle it either way. Without one it's a staff
+member's word against a player's, and the tool becomes something you can't safely defend having on
+the server at all.</p>
+
+<p>It runs from console as well as in game, so it works from a control panel during an event when
+nobody with permission is logged in.</p>
+</div>
+</details>
+
+<details>
+<summary>No arguments prints the player list</summary>
+<div class="body">
+<p>The command needs an exact name, and exact names are the thing people get wrong — capitalisation,
+a number on the end, an underscore they don't remember. Running it bare prints everyone online with
+a count, so the name can be read off rather than guessed.</p>
+
+<p>Leaving the message off gets a specific error saying the message is missing, rather than
+broadcasting an empty line under someone's name.</p>
+</div>
+</details>
+
+<footer>
+  <span><a href="skripts.html">← Skript tooling</a></span>
+  <span>makesay.sk</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>
