@@ -54,7 +54,7 @@ document.querySelectorAll("figure img").forEach(function (img) {
 });
 
 // Copy-to-clipboard account cards (a Discord username isn't a link).
-document.querySelectorAll("button.acct[data-copy]").forEach(function (btn) {
+document.querySelectorAll("[data-copy]").forEach(function (btn) {
   btn.addEventListener("click", function () {
     var text = btn.getAttribute("data-copy");
     var done = function () {
@@ -189,4 +189,47 @@ document.querySelectorAll("button.acct[data-copy]").forEach(function (btn) {
     d.addEventListener('toggle', remeasure);
   });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
+})();
+
+// A highlight that follows the cursor across the nav and settles back on the
+// current page. Purely additive: without JS the .here link keeps its own
+// background, so the active page is still obvious.
+(function () {
+  var nav = document.querySelector(".top nav");
+  if (!nav) return;
+  var links = [].slice.call(nav.querySelectorAll("a"));
+  var current = nav.querySelector("a.here");
+  if (!links.length) return;
+
+  var slider = document.createElement("span");
+  slider.className = "slider";
+  nav.appendChild(slider);
+
+  function moveTo(link, isHere) {
+    if (!link) { slider.style.opacity = "0"; return; }
+    slider.style.opacity = "1";
+    slider.style.width = link.offsetWidth + "px";
+    slider.style.transform = "translateX(" + link.offsetLeft + "px)";
+    slider.classList.toggle("on-here", !!isHere);
+  }
+
+  function settle() { moveTo(current, true); }
+
+  // Only take over the active styling once we know the slider is positioned.
+  if (current && current.offsetWidth) {
+    nav.classList.add("sliding");
+    settle();
+  } else {
+    slider.style.opacity = "0";
+  }
+
+  links.forEach(function (a) {
+    a.addEventListener("mouseenter", function () { moveTo(a, a === current); });
+    a.addEventListener("focus", function () { moveTo(a, a === current); });
+  });
+  nav.addEventListener("mouseleave", settle);
+  nav.addEventListener("focusout", function (e) {
+    if (!nav.contains(e.relatedTarget)) settle();
+  });
+  addEventListener("resize", settle);
 })();
