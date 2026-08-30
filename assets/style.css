@@ -22,6 +22,7 @@ body.civ{--accent:#fbbf24}
 body.aegis{--accent:#60a5fa}
 body.sus{--accent:#f87171}
 body.services{--accent:#a855f7}
+body.ffa{--accent:#ff5ec4}
 
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}

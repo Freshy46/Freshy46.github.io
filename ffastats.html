@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FFA Stats — fresh</title>
+<meta name="description" content="A scoreboard of kills, deaths, streaks and K/D for FFA servers. Free download.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="ffa">
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="services.html">Services</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Contact</a>
+  </nav>
+</header>
+
+<main id="main">
+
+<div class="phead">
+  <h1>FFA Stats</h1>
+  <p class="lede">A live scoreboard of how you're actually doing. Kills, deaths, wins, losses, your
+    best streak, your current streak and your K/D — on screen while you play, not buried behind a
+    command.</p>
+</div>
+<p class="stack">
+  <span>Java</span><span>Paper 1.21</span><span>free download</span><span>open source</span>
+</p>
+
+<div class="cta">
+  <h2>Download it</h2>
+  <p>Free, public, and small enough to drop straight into a plugins folder. Works on Paper 1.21.</p>
+  <div class="cta-row">
+    <a class="btn primary" href="https://github.com/Freshy46/Smp-stats-plugin/raw/main/ffastatsplugin.jar">Download the jar</a>
+    <a class="btn" href="https://github.com/Freshy46/Smp-stats-plugin" target="_blank" rel="noopener">Source on GitHub</a>
+  </div>
+</div>
+
+<h2>Commands</h2>
+
+<div class="scroll">
+<table>
+  <tr><th class="mono">Command</th><th>Who</th><th>What it does</th></tr>
+  <tr><td class="mono">/stats</td><td>everyone</td><td>Your kills, deaths, wins, losses, best and current streak, and K/D</td></tr>
+  <tr><td class="mono">/statsedit</td><td>admin</td><td>Opens the editor for changing what the board shows</td></tr>
+</table>
+</div>
+
+<h2>What it tracks</h2>
+
+<p class="first">Seven numbers, each of which can be switched off if you don't want it on the
+board:</p>
+
+<div class="scroll">
+<table>
+  <tr><th>Stat</th><th>Why it's there</th></tr>
+  <tr><td class="mono">Kills</td><td>The headline number, and the one people compare</td></tr>
+  <tr><td class="mono">Deaths</td><td>Meaningless alone, essential next to kills</td></tr>
+  <tr><td class="mono">Wins / Losses</td><td>Outcomes rather than raw fights — a different measure of doing well</td></tr>
+  <tr><td class="mono">Best streak</td><td>A personal record to beat, which is what keeps people playing</td></tr>
+  <tr><td class="mono">Current streak</td><td>The one that creates tension. A long streak makes you play differently</td></tr>
+  <tr><td class="mono">K/D ratio</td><td>The number people actually argue about</td></tr>
+</table>
+</div>
+
+<h2>How it works</h2>
+
+<details>
+<summary>Current streak is the number that changes behaviour</summary>
+<div class="body">
+<p>Kills and deaths are history — they tell you what already happened and nothing about right now.
+A current streak is live. It goes up while you're winning and it's gone the moment you're not, which
+means a player sitting on a good one plays more carefully than they otherwise would.</p>
+
+<p>That's the whole reason both streaks are on the board rather than just a total. Best streak gives
+you something to chase; current streak gives you something to lose. On an FFA server, where there's
+no objective other than fighting, those two numbers are most of what makes a session feel like it
+has stakes.</p>
+</div>
+</details>
+
+<details>
+<summary>Everything on the board is a toggle</summary>
+<div class="body">
+<p>All seven stats are individually switchable in the config, because the right board depends on the
+server. A pure deathmatch server might want kills, streaks and K/D and nothing else. A server with
+rounds cares about wins and losses. Showing everything by default and letting people delete what
+they don't want is easier than making them assemble it.</p>
+
+<p>The board title and its colours are configurable too — it ships with a purple-to-pink gradient,
+and both ends are set in the config rather than hardcoded, so it can be made to match a server's
+existing branding instead of clashing with it.</p>
+
+<p>There's also a seasonal flag, for servers that want to reset the table and start a new
+competition rather than have month-one players permanently at the top.</p>
+</div>
+</details>
+
+<details>
+<summary>Small on purpose</summary>
+<div class="body">
+<p>The whole plugin is a few kilobytes. It does one thing — count some numbers and put them on a
+scoreboard — and it doesn't need a database, a permissions tree or a dependency to do it.</p>
+
+<p>Not everything has to be AegisStaff. A server owner who wants a stats board should be able to
+drop in a jar, restart, and be finished, and anything that made that harder would be working against
+the point of it.</p>
+</div>
+</details>
+
+<!-- Screenshot slot. Drop the file into assets/img/ and uncomment.
+<figure>
+  <img src="assets/img/ffa-stats.png" alt="The FFA stats scoreboard in game">
+  <figcaption>The board in game.</figcaption>
+</figure>
+-->
+
+</main>
+
+<footer>
+  <span><a href="index.html">← everything else</a></span>
+  <span>FFA Stats · Paper 1.21</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>
