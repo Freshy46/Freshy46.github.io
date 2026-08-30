@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CustomPerms — fresh</title>
+<meta name="description" content="Ranks and permissions for Paper 1.21 — a lightweight replacement for LuckPerms.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="perms">
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+
+<header class="top">
+  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="services.html">Services</a>
+    <a href="reviews.html">Reviews</a>
+    <a href="details.html">Contact</a>
+  </nav>
+</header>
+
+<main id="main">
+
+<div class="phead">
+  <h1>CustomPerms</h1>
+  <p class="lede">Ranks and permissions without LuckPerms. Four roles out of the box, a coloured
+    star next to every name, per-player permission grants, and a config you can read in one
+    sitting.</p>
+</div>
+<p class="stack">
+  <span>Java 21</span><span>Paper 1.21</span><span>no dependencies</span><span>replaces LuckPerms</span>
+</p>
+
+<h2>Why it exists</h2>
+
+<p class="first">LuckPerms is excellent and most servers only ever use a tenth of it. Contexts,
+tracks, inheritance graphs, MySQL sync, a web editor — powerful, and all of it sitting on a server
+whose actual requirement is "give staff a blue name and let them run a few commands".</p>
+
+<p>This does that part and stops. Four roles, a permission list per role, per-player grants on top,
+and a name colour. One config file, no database, nothing to install alongside it.</p>
+
+<h2>The roles</h2>
+
+<div class="scroll">
+<table>
+  <tr><th>Role</th><th>Star</th><th class="mono">Colour</th><th>Inherits</th></tr>
+  <tr><td class="mono">Member</td><td><span style="color:#bec7d1">✦</span></td><td class="cd">#bec7d1</td><td>—</td></tr>
+  <tr><td class="mono">Staff</td><td><span style="color:#55d6ff">✦</span></td><td class="cd">#55d6ff</td><td>Member</td></tr>
+  <tr><td class="mono">Dev</td><td><span style="color:#d66bff">✦</span></td><td class="cd">#d66bff</td><td>Staff, Member</td></tr>
+  <tr><td class="mono">Owner</td><td><span style="color:#ffb000">✦</span></td><td class="cd">#ffb000</td><td>Dev, Staff, Member</td></tr>
+</table>
+</div>
+
+<p>Each role carries a label, a star glyph, a hex colour, an order number and its permission list.
+All five are config values, so the shipped four are a starting point rather than a fixed set — add
+a fifth by copying a block.</p>
+
+<h2>Commands</h2>
+
+<div class="scroll">
+<table>
+  <tr><th class="mono">Command</th><th>What it does</th></tr>
+  <tr><td class="mono">/role &lt;player&gt; &lt;role&gt;</td><td>Put a player in a role</td></tr>
+  <tr><td class="mono">/roles</td><td>List the roles that exist, with their stars and colours</td></tr>
+  <tr><td class="mono">/perm &lt;player&gt; &lt;permission&gt; &lt;add|remove&gt;</td><td>Grant or revoke a single permission on top of their role</td></tr>
+  <tr><td class="mono">/roleinfo &lt;player&gt;</td><td>What role someone is in, and their colour</td></tr>
+  <tr><td class="mono">/reloadperms</td><td>Re-read the config and reapply to everyone online</td></tr>
+</table>
+</div>
+
+<h2>How it works</h2>
+
+<details>
+<summary>Inheritance is a list, not a graph</summary>
+<div class="body">
+<p>LuckPerms resolves inheritance at runtime — a group points at its parent, that parent points at
+its own, and the effective set is computed by walking the tree. Powerful, and the reason a
+misconfigured setup can be genuinely hard to debug.</p>
+
+<p>Here each role simply lists every permission it has, including the ones it shares with the roles
+below it. Owner's list contains the dev, staff and member nodes explicitly. It's more typing and it
+duplicates entries — and in exchange, what a role can do is the list next to its name. There is no
+resolution step to reason about and no way to be surprised by an inherited node you forgot about.</p>
+
+<p>That trade only works because the list is short. At forty roles it would be unmanageable, and at
+that size you should be running LuckPerms.</p>
+</div>
+</details>
+
+<details>
+<summary>Permissions are attachments, rebuilt from scratch every time</summary>
+<div class="body">
+<p>Bukkit grants permissions through attachments, and the easy mistake is to add them incrementally
+and lose track — a stale attachment keeps granting a permission long after it should have gone.</p>
+
+<p>So nothing is ever adjusted in place. Every refresh removes every attachment the plugin is
+holding for that player, then rebuilds the whole set from their role plus their personal grants.
+Applying a change and applying it for the first time are the same code path, which means the state
+after a change can't drift from what a fresh login would produce.</p>
+
+<p>Attachments are tracked per player and dropped when they disconnect, so a long-running server
+doesn't accumulate references to people who left hours ago.</p>
+</div>
+</details>
+
+<details>
+<summary>The star is the point</summary>
+<div class="body">
+<p>A permission plugin nobody can see is a permission plugin nobody values. The visible half is a
+coloured star and role label in front of the player's name, applied to both the tab list and their
+display name, in the role's own hex colour.</p>
+
+<p>It's the same reasoning as ranks on a store page: people pay for, and care about, the part that
+other players can see. The permission nodes are what the plugin does; the star is what it's
+<em>for</em>.</p>
+
+<p>One caveat worth stating plainly: this sets the player's display name, so a chat plugin that
+builds its own format from scratch will ignore it. On a server already running a chat formatter,
+the star shows in tab and the chat format stays that plugin's job.</p>
+</div>
+</details>
+
+<details>
+<summary>Storage is a flat file, on purpose</summary>
+<div class="body">
+<p>Role assignments and per-player permissions live in a <code>data.yml</code> next to the config,
+written on every change. No database, no connection pool, no driver to install.</p>
+
+<p>For a single server with a normal player count that's the right answer — it's readable, it's
+editable by hand in an emergency, and it backs up by being copied. The moment you need several
+servers sharing one permission set, this is the wrong tool and LuckPerms is the right one.</p>
+</div>
+</details>
+
+<h2>What it deliberately doesn't do</h2>
+
+<p class="first">Worth being straight about, because picking this over LuckPerms should be an
+informed choice:</p>
+
+<ul>
+  <li><strong>Offline players.</strong> Commands target players who are online. Setting someone's role while they're away isn't supported.</li>
+  <li><strong>Multi-server sync.</strong> One server, one file.</li>
+  <li><strong>Contexts and tracks.</strong> No per-world permissions, no promotion ladders.</li>
+  <li><strong>Temporary permissions.</strong> Nothing expires on its own.</li>
+</ul>
+
+<p>Each of those is a feature LuckPerms has and this doesn't. If you need one, use LuckPerms — it's
+free and it's better at being LuckPerms. This is for the servers that were never going to use any of
+them.</p>
+
+</main>
+
+<footer>
+  <span><a href="index.html">← everything else</a></span>
+  <span>CustomPerms · Paper 1.21</span>
+</footer>
+
+</div>
+<script src="assets/main.js"></script>
+</body>
+</html>
