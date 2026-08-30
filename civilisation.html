@@ -59,6 +59,40 @@ are the scoreboard.</p>
   <figcaption>Borders on the ground.</figcaption>
 </figure>
 
+<!-- DRAFT COMMAND SET - check these against the plugin and correct any that are wrong. -->
+<h2>Commands</h2>
+
+<p class="first">One root command with subcommands, so everything a civilisation does lives under
+<code>/civ</code> and there's one thing to remember rather than a dozen top-level commands
+competing with every other plugin on the server.</p>
+
+<div class="scroll">
+<table>
+  <tr><th class="mono">Command</th><th>Who</th><th>What it does</th></tr>
+  <tr><td class="mono">/civ create &lt;name&gt;</td><td>everyone</td><td>Found a civilisation where you're standing</td></tr>
+  <tr><td class="mono">/civ claim</td><td>member</td><td>Claim the chunk you're standing in</td></tr>
+  <tr><td class="mono">/civ unclaim</td><td>leader</td><td>Give a chunk back</td></tr>
+  <tr><td class="mono">/civ map</td><td>everyone</td><td>Who owns the land around you</td></tr>
+  <tr><td class="mono">/civ info [civ]</td><td>everyone</td><td>Members, territory, treasury and standing</td></tr>
+  <tr><td class="mono">/civ list</td><td>everyone</td><td>Every civilisation on the server</td></tr>
+  <tr><td class="mono">/civ invite &lt;player&gt;</td><td>leader</td><td>Invite someone to join</td></tr>
+  <tr><td class="mono">/civ join &lt;civ&gt;</td><td>everyone</td><td>Accept an invite</td></tr>
+  <tr><td class="mono">/civ leave</td><td>member</td><td>Leave your civilisation</td></tr>
+  <tr><td class="mono">/civ kick &lt;player&gt;</td><td>leader</td><td>Remove a member</td></tr>
+  <tr><td class="mono">/civ deposit &lt;amount&gt;</td><td>member</td><td>Pay into the treasury</td></tr>
+  <tr><td class="mono">/civ withdraw &lt;amount&gt;</td><td>leader</td><td>Take from the treasury</td></tr>
+  <tr><td class="mono">/civ tax &lt;rate&gt;</td><td>leader</td><td>Set what members are charged</td></tr>
+  <tr><td class="mono">/civ ally &lt;civ&gt;</td><td>leader</td><td>Offer or accept an alliance</td></tr>
+  <tr><td class="mono">/civ unally &lt;civ&gt;</td><td>leader</td><td>Break an alliance</td></tr>
+  <tr><td class="mono">/civ war declare &lt;civ&gt;</td><td>leader</td><td>Declare war. Their claims stop protecting them from you</td></tr>
+  <tr><td class="mono">/civ war end</td><td>leader</td><td>Sue for peace</td></tr>
+</table>
+</div>
+
+<p>The permission column is a rank inside the civilisation rather than a server permission — leaders
+can spend the treasury and move borders, members can claim and contribute. The split matters because
+the treasury is the thing worth arguing over.</p>
+
 <h2>How it works</h2>
 
 <details>
@@ -106,9 +140,6 @@ decision that costs their citizens something, and citizens can leave. That singl
 to generate server drama than every other feature combined, which is precisely why it's in there.</p>
 </div>
 </details>
-
-<!-- ADD YOUR SPECIFICS HERE — commands, permissions, claim sizes, tax intervals, war rules,
-     ranks inside a civilisation. Match the table style used on the KyronCrates page. -->
 
 </main>
 

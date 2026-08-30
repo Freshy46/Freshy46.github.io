@@ -135,6 +135,29 @@ through lava like water; at tier 3 standing in it gives your hits a 1.10x boost.
 <strong>Infused:</strong> armour regenerates you while you stand in lava. A tier 3 sword carries Fire
 Aspect II for as long as it stays infused.</p>
 
+<h2>Try the kit</h2>
+
+<p class="first">Pick an element and a tier. This is the real catalog data the plugin ships — the
+same strings <code>/cores info</code> prints in chat. Click any cooldown to watch it run at its
+actual length.</p>
+
+<div id="explorer" class="explorer">
+  <div class="ex-bar">
+    <div class="ex-group" role="group" aria-label="Aspect">
+      <button type="button" class="ex-pick" data-aspect="strength" aria-pressed="true">Strength</button>
+      <button type="button" class="ex-pick" data-aspect="mirror" aria-pressed="false">Mirror</button>
+      <button type="button" class="ex-pick" data-aspect="light" aria-pressed="false">Light</button>
+      <button type="button" class="ex-pick" data-aspect="fire" aria-pressed="false">Fire</button>
+    </div>
+    <div class="ex-group" role="group" aria-label="Tier">
+      <button type="button" class="ex-pick" data-tier="1" aria-pressed="false">Tier 1</button>
+      <button type="button" class="ex-pick" data-tier="2" aria-pressed="false">Tier 2</button>
+      <button type="button" class="ex-pick" data-tier="3" aria-pressed="true">Tier 3</button>
+    </div>
+  </div>
+  <div class="ex-out"></div>
+</div>
+
 <h2>How it works</h2>
 
 <details>
@@ -316,6 +339,12 @@ and texture per aspect per tier, driven off the custom model data above, and a b
 draw ability icons inline in chat and on the action-bar HUD — so a cooldown readout shows the actual
 ability glyph instead of a letter.</p>
 
+<figure>
+  <img src="assets/img/crysgear-items.png" alt="The Crysgear items menu in game: an empty core on the top row and a row of coloured aspect gems below it, each a custom model.">
+  <figcaption>The <code>/cores items</code> menu. Every one of these is a custom model from the
+    pack — the empty core and the aspect gems — not a renamed vanilla item.</figcaption>
+</figure>
+
 <p>The build script compiles the plugin and zips the pack side by side, so a release is always a
 matched pair. A jar that ships without its pack shows everyone a stick.</p>
 
@@ -342,5 +371,6 @@ matched pair. A jar that ships without its pack shows everyone a stick.</p>
 
 </div>
 <script src="assets/main.js"></script>
+<script src="assets/aspects.js"></script>
 </body>
 </html>

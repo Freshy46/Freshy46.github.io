@@ -72,6 +72,34 @@ server, where a key in someone's inventory is a reason to fight them.</p>
 </div>
 <p class="src">command/CrateCommand.java · aliases /crate, /kcrates · permissions kyroncrates.use (default true) and kyroncrates.admin (op)</p>
 
+<h2>Try the odds</h2>
+
+<p class="first">The same weighted draw the plugin runs. Weights are relative, not percentages —
+nothing has to add up to 100. Change them and watch the real chances move. Shift-click a button for
+±10, exactly like the in-game editor.</p>
+
+<div id="sim" class="sim">
+  <div class="scroll">
+  <table>
+    <tr><th>Reward</th><th>Weight</th><th>Chance</th><th>Rolled</th><th></th></tr>
+    <tbody class="sim-body"></tbody>
+  </table>
+  </div>
+  <p class="sim-meta">Total weight <strong class="sim-total">0</strong> · rolls
+    <strong class="sim-count">0</strong></p>
+  <div class="sim-row">
+    <button type="button" class="btn primary" data-sim="1">Spin once</button>
+    <button type="button" class="btn" data-sim="100">Spin 100</button>
+    <button type="button" class="btn" data-sim="10000">Spin 10,000</button>
+    <button type="button" class="btn" data-sim="reset">Reset</button>
+  </div>
+  <p class="sim-last">Spin it.</p>
+</div>
+
+<p>Spin ten thousand times and the rolled column converges on the chance column. That's the whole
+argument for weights over percentages: you can add a reward without rebalancing everything else,
+and the odds stay honest on their own.</p>
+
 <h2>How it works</h2>
 
 <details>
@@ -218,5 +246,6 @@ so there's nothing to set up first. Rebuild after code changes with <code>bash b
 
 </div>
 <script src="assets/main.js"></script>
+<script src="assets/crates.js"></script>
 </body>
 </html>
