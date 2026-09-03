@@ -525,3 +525,7 @@ summary:focus-visible{outline-offset:-2px}
 .fbtn[aria-pressed="true"]{color:var(--on-accent);background:var(--text);border-color:var(--text)}
 .card.hidden{display:none}
 .filter-none{color:var(--dim);margin:24px 0 0}
+
+/* Once the filter is in use it owns card visibility. The scroll reveal caches
+   layout positions and filtering invalidates them, so it must not get a vote. */
+.cards.filtering .card:not(.hidden){opacity:1;transform:none}

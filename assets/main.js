@@ -298,6 +298,9 @@ document.querySelectorAll("[data-copy]").forEach(function (btn) {
       b.setAttribute("aria-pressed", String(b === btn));
     });
 
+    // From the first click on, the filter decides what is visible.
+    grid.classList.add("filtering");
+
     var shown = 0;
     cards.forEach(function (c) {
       var tags = (c.dataset.tags || "").split(" ");
