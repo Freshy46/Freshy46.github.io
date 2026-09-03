@@ -121,6 +121,94 @@ built anything like before, which had a working demo four hours later.</p>
   <li><strong>Straight answers.</strong> If something will take longer than I said, you hear it from me first.</li>
 </ul>
 
+<h2>How long it takes</h2>
+
+<p class="first">Faster than you'd expect, and I'd rather tell you honestly than pad it. The combat
+system in <a href="reviews.html">that review</a> had a working demo four hours after being asked
+for — the client's words, not mine.</p>
+
+<div class="scroll">
+<table>
+  <tr><th>Size</th><th>First thing you can run</th><th>Finished</th></tr>
+  <tr><td class="mono">A script</td><td>Same day</td><td>Same day</td></tr>
+  <tr><td class="mono">A single-purpose plugin</td><td>Within a day or two</td><td>A few days, depending on how much you want changed</td></tr>
+  <tr><td class="mono">A system</td><td>A few days</td><td>Weeks, and worth it</td></tr>
+</table>
+</div>
+
+<p><strong>You always get something runnable early.</strong> Not a progress update — an actual jar
+you can drop on a test server and click around in. If what I've built is heading the wrong way,
+that's the point at which it's cheap to find out.</p>
+
+<p>The variable is never the building, it's the iteration. A fixed spec ships quickly. "Build it
+and we'll see how it feels" takes as long as it takes to feel right, which is usually the correct
+choice for anything players will touch every day.</p>
+
+<h2>Questions I get asked</h2>
+
+<details>
+<summary>Do I get the source code?</summary>
+<div class="body">
+<p>Yes, on request. You paid for it. Some clients only ever want the jar and the config, which is
+fine, but the source is yours if you want it and I won't hold it back as leverage.</p>
+</div>
+</details>
+
+<details>
+<summary>What if it breaks after you've delivered it?</summary>
+<div class="body">
+<p>If it's a bug in what I built, I fix it. That isn't a support contract with a time limit on it —
+it's just that shipping something broken and walking away isn't delivering.</p>
+<p>New features, or making it work on a version that came out later, are new work. The line is
+simple: if it never did what we agreed, that's mine. If you want it to do something else, that's a
+new job.</p>
+</div>
+</details>
+
+<details>
+<summary>How many revisions do I get?</summary>
+<div class="body">
+<p>There's no counter. Iteration is step four of how I work and it's the part that decides whether
+the thing is good, so I'm not going to charge you per opinion.</p>
+<p>What does change the price is scope. Rebalancing an ability ten times is iteration. Deciding
+halfway through that it also needs a GUI and a database is a different plugin, and I'll say so
+before doing it rather than after.</p>
+</div>
+</details>
+
+<details>
+<summary>Can you work with a plugin I already have?</summary>
+<div class="body">
+<p>Usually. Building on top of another plugin's API is normal — the Skript tooling on this site
+drives KyronCrates through its own commands rather than reimplementing it, which is exactly this.</p>
+<p>What I can't promise is modifying a paid plugin I don't have the source to. Tell me what you're
+running and I'll tell you honestly whether it's possible.</p>
+</div>
+</details>
+
+<details>
+<summary>What do you need from me to start?</summary>
+<div class="body">
+<p>Your server software and version, roughly how many players it needs to hold, and a description
+of what the feature should feel like to the person using it. Not a spec — I'd rather hear "crates
+should feel like opening something, not clicking a chest" than a list of methods.</p>
+<p>If you have a competing plugin you like parts of, say which parts. That's usually the fastest way
+to understand what you actually want.</p>
+</div>
+</details>
+
+<details>
+<summary>Will it slow my server down?</summary>
+<div class="body">
+<p>It shouldn't, and that's a design constraint rather than an afterthought. Things that run on
+every block break or every tick get treated differently from things that run when someone types a
+command — <a href="freshsus.html">Fresh's Sus</a> and <a href="crysgear.html">Crysgear</a> both
+explain where that mattered and what it cost.</p>
+<p>If you're already running badly before I start, I'll tell you that too. A new plugin isn't going
+to fix an overloaded server.</p>
+</div>
+</details>
+
 <h2>What it costs</h2>
 
 <p class="first">I quote per job rather than publishing a rate card, because a rate card is wrong

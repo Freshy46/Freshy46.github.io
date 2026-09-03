@@ -233,3 +233,70 @@ document.querySelectorAll("[data-copy]").forEach(function (btn) {
   });
   addEventListener("resize", settle);
 })();
+
+// Theme toggle. Defaults to whatever the OS prefers and only stores a choice
+// once the reader actually makes one, so a system switch keeps working for
+// anyone who never touches the button.
+(function () {
+  var nav = document.querySelector(".top nav");
+  if (!nav) return;
+
+  var btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "themer";
+  btn.setAttribute("aria-label", "Switch between light and dark");
+  btn.innerHTML =
+    '<svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-13a1 1 0 0 1-1-1V1a1 1 0 0 1 2 0v2a1 1 0 0 1-1 1zm0 16a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1zM4 12a1 1 0 0 1-1 1H1a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1zm19 0a1 1 0 0 1-1 1h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1zM5.6 5.6a1 1 0 0 1 0-1.4 1 1 0 0 1 1.4 0l1.4 1.4a1 1 0 1 1-1.4 1.4L5.6 5.6zm11 11a1 1 0 0 1 1.4 0l1.4 1.4a1 1 0 0 1-1.4 1.4l-1.4-1.4a1 1 0 0 1 0-1.4zm1.4-11L16.6 7a1 1 0 0 1-1.4-1.4l1.4-1.4a1 1 0 0 1 1.4 1.4zM7 16.6a1 1 0 0 1 0 1.4l-1.4 1.4a1 1 0 0 1-1.4-1.4L5.6 16.6a1 1 0 0 1 1.4 0z"/></svg>' +
+    '<svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 13.2A9 9 0 1 1 10.8 3a7 7 0 0 0 10.2 10.2z"/></svg>';
+  nav.appendChild(btn);
+
+  var stored = null;
+  try { stored = localStorage.getItem("theme"); } catch (e) {}
+  if (stored) document.documentElement.setAttribute("data-theme", stored);
+
+  function current() {
+    var set = document.documentElement.getAttribute("data-theme");
+    if (set) return set;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches
+      ? "light" : "dark";
+  }
+
+  btn.addEventListener("click", function () {
+    var next = current() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+  });
+})();
+
+// Tag filter on the work index. Cards carry their tags in data-tags.
+(function () {
+  var bar = document.querySelector(".filter");
+  var grid = document.querySelector(".cards");
+  if (!bar || !grid) return;
+
+  var cards = [].slice.call(grid.querySelectorAll(".card"));
+  var empty = document.createElement("p");
+  empty.className = "filter-none";
+  empty.hidden = true;
+  empty.textContent = "Nothing with that tag.";
+  grid.parentNode.insertBefore(empty, grid.nextSibling);
+
+  bar.addEventListener("click", function (e) {
+    var btn = e.target.closest(".fbtn");
+    if (!btn) return;
+    var tag = btn.dataset.tag;
+
+    bar.querySelectorAll(".fbtn").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b === btn));
+    });
+
+    var shown = 0;
+    cards.forEach(function (c) {
+      var tags = (c.dataset.tags || "").split(" ");
+      var on = tag === "all" || tags.indexOf(tag) !== -1;
+      c.classList.toggle("hidden", !on);
+      if (on) shown++;
+    });
+    empty.hidden = shown > 0;
+  });
+})();

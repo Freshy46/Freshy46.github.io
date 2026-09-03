@@ -48,9 +48,18 @@ together, and the storefront that pays for it. Everything below is mine, start t
 
 <p style="margin-top:26px"><a href="details.html">Discord, socials and how to reach me →</a></p>
 
+<div class="filter" role="group" aria-label="Filter projects by type">
+  <span class="lbl">Filter</span>
+  <button type="button" class="fbtn" data-tag="all" aria-pressed="true">Everything</button>
+  <button type="button" class="fbtn" data-tag="plugin" aria-pressed="false">Plugins</button>
+  <button type="button" class="fbtn" data-tag="skript" aria-pressed="false">Skript</button>
+  <button type="button" class="fbtn" data-tag="ai" aria-pressed="false">AI</button>
+  <button type="button" class="fbtn" data-tag="web" aria-pressed="false">Front-end</button>
+</div>
+
 <div class="cards">
 
-  <a class="card" href="jarvis.html" style="--c:#22d3ee">
+  <a class="card" href="jarvis.html" data-tags="ai" style="--c:#22d3ee">
     <div class="rule"></div>
     <h2>JARVIS</h2>
     <p class="hook">My own AI assistant. Voice in, voice out, seventy-five tools behind it, and a
@@ -64,7 +73,7 @@ together, and the storefront that pays for it. Everything below is mine, start t
     <p class="stack"><span>Flash-Lite</span><span>75 tools</span><span>9 modes</span></p>
   </a>
 
-  <a class="card" href="crysgear.html" style="--c:#ffa726">
+  <a class="card" href="crysgear.html" data-tags="plugin" style="--c:#ffa726">
     <div class="rule"></div>
     <h2>Crysgear</h2>
     <p class="hook">Cores and Aspects — a full combat-ability system. Four elements, three tiers,
@@ -78,7 +87,7 @@ together, and the storefront that pays for it. Everything below is mine, start t
     <p class="stack"><span>Java 21</span><span>Paper 1.21</span><span>38 classes</span></p>
   </a>
 
-  <a class="card" href="kyroncrates.html" style="--c:#8b5cf6">
+  <a class="card" href="kyroncrates.html" data-tags="plugin" style="--c:#8b5cf6">
     <div class="rule"></div>
     <h2>KyronCrates</h2>
     <p class="hook">Physical crates and keys for an FFA server. Weighted loot, a roulette spin, and
@@ -92,7 +101,7 @@ together, and the storefront that pays for it. Everything below is mine, start t
     <p class="stack"><span>Java 21</span><span>Paper 1.21</span><span>17 classes</span></p>
   </a>
 
-  <a class="card" href="aegisstaff.html" style="--c:#60a5fa">
+  <a class="card" href="aegisstaff.html" data-tags="plugin" style="--c:#60a5fa">
     <div class="rule"></div>
     <h2>AegisStaff</h2>
     <p class="hook">The whole staff side of a server. Punishments that escalate on their own, staff
@@ -106,7 +115,7 @@ together, and the storefront that pays for it. Everything below is mine, start t
     <p class="stack"><span>Java 21</span><span>Paper 1.21</span><span>124 classes</span></p>
   </a>
 
-  <a class="card" href="freshsus.html" style="--c:#f87171">
+  <a class="card" href="freshsus.html" data-tags="plugin" style="--c:#f87171">
     <div class="rule"></div>
     <h2>Fresh's Sus</h2>
     <p class="hook">Catches players tunnelling down to find bases, and hides those bases from ESP
@@ -119,7 +128,7 @@ together, and the storefront that pays for it. Everything below is mine, start t
     <p class="stack"><span>Java 21</span><span>Paper 1.21</span></p>
   </a>
 
-  <a class="card" href="civilisation.html" style="--c:#fbbf24">
+  <a class="card" href="civilisation.html" data-tags="plugin" style="--c:#fbbf24">
     <div class="rule"></div>
     <h2>Civilisation</h2>
     <p class="hook">Towns, borders, treasuries and war. Players found nations, tax their citizens,
@@ -133,7 +142,7 @@ together, and the storefront that pays for it. Everything below is mine, start t
     <p class="stack"><span>Java</span><span>Paper</span><span>server-wide</span></p>
   </a>
 
-  <a class="card" href="blockmorph.html" style="--c:#f472b6">
+  <a class="card" href="blockmorph.html" data-tags="plugin" style="--c:#f472b6">
     <div class="rule"></div>
     <h2>Block Morph</h2>
     <p class="hook">Prop hunt, and a free-roam disguise. Become a solid block, lock yourself in
@@ -146,7 +155,7 @@ together, and the storefront that pays for it. Everything below is mine, start t
     <p class="stack"><span>Java</span><span>Paper</span></p>
   </a>
 
-  <a class="card" href="morph.html" style="--c:#34d399">
+  <a class="card" href="morph.html" data-tags="plugin" style="--c:#34d399">
     <div class="rule"></div>
     <h2>Morph</h2>
     <p class="hook">Turn into a mob. Everyone else sees a zombie walking around doing exactly what
@@ -158,7 +167,7 @@ together, and the storefront that pays for it. Everything below is mine, start t
     <p class="stack"><span>Java</span><span>Paper</span></p>
   </a>
 
-  <a class="card" href="customperms.html" style="--c:#55d6ff">
+  <a class="card" href="customperms.html" data-tags="plugin" style="--c:#55d6ff">
     <div class="rule"></div>
     <h2>CustomPerms</h2>
     <p class="hook">Ranks and permissions without LuckPerms. Four roles, a coloured star on every
@@ -171,7 +180,7 @@ together, and the storefront that pays for it. Everything below is mine, start t
     <p class="stack"><span>Java 21</span><span>Paper 1.21</span><span>flat file</span></p>
   </a>
 
-  <a class="card" href="ffastats.html" style="--c:#ff5ec4">
+  <a class="card" href="ffastats.html" data-tags="plugin" style="--c:#ff5ec4">
     <div class="rule"></div>
     <h2>FFA Stats</h2>
     <p class="hook">A live scoreboard of kills, deaths, wins, losses, streaks and K/D. Free, open
@@ -184,7 +193,7 @@ together, and the storefront that pays for it. Everything below is mine, start t
     <p class="stack"><span>Java</span><span>Paper 1.21</span><span>no dependencies</span></p>
   </a>
 
-  <a class="card" href="skripts.html" style="--c:#4ade80">
+  <a class="card" href="skripts.html" data-tags="skript" style="--c:#4ade80">
     <div class="rule"></div>
     <h2>Skript tooling</h2>
     <p class="hook">The small stuff a live server actually runs on — key handouts, staff chat tools,
@@ -197,7 +206,7 @@ together, and the storefront that pays for it. Everything below is mine, start t
     <p class="stack"><span>Skript</span><span>3 scripts</span></p>
   </a>
 
-  <a class="card" href="kyronsmp.html" style="--c:#3b82f6">
+  <a class="card" href="kyronsmp.html" data-tags="web" style="--c:#3b82f6">
     <div class="rule"></div>
     <h2>Kyron SMP store</h2>
     <p class="hook">Nine ranks, Stripe checkout, live player count. Built five times over from one
