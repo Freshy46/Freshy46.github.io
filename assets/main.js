@@ -138,6 +138,14 @@ document.querySelectorAll("[data-copy]").forEach(function (btn) {
   function apply() {
     var top = window.pageYOffset;
     var h = window.innerHeight;
+
+    // A zero-height viewport - a hidden tab, some embedded views - would make
+    // every test fail and leave the page blank. Show everything instead.
+    if (!h) {
+      for (var k = 0; k < spots.length; k++) spots[k].el.classList.add("in");
+      return;
+    }
+
     var bottom = top + h;
 
     var showTop = top + h * 0.05;
@@ -295,8 +303,16 @@ document.querySelectorAll("[data-copy]").forEach(function (btn) {
       var tags = (c.dataset.tags || "").split(" ");
       var on = tag === "all" || tags.indexOf(tag) !== -1;
       c.classList.toggle("hidden", !on);
-      if (on) shown++;
+      // A card the filter is showing must be visible immediately. Don't leave
+      // that to the scroll effect - it caches layout positions, and filtering
+      // has just moved everything.
+      if (on) { c.classList.add("in"); shown++; }
     });
     empty.hidden = shown > 0;
+
+    // Hiding cards moves everything below them, and the reveal effect caches
+    // layout positions. Without this the surviving cards keep their old
+    // positions, never qualify as on-screen, and stay invisible.
+    window.dispatchEvent(new Event("resize"));
   });
 })();
