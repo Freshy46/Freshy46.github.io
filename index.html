@@ -37,10 +37,6 @@
   .nav ul a:hover { border-color: rgba(255,138,61,.7); background: rgba(255,138,61,.1); transform: translateY(-1px); }
   .nav ul a.hot { border-color: rgba(255,138,61,.55); background: rgba(255,138,61,.14); }
   .menu { display: none; background: rgba(255,255,255,.04); border: 1px solid var(--bd-2); color: var(--text); font: 700 14.5px/1 "Archivo", sans-serif; padding: 11px 16px; border-radius: 12px; cursor: pointer; }
-  .announce { margin-top: 90px; text-align: center; background: rgba(255,122,47,.14); border-block: 1px solid var(--bd); padding: 11px 52px; font-size: 15px; font-weight: 600; position: relative; }
-  .announce a { text-underline-offset: 3px; font-weight: 700; margin-left: 8px; }
-  .announce button { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,.08); border: 1px solid var(--bd); color: var(--text); width: 28px; height: 28px; border-radius: 8px; cursor: pointer; font-size: 15px; }
-  .announce[hidden] { display: none; }
 
   /* shared */
   section { padding-top: 120px; }
@@ -57,7 +53,7 @@
   .rv.in { opacity: 1; transform: none; }
 
   /* hero */
-  .hero { padding-top: 60px; }
+  .hero { padding-top: 140px; }
   .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(32px, 5vw, 80px); align-items: center; }
   .tag { display: inline-block; font: 500 12.5px var(--mono); letter-spacing: .05em; color: #f0d5c4; border: 1px solid rgba(255,138,61,.5); background: rgba(255,138,61,.08); border-radius: 999px; padding: 9px 16px; }
   .name { font-stretch: 125%; font-weight: 800; font-size: clamp(64px, 10.5vw, 160px); line-height: .88; letter-spacing: -.045em; margin: 28px 0 20px; }
@@ -242,8 +238,8 @@
     .nav[data-open="true"] ul { display: flex; } .nav ul a { padding: 14px 16px; font-size: 16px; } .menu { display: block; }
   }
   @media (max-width: 640px) {
-    body { font-size: 16px; } section { padding-top: 90px; } .announce { margin-top: 84px; padding: 11px 46px 11px 16px; font-size: 14px; text-align: left; }
-    .hero { padding-top: 40px; } .name { font-size: 21vw; } .facts div { grid-template-columns: 92px 1fr; }
+    body { font-size: 16px; } section { padding-top: 90px; }
+    .hero { padding-top: 112px; } .name { font-size: 21vw; } .facts div { grid-template-columns: 92px 1fr; }
     .sk-grid, .svc-grid, .work { grid-template-columns: 1fr; } .sk p { min-height: 0; } .count { gap: 12px; } .count .c { padding: 20px 18px; }
     .proj.open .thumb { height: 200px; } .pdetail { padding: 4px 18px 26px; } .pb .lede { font-size: 18px; } .pb table { min-width: 420px; }
     .tl { padding-left: 46px; } .tl::before, .tl .fill { left: 13px; } .tl-i { padding: 18px 18px; } .tl-i::before { left: -41px; width: 15px; height: 15px; }
@@ -265,10 +261,9 @@
     <li><a href="#reviews">Reviews</a></li><li><a href="#process">Process</a></li><li><a href="#faq">FAQ</a></li><li><a class="hot" href="#contact">Contact</a></li>
   </ul>
 </header>
-<div class="announce" id="announce"><span>FFA Stats is free and open source.</span><a href="https://github.com/Freshy46/Smp-stats-plugin">Get it on GitHub</a><button type="button" aria-label="Dismiss" id="annX">&times;</button></div>
 
 <main id="top">
-  <section class="hero wrap" style="padding-top:60px">
+  <section class="hero wrap">
     <div class="hero-grid">
       <div>
         <span class="tag">// MINECRAFT DEVELOPER · JAVA · PAPER · SKRIPT · FRONT-END</span>
@@ -605,7 +600,6 @@
   const navEl = document.getElementById("nav"), menuBtn = document.getElementById("menuBtn");
   const setMenu = o => { navEl.dataset.open = o; menuBtn.setAttribute("aria-expanded", o); menuBtn.textContent = o ? "Close" : "Menu"; };
   menuBtn.addEventListener("click", () => setMenu(navEl.dataset.open !== "true")); document.querySelectorAll("#menuList a").forEach(a => a.addEventListener("click", () => setMenu(false)));
-  document.getElementById("annX").addEventListener("click", () => { document.getElementById("announce").hidden = true; });
   document.querySelectorAll(".copy").forEach(b => b.addEventListener("click", () => {
     const h = document.getElementById("hint"), lab = b.querySelector(".hc") || b, orig = lab.textContent, base = h.textContent;
     const ok = () => { lab.textContent = "Copied"; h.textContent = "Copied. Add me and say what you're after."; setTimeout(() => { lab.textContent = orig; h.textContent = base; }, 2400); };
