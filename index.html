@@ -11,41 +11,52 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #07060b; --card: rgba(22,18,31,.78); --card-2: rgba(32,26,44,.86); --bd: rgba(255,255,255,.1); --bd-2: rgba(255,255,255,.2);
-    --text: #f4efe9; --mute: #aaa2b4; --a1: #ff7a2f; --a2: #ff3d7f; --a3: #ffd166;
-    --grad: #ff7a2f; --mono: "JetBrains Mono", ui-monospace, Consolas, monospace; --r: 18px;
+    --bg: #07060b; --card: rgba(22,18,31,.8); --card-2: rgba(30,25,42,.94); --bd: rgba(255,255,255,.1); --bd-2: rgba(255,255,255,.2);
+    --text: #f4efe9; --mute: #aaa2b4; --a1: #ff7a2f; --neon: #ff9a55; --hot: #ffe3cf; --mono: "JetBrains Mono", ui-monospace, Consolas, monospace; --r: 18px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; scroll-padding-top: 100px; background: var(--bg); overflow-x: clip; }
+  html { scroll-padding-top: 90px; background: var(--bg); overflow-x: clip; }
   body { background: transparent; color: var(--text); font-family: "Archivo", system-ui, sans-serif; font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
   a { color: inherit; } img, svg, canvas { display: block; max-width: 100%; }
-  ::selection { background: var(--a2); color: #fff; }
+  ::selection { background: var(--a1); color: #1a0a06; }
   :focus-visible { outline: 2px solid var(--a1); outline-offset: 3px; }
   .wrap { max-width: 1320px; margin: 0 auto; padding: 0 clamp(20px, 4.5vw, 64px); }
 
-  /* space */
-  #neb { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -3; image-rendering: pixelated; opacity: .7; }
+  /* layers */
+  #neb { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -3; image-rendering: pixelated; opacity: .7; transform: scale(1.12); will-change: transform; }
   .veil { position: fixed; inset: 0; z-index: -2; pointer-events: none; background: rgba(7,6,11,.5); }
-  #stars { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+  #bgfx { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+  #wipe { position: fixed; inset: 0; z-index: 96; background: var(--a1); transform: translateY(101%); pointer-events: none; }
+  #wipe.go { animation: wipe .86s cubic-bezier(.7,0,.3,1) forwards; }
+  @keyframes wipe { 0% { transform: translateY(101%); } 45%, 55% { transform: translateY(0); } 100% { transform: translateY(-101%); } }
+
+  /* neon type */
+  .neon { color: transparent; -webkit-text-stroke: 2px var(--neon); }
+
+  .pill { font: 600 15px "Archivo", sans-serif; padding: 13px 24px; border-radius: 999px; border: 1px solid var(--bd-2); background: rgba(255,255,255,.05); color: var(--text); cursor: pointer; transition: border-color .15s, background .15s, transform .15s; }
+  .pill:hover { border-color: var(--a1); background: rgba(255,122,47,.14); transform: translateY(-1px); }
+  .pill.main { background: var(--a1); color: #1a0a06; border-color: transparent; font-weight: 800; }
+  .pill.main:hover { background: #ff9255; }
 
   /* nav */
-  .nav { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 80; width: min(1240px, calc(100% - 28px)); display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 14px; background: var(--card); border: 1px solid var(--bd); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,.45); }
+  .nav { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 80; width: min(1280px, calc(100% - 28px)); display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 14px; background: var(--card); border: 1px solid var(--bd); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,.45); }
   .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-stretch: 125%; font-weight: 800; font-size: 20px; letter-spacing: -.02em; padding-left: 4px; }
-  .logo b { width: 32px; height: 32px; border-radius: 10px; background: var(--grad); color: #1a0a06; display: grid; place-items: center; font-size: 17px; }
+  .logo b { width: 32px; height: 32px; border-radius: 10px; background: var(--a1); color: #1a0a06; display: grid; place-items: center; font-size: 17px; }
   .nav ul { list-style: none; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
-  .nav ul a { display: block; text-decoration: none; font-weight: 600; font-size: 14.5px; padding: 9px 15px; border-radius: 12px; border: 1px solid var(--bd); background: rgba(255,255,255,.03); transition: border-color .15s, background .15s, transform .15s; }
-  .nav ul a:hover { border-color: rgba(255,138,61,.7); background: rgba(255,138,61,.1); transform: translateY(-1px); }
-  .nav ul a.hot { border-color: rgba(255,138,61,.55); background: rgba(255,138,61,.14); }
+  .nav ul a, .nav ul button { display: block; text-decoration: none; font: 600 14.5px "Archivo", sans-serif; color: var(--text); padding: 9px 15px; border-radius: 12px; border: 1px solid var(--bd); background: rgba(255,255,255,.03); cursor: pointer; transition: border-color .15s, background .15s, transform .15s; }
+  .nav ul a:hover, .nav ul button:hover { border-color: rgba(255,122,47,.75); background: rgba(255,122,47,.12); transform: translateY(-1px); }
+  .nav ul a.cur { border-color: rgba(255,122,47,.7); background: rgba(255,122,47,.14); }
+  .nav ul button { font-family: var(--mono); font-size: 13px; }
   .menu { display: none; background: rgba(255,255,255,.04); border: 1px solid var(--bd-2); color: var(--text); font: 700 14.5px/1 "Archivo", sans-serif; padding: 11px 16px; border-radius: 12px; cursor: pointer; }
 
   /* shared */
-  section { padding-top: 120px; }
+  section, section.wrap { padding-top: 130px; }
   .eyebrow { font: 500 13px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--a1); }
   .eyebrow::before { content: "// "; opacity: .7; }
   h2.h { font-stretch: 125%; font-weight: 800; font-size: clamp(32px, 4.8vw, 62px); line-height: 1; letter-spacing: -.03em; margin: 14px 0 16px; }
   .lede { color: var(--mute); max-width: 60ch; font-size: 18.5px; }
   .glass { background: var(--card); border: 1px solid var(--bd); border-radius: var(--r); }
-  .btn { display: inline-block; text-decoration: none; cursor: pointer; border: 0; border-radius: 14px; padding: 15px 26px; font: 700 16px/1 "Archivo", sans-serif; color: #1a0a06; background: var(--grad); box-shadow: 4px 4px 0 #7a2f0d; transition: transform .12s, box-shadow .12s; }
+  .btn { display: inline-block; text-decoration: none; cursor: pointer; border: 0; border-radius: 14px; padding: 15px 26px; font: 700 16px/1 "Archivo", sans-serif; color: #1a0a06; background: var(--a1); box-shadow: 4px 4px 0 #7a2f0d; transition: transform .12s, box-shadow .12s; }
   .btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #7a2f0d; }
   .btn.ghost { background: rgba(255,255,255,.05); color: var(--text); border: 1px solid var(--bd-2); box-shadow: none; }
   .btn.ghost:hover { border-color: var(--a1); box-shadow: none; transform: translateY(-1px); }
@@ -53,89 +64,110 @@
   .rv.in { opacity: 1; transform: none; }
 
   /* hero */
-  .hero { padding-top: 140px; }
-  .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(32px, 5vw, 80px); align-items: center; }
-  .tag { display: inline-block; font: 500 12.5px var(--mono); letter-spacing: .05em; color: #f0d5c4; border: 1px solid rgba(255,138,61,.5); background: rgba(255,138,61,.08); border-radius: 999px; padding: 9px 16px; }
-  .name { font-stretch: 125%; font-weight: 800; font-size: clamp(64px, 10.5vw, 160px); line-height: .88; letter-spacing: -.045em; margin: 28px 0 20px; }
-  .name i { font-style: normal; color: var(--a1); }
+  .hero { position: relative; min-height: 100vh; display: flex; align-items: center; padding-bottom: 70px; overflow: hidden; }
+  .hero-in { width: 100%; }
+  .hi { animation: hi .95s cubic-bezier(.2,.8,.2,1) backwards; animation-delay: calc(var(--d, 0) * 120ms); }
+  @keyframes hi { from { opacity: 0; transform: translateY(40px); } }
+  .tag { display: inline-block; font: 500 12.5px var(--mono); letter-spacing: .05em; color: #f0d5c4; border: 1px solid rgba(255,122,47,.5); background: rgba(255,122,47,.08); border-radius: 999px; padding: 9px 16px; }
+  .name { font-stretch: 125%; font-weight: 800; font-size: clamp(70px, calc((min(100vw, 1320px) - 2 * clamp(20px, 4.5vw, 64px)) / 4.85), 290px); line-height: .82; letter-spacing: -.05em; margin: 22px 0 26px -.04em; text-transform: uppercase; will-change: transform, opacity; transform-origin: 0 60%; }
+  .name i { font-style: normal; color: var(--a1); -webkit-text-stroke: 0; }
+  .hero-row { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(28px, 5vw, 80px); align-items: start; will-change: transform, opacity; }
   .roles { font: 500 clamp(16px, 1.7vw, 21px) var(--mono); color: #eadfd4; min-height: 1.7em; }
   .roles::before { content: "> "; color: var(--a1); } .roles .cur { display: inline-block; width: .55ch; height: 1.1em; background: var(--a1); vertical-align: -.18em; margin-left: 2px; animation: blink 1s steps(1) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
-  .hero h1 { font-size: clamp(22px, 2.4vw, 30px); font-weight: 700; line-height: 1.25; margin-top: 26px; max-width: 24ch; letter-spacing: -.01em; }
-  .hero .about { color: var(--mute); max-width: 56ch; margin-top: 14px; }
-  .cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 30px; }
-  .facts { margin-top: 40px; max-width: 520px; border-top: 1px solid var(--bd); }
-  .facts div { display: grid; grid-template-columns: 110px 1fr; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--bd); font-size: 15.5px; }
+  .hero h1 { font-size: clamp(24px, 2.8vw, 38px); font-weight: 700; line-height: 1.2; margin-top: 20px; max-width: 22ch; letter-spacing: -.015em; }
+  .hero .about { color: var(--mute); max-width: 54ch; margin-top: 14px; }
+  .cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 28px; }
+  .facts { border-top: 1px solid var(--bd); }
+  .facts div { display: grid; grid-template-columns: 110px 1fr; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--bd); font-size: 15.5px; }
   .facts dt { color: var(--mute); font-family: var(--mono); font-size: 13px; padding-top: 2px; } .facts dd { font-weight: 600; }
-  .pcard { padding: 28px; border-color: rgba(255,138,61,.4); box-shadow: 8px 8px 0 rgba(0,0,0,.45); }
-  .pc-top { display: flex; gap: 16px; align-items: center; }
-  .avatar { width: 68px; height: 68px; border-radius: 18px; background: var(--grad); color: #1a0a06; display: grid; place-items: center; font-stretch: 125%; font-weight: 800; font-size: 34px; flex: none; }
-  .pc-top h3 { font-stretch: 125%; font-weight: 800; font-size: 26px; line-height: 1; letter-spacing: -.02em; }
-  .pc-top span { display: block; margin-top: 6px; font: 500 13.5px var(--mono); color: var(--mute); }
-  .np { margin-top: 22px; padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,.04); border: 1px solid var(--bd); font: 500 13.5px var(--mono); display: flex; gap: 12px; align-items: center; }
-  .np .eq { display: flex; gap: 2px; align-items: flex-end; height: 16px; flex: none; } .np .eq i { width: 3px; height: 4px; background: var(--a1); }
-  .playing .np .eq i, .np.playing .eq i { animation: eq .9s ease-in-out infinite; } .np .eq i:nth-child(2) { animation-delay: -.3s; } .np .eq i:nth-child(3) { animation-delay: -.6s; }
-  @keyframes eq { 0%,100% { height: 4px; } 50% { height: 16px; } }
-  .pcard .btn { width: 100%; margin-top: 18px; text-align: center; }
-  .pcard small { display: block; margin-top: 14px; color: var(--mute); font-size: 14px; text-align: center; }
+  .scrollcue { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); font: 500 11.5px var(--mono); letter-spacing: .24em; text-transform: uppercase; color: var(--mute); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .scrollcue::after { content: ""; width: 1px; height: 38px; background: var(--a1); transform-origin: top; animation: cue 1.8s ease-in-out infinite; }
+  @keyframes cue { 0% { transform: scaleY(0); } 55% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
 
   /* marquee */
-  .marq { margin-top: 90px; border-block: 1px solid var(--bd); background: rgba(10,8,16,.6); overflow: hidden; white-space: nowrap; }
-  .marq div { display: inline-flex; animation: mq 46s linear infinite; } .marq:hover div { animation-play-state: paused; }
+  .marq { margin-top: 20px; border-block: 1px solid var(--bd); background: rgba(10,8,16,.6); overflow: hidden; white-space: nowrap; }
+  .marq div { display: inline-flex; animation: mq 46s linear infinite; } .marq:hover div { }
   .marq span { font: 500 15px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #cdbfb2; padding: 16px 0; }
-  .marq span::after { content: "\2726"; color: var(--a1); margin: 0 26px; }
+  .marq span::after { content: ""; display: inline-block; width: 8px; height: 8px; background: var(--a1); margin: 0 26px; vertical-align: 2px; }
   @keyframes mq { to { transform: translateX(-50%); } }
 
   /* about */
   .about-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(32px, 5vw, 80px); align-items: center; }
   .count { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .count .c { padding: 26px 24px; transition: transform .15s, border-color .2s; } .count .c:hover { border-color: rgba(255,138,61,.5); }
+  .count .c { padding: 26px 24px; transition: transform .15s, border-color .2s; } .count .c:hover { border-color: rgba(255,122,47,.5); }
   .count b { display: block; font-stretch: 125%; font-weight: 800; font-size: clamp(40px, 5vw, 66px); line-height: 1; letter-spacing: -.03em; color: var(--a1); }
   .count span { display: block; margin-top: 10px; font: 500 12.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
 
   /* skills */
-  .sk-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 44px; }
-  .sk { padding: 24px; transition: transform .12s ease-out, border-color .2s; transform-style: preserve-3d; will-change: transform; }
-  .sk:hover { border-color: rgba(255,138,61,.55); }
+  .hs { position: relative; padding-top: 0; }
+  .hs-sticky { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; justify-content: center; gap: 38px; overflow: hidden; padding-top: 60px; }
+  .hs-head { padding: 0 clamp(20px, 4.5vw, 64px); width: 100%; max-width: 1320px; margin: 0 auto; }
+  .hs-track { display: flex; gap: 20px; padding: 0 clamp(20px, 4.5vw, 64px); width: max-content; will-change: transform; }
+  .hs-track .sk { width: min(350px, 78vw); flex: none; }
+  html.no-hs .hs { height: auto !important; }
+  html.no-hs .hs-sticky { position: static; height: auto; display: block; overflow: visible; padding-top: 130px; }
+  html.no-hs .hs-track { display: grid; grid-template-columns: repeat(2, 1fr); width: auto; transform: none !important; margin-top: 40px; max-width: 1320px; margin-left: auto; margin-right: auto; }
+  html.no-hs .hs-track .sk { width: auto; }
+  .sk { padding: 24px; transition: transform .12s ease-out, border-color .2s; will-change: transform; }
+  .sk:hover { border-color: rgba(255,122,47,.55); }
   .sk .gl { font: 700 15px var(--mono); color: var(--a1); margin-bottom: 12px; letter-spacing: .02em; }
   .sk h3 { font-stretch: 125%; font-weight: 800; font-size: 21px; letter-spacing: -.02em; margin-bottom: 8px; }
   .sk p { color: var(--mute); font-size: 15px; line-height: 1.55; min-height: 70px; }
   .sk .bar { height: 8px; border-radius: 99px; background: rgba(255,255,255,.08); margin-top: 18px; overflow: hidden; }
-  .sk .bar i { display: block; height: 100%; width: 0; border-radius: 99px; background: var(--grad); transition: width 1.4s cubic-bezier(.2,.7,.2,1); }
+  .sk .bar i { display: block; height: 100%; width: 0; border-radius: 99px; background: var(--a1); transition: width 1.4s cubic-bezier(.2,.7,.2,1); }
   .sk.in .bar i { width: var(--w); }
   .sk .lab { margin-top: 10px; font: 500 12px var(--mono); color: var(--mute); letter-spacing: .04em; }
 
-  /* work */
-  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
-  .filters button { font: 500 13.5px var(--mono); padding: 10px 18px; border-radius: 999px; border: 1px solid var(--bd-2); background: rgba(255,255,255,.04); color: var(--text); cursor: pointer; transition: border-color .15s, background .15s; }
-  .filters button:hover { border-color: var(--a1); }
-  .filters button[aria-pressed="true"] { background: var(--grad); color: #1a0a06; border-color: transparent; font-weight: 700; }
-  .work { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 30px; align-items: start; }
-  .proj { overflow: hidden; transition: border-color .2s, box-shadow .2s, transform .15s; }
+  .sw { transition: none; }
+  .hrv { clip-path: inset(0 0 100% 0); transform: translateY(34px); transition: clip-path .95s cubic-bezier(.2,.8,.2,1), transform .95s cubic-bezier(.2,.8,.2,1); }
+  .hrv.in { clip-path: inset(-10% -2% -10% -2%); transform: none; }
+
+  /* work: scroll-driven 3D gallery */
+  .tun { position: relative; height: calc(var(--n, 12) * 62vh + 100vh); padding-top: 0; }
+  .tun-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; perspective: 1100px; perspective-origin: 50% 42%; }
+  .tun-head { position: absolute; left: clamp(20px, 4.5vw, 64px); top: 112px; z-index: 5; max-width: 480px; pointer-events: none; }
+  .tun-head h2 { margin-top: 10px; }
+  .cam { position: absolute; inset: 0; transform-style: preserve-3d; }
+  .pc { position: absolute; left: 50%; top: 56%; width: min(440px, 80vw); will-change: transform, opacity; }
+  .tun-hud { position: absolute; left: 0; right: 0; bottom: 30px; display: flex; align-items: center; justify-content: center; gap: 18px; z-index: 5; font: 500 14px var(--mono); }
+  .tun-hud #ti { color: var(--a1); font-weight: 700; } .tun-hud #tt { min-width: 150px; }
+  .tbar { width: min(260px, 40vw); height: 3px; background: rgba(255,255,255,.16); } .tbar i { display: block; height: 100%; background: var(--a1); transform-origin: left; transform: scaleX(0); }
+  .filters { display: none; flex-wrap: wrap; gap: 10px; margin-top: 26px; pointer-events: auto; }
+  .filters button { font: 500 13.5px var(--mono); padding: 10px 18px; border-radius: 999px; border: 1px solid var(--bd-2); background: rgba(255,255,255,.04); color: var(--text); cursor: pointer; transition: border-color .15s; }
+  .filters button:hover { border-color: var(--a1); } .filters button[aria-pressed="true"] { background: var(--a1); color: #1a0a06; border-color: transparent; font-weight: 700; }
+  html.no-tun .tun { height: auto; }
+  html.no-tun .tun-sticky { position: static; height: auto; overflow: visible; perspective: none; max-width: 1320px; margin: 0 auto; padding: 130px clamp(20px, 4.5vw, 64px) 0; }
+  html.no-tun .tun-head { position: static; pointer-events: auto; max-width: none; margin-bottom: 8px; }
+  html.no-tun .cam { position: static; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: start; margin-top: 28px; transform-style: flat; }
+  html.no-tun .pc { position: relative; left: auto; top: auto; width: auto; transform: none !important; opacity: 1 !important; pointer-events: auto !important; }
+  html.no-tun .tun-hud { display: none; } html.no-tun .filters { display: flex; }
+  html.no-tun .pc.open { grid-column: 1 / -1; }
+
+  .proj { overflow: hidden; transition: border-color .2s, box-shadow .2s; }
   .proj[hidden] { display: none; }
-  .proj:hover { border-color: rgba(255,138,61,.5); box-shadow: 0 16px 50px rgba(0,0,0,.45); transform: translateY(-3px); }
-  .proj.open { grid-column: 1 / -1; border-color: rgba(255,138,61,.55); transform: none; }
+  .proj:hover { border-color: rgba(255,122,47,.55); box-shadow: 0 16px 50px rgba(0,0,0,.5); }
   .pt { all: unset; box-sizing: border-box; display: block; width: 100%; cursor: pointer; }
   .pt:focus-visible { outline: 2px solid var(--a1); outline-offset: -2px; }
-  .thumb { height: 190px; position: relative; display: grid; place-items: center; overflow: hidden; border-bottom: 1px solid var(--bd);
-    background: #0c0a13; }
+  .thumb { height: 190px; position: relative; display: grid; place-items: center; overflow: hidden; border-bottom: 1px solid var(--bd); background: #0c0a13; }
   .thumb::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.55) 1px, transparent 1.4px); background-size: 38px 38px; opacity: .13; }
-  .thumb svg { width: 88px; height: 88px; position: relative; filter: drop-shadow(3px 3px 0 rgba(0,0,0,.6)); transition: transform .25s steps(4); }
-  .proj:hover .thumb svg { transform: translateY(-6px); }
+  .thumb { align-content: center; gap: 10px; text-align: center; padding: 0 16px; }
+  .thumb .big { position: relative; font-stretch: 125%; font-weight: 800; font-size: clamp(36px, 4.6vw, 58px); line-height: 1; letter-spacing: -.04em; color: var(--a1); }
+  .thumb .sm { position: relative; font: 500 12.5px var(--mono); letter-spacing: .04em; color: var(--mute); }
+  .thumb.has-img .big, .thumb.has-img .sm { display: none; }
   .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .thumb img.pix { object-fit: contain; image-rendering: pixelated; padding: 14px; }
-  .proj.open .thumb { height: 260px; }
   .kd { position: absolute; top: 12px; right: 12px; z-index: 2; font: 500 11.5px var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 5px 11px; border-radius: 999px; background: rgba(7,6,11,.82); border: 1px solid var(--bd-2); }
   .pbody { display: block; padding: 22px 24px 20px; }
   .pbody b { display: block; font-stretch: 125%; font-weight: 800; font-size: 22px; line-height: 1.1; letter-spacing: -.02em; margin-bottom: 8px; }
   .pbody span.d { display: block; color: var(--mute); font-size: 15.5px; line-height: 1.55; }
-  .pbody span.go { display: inline-block; margin-top: 16px; font: 500 13px var(--mono); color: var(--a1); }
-  .pbody span.go::after { content: " +"; } .proj.open .pbody span.go::after { content: " \2013 close"; }
+  .pbody span.go { display: inline-block; margin-top: 16px; font: 500 13px var(--mono); color: var(--a1); } .pbody span.go::after { content: " +"; }
+  html.no-tun .pc.open .pbody span.go::after { content: " \2013 close"; } html.no-tun .pc.open .thumb { height: 260px; }
   .pdetail { display: none; padding: 6px 28px 34px; border-top: 1px solid var(--bd); background: rgba(8,6,13,.5); }
-  .proj.open .pdetail { display: block; }
+  html.no-tun .pc.open .pdetail { display: block; }
 
-  /* project detail text */
-  .pb { max-width: 940px; padding-top: 26px; }
+  /* detail text (shared by card + sheet) */
+  .pb { max-width: 940px; padding-top: 22px; }
   .pb .lede { font-size: 20px; line-height: 1.55; color: var(--text); margin-bottom: 14px; max-width: 58ch; }
   .pb .stk { color: var(--a1); font: 500 13px var(--mono); margin-bottom: 8px; }
   .pb h4 { font-stretch: 125%; font-weight: 800; font-size: 20px; letter-spacing: -.02em; margin: 40px 0 14px; }
@@ -154,19 +186,23 @@
   .pb details { border: 1px solid var(--bd); border-radius: 12px; margin-bottom: 10px; background: rgba(255,255,255,.025); }
   .pb summary { cursor: pointer; list-style: none; padding: 16px 48px 16px 18px; font-weight: 700; font-size: 16.5px; position: relative; }
   .pb summary::-webkit-details-marker { display: none; } .pb summary::after { content: "+"; position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--a1); font: 500 22px var(--mono); }
-  .pb details[open] summary::after { content: "\2013"; }
-  .pb details .body { padding: 0 18px 8px; }
+  .pb details[open] summary::after { content: "\2013"; } .pb details .body { padding: 0 18px 8px; }
+
+  /* sheet (project details in gallery mode) */
+  dialog#sheet { border: 0; padding: 0; background: transparent; max-width: none; max-height: none; width: 100%; height: 100%; color: var(--text); }
+  dialog#sheet::backdrop { background: rgba(4,3,8,.84); }
+  .sheet-in { position: absolute; left: 50%; top: 5vh; bottom: 0; transform: translateX(-50%); width: min(1040px, 96vw); background: var(--card-2); border: 1px solid var(--bd-2); border-bottom: 0; border-radius: 22px 22px 0 0; overflow: auto; padding: 0 clamp(20px, 4vw, 48px) 70px; }
+  .sheet-top { position: sticky; top: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 0 14px; background: var(--card-2); border-bottom: 1px solid var(--bd); }
+  .sheet-top b { font-stretch: 125%; font-weight: 800; font-size: clamp(22px, 3vw, 34px); letter-spacing: -.03em; } .sheet-top small { display: block; font: 500 12px var(--mono); color: var(--a1); letter-spacing: .1em; text-transform: uppercase; }
+  dialog[open] .sheet-in { animation: up .45s cubic-bezier(.2,.8,.2,1); } @keyframes up { from { transform: translate(-50%, 40px); opacity: 0; } }
 
   /* services */
-  .svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 44px; }
-  .svc { padding: 26px; display: flex; flex-direction: column; transition: transform .12s ease-out, border-color .2s; will-change: transform; }
-  .svc:hover { border-color: rgba(255,138,61,.55); }
-  .svc .ic { margin-bottom: 16px; }
-  .svc .ic svg { width: 40px; height: 40px; }
-  .svc h3 { font-stretch: 125%; font-weight: 800; font-size: 22px; letter-spacing: -.02em; margin-bottom: 10px; }
-  .svc p { color: var(--mute); font-size: 15.5px; flex: 1; }
-  .svc .m { margin-top: 16px; font: 500 12px var(--mono); color: #d7c8bb; letter-spacing: .03em; }
-  .svc a { margin-top: 16px; font-weight: 700; color: var(--a1); text-decoration: none; font-size: 15px; } .svc a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .svc-grid { margin-top: 44px; padding-bottom: 30px; }
+  .svc { position: sticky; top: calc(104px + var(--i, 0) * 20px); display: grid; grid-template-columns: 1.05fr 1.6fr; gap: 40px; align-items: center; margin-bottom: 28px; padding: 32px 36px; background: var(--card-2); transform-origin: 50% 0; will-change: transform, opacity; }
+  .svc h3 { font-stretch: 125%; font-weight: 800; font-size: clamp(24px, 2.6vw, 34px); letter-spacing: -.025em; line-height: 1.05; }
+  .svc .m { margin-top: 12px; font: 500 12px var(--mono); color: #d7c8bb; letter-spacing: .03em; }
+  .svc p { color: #cfc6d6; font-size: 16.5px; }
+  .svc a { display: inline-block; margin-top: 14px; font-weight: 700; color: var(--a1); text-decoration: none; font-size: 15px; } .svc a:hover { text-decoration: underline; text-underline-offset: 4px; }
 
   /* review */
   .rev { display: grid; grid-template-columns: 4fr 8fr; gap: clamp(28px, 5vw, 70px); padding: clamp(28px, 4vw, 56px); margin-top: 44px; border-color: rgba(255,122,47,.35); }
@@ -179,113 +215,100 @@
   /* timeline */
   .tl { position: relative; max-width: 900px; margin-top: 50px; padding-left: 62px; }
   .tl::before { content: ""; position: absolute; left: 19px; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: rgba(255,255,255,.1); }
-  .tl .fill { position: absolute; left: 19px; top: 8px; width: 3px; height: 0; border-radius: 3px; background: var(--grad); }
+  .tl .fill { position: absolute; left: 19px; top: 8px; width: 3px; height: 0; border-radius: 3px; background: var(--a1); }
   .tl-i { position: relative; margin-bottom: 22px; padding: 22px 26px; }
-  .tl-i::before { content: ""; position: absolute; left: -52px; top: 28px; width: 17px; height: 17px; border-radius: 50%; background: var(--bg); border: 3px solid rgba(255,255,255,.25); transition: border-color .3s, background .3s, box-shadow .3s; }
+  .tl-i::before { content: ""; position: absolute; left: -52px; top: 28px; width: 17px; height: 17px; border-radius: 50%; background: var(--bg); border: 3px solid rgba(255,255,255,.25); transition: border-color .3s, background .3s; }
   .tl-i.on::before { border-color: var(--a1); background: var(--a1); }
   .tl-i small { font: 500 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--a1); }
   .tl-i h3 { font-stretch: 125%; font-weight: 800; font-size: 24px; letter-spacing: -.02em; margin: 6px 0 8px; } .tl-i p { color: #cfc6d6; max-width: 62ch; }
 
-  /* costs */
+  /* costs / faq / contact */
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 22px; align-items: start; }
   .box { padding: clamp(24px, 3vw, 36px); }
   .box h3 { font-stretch: 125%; font-weight: 800; font-size: 24px; letter-spacing: -.02em; margin-bottom: 16px; }
   .box p { color: #d2c9d8; margin-bottom: 14px; }
   .box ul { list-style: none; display: grid; gap: 12px; } .box li { padding-left: 24px; position: relative; color: #d2c9d8; font-size: 16px; }
-  .box li::before { content: ""; position: absolute; left: 0; top: 9px; width: 10px; height: 10px; border-radius: 3px; background: var(--grad); } .box li b { color: var(--text); }
+  .box li::before { content: ""; position: absolute; left: 0; top: 9px; width: 10px; height: 10px; border-radius: 3px; background: var(--a1); } .box li b { color: var(--text); }
   .box a { color: var(--a1); text-underline-offset: 3px; }
   .box table { width: 100%; border-collapse: collapse; font-size: 15px; margin-bottom: 8px; }
   .box th { text-align: left; font: 500 11.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); padding: 0 12px 10px 0; border-bottom: 1px solid var(--bd-2); }
   .box td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--bd); vertical-align: top; color: #d2c9d8; } .box td:first-child { color: var(--text); font-weight: 700; white-space: nowrap; }
   .note { color: var(--mute); font-size: 15px; margin-top: 12px; }
-
-  /* faq */
   .faq { display: grid; gap: 12px; margin-top: 40px; max-width: 920px; }
-  .faq details { background: var(--card); border: 1px solid var(--bd); border-radius: 16px; transition: border-color .2s; }
-  .faq details[open] { border-color: rgba(255,138,61,.5); }
+  .faq details { background: var(--card); border: 1px solid var(--bd); border-radius: 16px; transition: border-color .2s; } .faq details[open] { border-color: rgba(255,122,47,.5); }
   .faq summary { cursor: pointer; list-style: none; padding: 20px 56px 20px 24px; font-weight: 700; font-size: 18px; position: relative; }
   .faq summary::-webkit-details-marker { display: none; } .faq summary::after { content: "+"; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); color: var(--a1); font: 500 26px var(--mono); }
-  .faq details[open] summary::after { content: "\2013"; }
-  .faq details p { padding: 0 24px 24px; color: #d2c9d8; max-width: 72ch; }
-
-  /* contact */
+  .faq details[open] summary::after { content: "\2013"; } .faq details p { padding: 0 24px 24px; color: #d2c9d8; max-width: 72ch; }
   .ct { display: grid; grid-template-columns: 1.1fr .9fr; gap: 22px; margin-top: 40px; align-items: start; }
   .ct .big { padding: clamp(26px, 3.4vw, 46px); border-color: rgba(255,122,47,.4); }
-  .handle { display: flex; justify-content: space-between; align-items: center; gap: 18px; width: 100%; margin-top: 26px; padding: 22px 26px; border: 0; border-radius: 18px; background: var(--grad); color: #1a0a06; cursor: pointer; text-align: left; font-family: inherit; box-shadow: 6px 6px 0 #7a2f0d; transition: transform .12s, box-shadow .12s; }
+  .handle { display: flex; justify-content: space-between; align-items: center; gap: 18px; width: 100%; margin-top: 26px; padding: 22px 26px; border: 0; border-radius: 18px; background: var(--a1); color: #1a0a06; cursor: pointer; text-align: left; font-family: inherit; box-shadow: 6px 6px 0 #7a2f0d; transition: transform .12s, box-shadow .12s; }
   .handle:hover { transform: translate(3px, 3px); box-shadow: 3px 3px 0 #7a2f0d; }
   .handle .hn { font-stretch: 125%; font-weight: 800; font-size: clamp(32px, 4.6vw, 58px); letter-spacing: -.03em; line-height: 1; }
   .handle .hc { font: 700 12.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; border: 2px solid #1a0a06; border-radius: 10px; padding: 8px 12px; white-space: nowrap; }
-  .hint { color: var(--mute); margin-top: 16px; font-size: 15px; }
+  .hint2 { color: var(--mute); margin-top: 16px; font-size: 15px; }
   .list { list-style: none; } .list li { padding: 15px 0; border-bottom: 1px solid var(--bd); color: #d2c9d8; } .list li:first-child { border-top: 1px solid var(--bd); } .list b { color: var(--text); }
   .links { margin-top: 26px; display: grid; gap: 10px; }
   .links a { display: flex; justify-content: space-between; align-items: center; text-decoration: none; padding: 16px 20px; border-radius: 14px; border: 1px solid var(--bd); background: rgba(255,255,255,.03); font-weight: 700; transition: border-color .15s, transform .15s; }
   .links a:hover { border-color: var(--a1); transform: translateX(4px); } .links a span { color: var(--mute); font: 500 13px var(--mono); }
-  footer { margin-top: 110px; border-top: 1px solid var(--bd); padding: 34px 0 120px; color: var(--mute); font-size: 14.5px; }
+  footer { margin-top: 110px; border-top: 1px solid var(--bd); padding: 34px 0 60px; color: var(--mute); font-size: 14.5px; }
   footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 
-  /* floating player */
-  .bar { position: fixed; left: 18px; bottom: 18px; z-index: 85; display: flex; align-items: center; gap: 8px; background: var(--card-2); border: 1px solid var(--bd-2); border-radius: 16px; padding: 7px 8px 7px 14px; box-shadow: 0 10px 34px rgba(0,0,0,.5); }
-  .bar .eq { display: flex; gap: 2px; align-items: flex-end; height: 14px; } .bar .eq i { width: 3px; height: 3px; background: var(--a1); }
-  .bar.playing .eq i { animation: eq .9s ease-in-out infinite; } .bar .eq i:nth-child(2) { animation-delay: -.3s; } .bar .eq i:nth-child(3) { animation-delay: -.6s; }
-  .bar .song { font: 500 12.5px var(--mono); max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 2px; }
-  .bar button { font: 700 12.5px/1 "Archivo", sans-serif; background: rgba(255,255,255,.06); color: var(--text); border: 1px solid var(--bd); border-radius: 10px; padding: 8px 12px; cursor: pointer; }
-  .bar button:hover:not(:disabled) { background: var(--grad); color: #1a0a06; border-color: transparent; } .bar button:disabled { opacity: .35; cursor: default; }
-
-  @media (max-width: 1100px) { .sk-grid, .svc-grid { grid-template-columns: repeat(2, 1fr); } .work { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 1100px) { html.no-hs .hs-track, html.no-tun .cam { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 1180px) { .nav ul { gap: 5px; } .nav ul a, .nav ul button { padding: 8px 11px; font-size: 13.5px; } .logo { font-size: 18px; } }
   @media (max-width: 920px) {
-    .hero-grid, .about-grid, .rev, .grid2, .ct { grid-template-columns: 1fr; }
+    .hero-row, .about-grid, .rev, .grid2, .ct { grid-template-columns: 1fr; }
+    .svc { grid-template-columns: 1fr; gap: 14px; }
     .nav ul { display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0; flex-direction: column; align-items: stretch; background: var(--card-2); border: 1px solid var(--bd-2); border-radius: 18px; padding: 10px; gap: 6px; }
-    .nav[data-open="true"] ul { display: flex; } .nav ul a { padding: 14px 16px; font-size: 16px; } .menu { display: block; }
+    .nav[data-open="true"] ul { display: flex; } .nav ul a, .nav ul button { padding: 14px 16px; font-size: 16px; } .menu { display: block; }
   }
   @media (max-width: 640px) {
-    body { font-size: 16px; } section { padding-top: 90px; }
-    .hero { padding-top: 112px; } .name { font-size: 21vw; } .facts div { grid-template-columns: 92px 1fr; }
-    .sk-grid, .svc-grid, .work { grid-template-columns: 1fr; } .sk p { min-height: 0; } .count { gap: 12px; } .count .c { padding: 20px 18px; }
-    .proj.open .thumb { height: 200px; } .pdetail { padding: 4px 18px 26px; } .pb .lede { font-size: 18px; } .pb table { min-width: 420px; }
+    body { font-size: 16px; } section, section.wrap { padding-top: 90px; } html.no-tun .tun-sticky { padding-top: 90px; }
+    .name { font-size: calc((100vw - 40px) / 4.85); } .scrollcue { display: none; } .facts div { grid-template-columns: 92px 1fr; }
+    html.no-hs .hs-track, html.no-tun .cam { grid-template-columns: 1fr; } .svc { position: static; grid-template-columns: 1fr; padding: 24px 22px; gap: 14px; } .sk p { min-height: 0; } .count { gap: 12px; } .count .c { padding: 20px 18px; }
+    html.no-tun .pc.open .thumb { height: 200px; } .pdetail { padding: 4px 18px 26px; } .pb .lede { font-size: 18px; } .pb table { min-width: 420px; }
     .tl { padding-left: 46px; } .tl::before, .tl .fill { left: 13px; } .tl-i { padding: 18px 18px; } .tl-i::before { left: -41px; width: 15px; height: 15px; }
     .handle { padding: 16px 18px; } .handle .hn { font-size: 10.4vw; } .handle .hc { font-size: 11px; padding: 6px 9px; }
-    .bar { left: 10px; bottom: 10px; padding: 5px 5px 5px 10px; } .bar .song { display: none; }
-    .box td:first-child { white-space: normal; } .pcard { padding: 22px; }
+    .box td:first-child { white-space: normal; } 
   }
-  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } .rv { opacity: 1; transform: none; } .sk .bar i { width: var(--w); } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .rv { opacity: 1; transform: none; } .sk .bar i { width: var(--w); } }
 </style>
 </head>
 <body>
-<canvas id="neb" aria-hidden="true"></canvas><div class="veil" aria-hidden="true"></div><canvas id="stars" aria-hidden="true"></canvas>
+<canvas id="neb" aria-hidden="true"></canvas><div class="veil" aria-hidden="true"></div><canvas id="bgfx" aria-hidden="true"></canvas>
+<div id="wipe" aria-hidden="true"></div>
+
 
 <header class="nav" id="nav">
   <a class="logo" href="#top"><b>F</b>fresh.</a>
   <button class="menu" id="menuBtn" type="button" aria-expanded="false" aria-controls="menuList">Menu</button>
   <ul id="menuList">
     <li><a href="#about">About</a></li><li><a href="#skills">Skills</a></li><li><a href="#work">Work</a></li><li><a href="#services">Services</a></li>
-    <li><a href="#reviews">Reviews</a></li><li><a href="#process">Process</a></li><li><a href="#faq">FAQ</a></li><li><a class="hot" href="#contact">Contact</a></li>
+    <li><a href="#reviews">Reviews</a></li><li><a href="#process">Process</a></li><li><a href="#faq">FAQ</a></li><li><a class="cur" href="#contact">Contact</a></li>
+    <li><button type="button" id="snd" aria-label="Toggle music">Sound Off</button></li>
   </ul>
 </header>
 
 <main id="top">
-  <section class="hero wrap">
-    <div class="hero-grid">
-      <div>
-        <span class="tag">// MINECRAFT DEVELOPER · JAVA · PAPER · SKRIPT · FRONT-END</span>
-        <div class="name">Fresh<i>.</i></div>
-        <div class="roles" id="roles" aria-label="Plugin developer, Skript tooling, Discord bots, storefronts, AI tooling"><span id="rt"></span><span class="cur"></span></div>
-        <h1>I build things that do something.</h1>
-        <p class="about">An AI assistant with its own voice. Java plugins on Paper 1.21: combat, loot, morphing, whole civilisations. The Skript that holds a live server together, and the storefront that pays for it. All mine, start to finish. Not things that demo well.</p>
-        <div class="cta"><a class="btn" href="#work">View my work</a><a class="btn ghost" href="#contact">Contact me</a></div>
-        <dl class="facts">
+  <section class="hero wrap" id="hero">
+    <div class="hero-in">
+      <span class="tag hi" style="--d:1">// MINECRAFT DEVELOPER · JAVA · PAPER · SKRIPT · FRONT-END</span>
+      <div class="name neon hi" id="wordmark" style="--d:2">Fresh<i>.</i></div>
+      <div class="hero-row" id="heroRow">
+        <div>
+          <div class="roles hi" style="--d:3" aria-label="Plugin developer, Skript tooling, Discord bots, storefronts, AI tooling"><span id="rt"></span><span class="cur"></span></div>
+          <h1 class="hi" style="--d:4">I build things that do something.</h1>
+          <p class="about hi" style="--d:5">An AI assistant with its own voice. Java plugins on Paper 1.21: combat, loot, morphing, whole civilisations. The Skript that holds a live server together, and the storefront that pays for it. All mine, start to finish. Not things that demo well.</p>
+          <div class="cta hi" style="--d:6"><a class="btn" href="#work">View my work</a><a class="btn ghost" href="#contact">Contact me</a></div>
+        </div>
+        <dl class="facts hi" style="--d:7">
           <div><dt>Writes</dt><dd>Java 21 · Paper API</dd></div>
           <div><dt>Also</dt><dd>Skript · discord.js · Stripe · vanilla JS</dd></div>
           <div><dt>Built</dt><dd>12 projects · one developer</dd></div>
           <div><dt>Reach me</dt><dd>Discord fresh46_</dd></div>
         </dl>
       </div>
-      <aside class="glass pcard tilt" aria-label="Contact card">
-        <div class="pc-top"><div class="avatar">F</div><div><h3>Fresh</h3><span>@fresh46_ · Discord</span></div></div>
-        <div class="np" id="np"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span id="npt">Superstar · Lupe Fiasco</span></div>
-        <button class="btn copy" type="button" data-copy="fresh46_">Copy Discord username</button>
-        <small>DM me what you're after and your server version.</small>
-      </aside>
     </div>
+    <div class="scrollcue hi" style="--d:9" aria-hidden="true">Scroll</div>
   </section>
 
   <div class="marq" aria-hidden="true"><div id="mq"></div></div>
@@ -294,8 +317,8 @@
     <div class="about-grid">
       <div class="rv">
         <span class="eyebrow">About</span>
-        <h2 class="h">I build things to order.</h2>
-        <p class="lede">Server plugins, mods, texture packs and Discord bots. Most of what's on this site started as someone asking for something that didn't exist yet, including a combat system I'd never built anything like before, which had a working demo four hours later.</p>
+        <h2 class="h hrv">I build things to order.</h2>
+        <p class="lede" data-scrub>Server plugins, mods, texture packs and Discord bots. Most of what's on this site started as someone asking for something that didn't exist yet, including a combat system I'd never built anything like before, which had a working demo four hours later.</p>
       </div>
       <div class="count rv">
         <div class="glass c tilt"><b data-to="12">0</b><span>Things shipped</span></div>
@@ -306,37 +329,46 @@
     </div>
   </section>
 
-  <section id="skills" class="wrap">
-    <span class="eyebrow">Skills</span>
-    <h2 class="h">What I work with.</h2>
-    <p class="lede">The bar on each card isn't a self-rating. It's how many of my 12 projects it shows up in.</p>
-    <div class="sk-grid" id="sk"></div>
+  <section id="skills" class="hs">
+    <div class="hs-sticky">
+      <div class="hs-head">
+        <span class="eyebrow">Skills</span>
+        <h2 class="h hrv">What I work with.</h2>
+        <p class="lede">The bar on each card isn't a self-rating. It's how many of my 12 projects it shows up in. Keep scrolling and the row moves.</p>
+      </div>
+      <div class="hs-track" id="sk"></div>
+    </div>
   </section>
 
-  <section id="work" class="wrap">
-    <span class="eyebrow">Selected work</span>
-    <h2 class="h">Things I've shipped.</h2>
-    <p class="lede">Filter, then open any card. Each one explains how the thing actually works.</p>
-    <div class="filters" role="group" aria-label="Filter projects">
-      <button aria-pressed="true" data-f="all">All</button><button aria-pressed="false" data-f="plugin">Plugins</button><button aria-pressed="false" data-f="skript">Skript</button><button aria-pressed="false" data-f="ai">AI</button><button aria-pressed="false" data-f="web">Front-end</button>
+  <section id="work" class="tun">
+    <div class="tun-sticky">
+      <div class="tun-head">
+        <span class="eyebrow">Selected work</span>
+        <h2 class="h hrv">Things I've shipped.</h2>
+        <p class="lede" id="tunhint">Scroll to fly through. Click a card to open it.</p>
+        <div class="filters" role="group" aria-label="Filter projects">
+          <button aria-pressed="true" data-f="all">All</button><button aria-pressed="false" data-f="plugin">Plugins</button><button aria-pressed="false" data-f="skript">Skript</button><button aria-pressed="false" data-f="ai">AI</button><button aria-pressed="false" data-f="web">Front-end</button>
+        </div>
+      </div>
+      <div class="cam" id="cam"></div>
+      <div class="tun-hud" aria-hidden="true"><span id="ti">01</span><span id="tt">JARVIS</span><div class="tbar"><i id="tb"></i></div></div>
     </div>
-    <div class="work" id="work-grid"></div>
   </section>
 
   <section id="services" class="wrap">
     <span class="eyebrow">Services</span>
-    <h2 class="h">Built to order.</h2>
+    <h2 class="h hrv">Built to order.</h2>
     <p class="lede">Small jobs and whole systems, agreed before I start.</p>
     <div class="svc-grid" id="svc"></div>
   </section>
 
   <section id="reviews" class="wrap">
     <span class="eyebrow">Reviews</span>
-    <h2 class="h">What clients say.</h2>
+    <h2 class="h hrv">What clients say.</h2>
     <figure class="glass rev rv">
       <div class="st"><b>4 hrs</b><span>to a first working demo of a combat system I'd never built anything like before.</span></div>
       <div>
-        <blockquote>I asked this guy to make me a plugin, which at the time he had never made something so combat based and difficult to produce before. despite this the guy put out the first demo within 4 hours- Which he listens to feedback and improves stuff off of, great guy to work with and quite friendly to talk to. Very talented at his work, something like this can pull off great comparisons against some of the top smp mods in minecraft like bliss, this thing comes really close alongside the quality of bliss and still bliss took ages to develop along with multiple devs, this was a one man army developing this. He's great at his work and I really would recommend him!</blockquote>
+        <blockquote data-scrub>I asked this guy to make me a plugin, which at the time he had never made something so combat based and difficult to produce before. despite this the guy put out the first demo within 4 hours- Which he listens to feedback and improves stuff off of, great guy to work with and quite friendly to talk to. Very talented at his work, something like this can pull off great comparisons against some of the top smp mods in minecraft like bliss, this thing comes really close alongside the quality of bliss and still bliss took ages to develop along with multiple devs, this was a one man army developing this. He's great at his work and I really would recommend him!</blockquote>
         <figcaption><strong>Ìçêsîxê</strong><span>Client · Crysgear</span></figcaption>
       </div>
     </figure>
@@ -344,7 +376,7 @@
 
   <section id="process" class="wrap">
     <span class="eyebrow">Process</span>
-    <h2 class="h">How I work.</h2>
+    <h2 class="h hrv">How I work.</h2>
     <p class="lede">You always get something runnable early. Not a progress update. An actual jar you can drop on a test server and click around in.</p>
     <div class="tl" id="tl">
       <div class="fill" id="tlfill"></div>
@@ -354,25 +386,16 @@
       <div class="glass tl-i"><small>Step 4</small><h3>Iterate</h3><p>You play it, you tell me what's wrong, I change it. This is the part that makes the difference and I don't rush it.</p></div>
       <div class="glass tl-i"><small>Step 5</small><h3>Ship</h3><p>Built jar, config, and documentation written so your staff can actually use it.</p></div>
     </div>
-
     <div class="grid2">
-      <div class="glass box">
-        <h3>What you get</h3>
-        <ul>
-          <li><b>Documentation that isn't an afterthought.</b> Every config option explained, including the ones where the obvious change is the wrong one.</li>
-          <li><b>Config you don't have to fight.</b> Where it makes sense the setup lives in an in-game menu instead of a YAML file. KyronCrates has no config worth opening.</li>
-          <li><b>Built for a live server.</b> Crash-safe, dupe-resistant, and tested against the awkward paths, not just the happy one.</li>
-          <li><b>Straight answers.</b> If something will take longer than I said, you hear it from me first.</li>
-        </ul>
-      </div>
-      <div class="glass box">
-        <h3>How long it takes</h3>
-        <table><thead><tr><th>Size</th><th>First runnable</th><th>Finished</th></tr></thead>
-        <tbody><tr><td>A script</td><td>Same day</td><td>Same day</td></tr><tr><td>A single-purpose plugin</td><td>A day or two</td><td>A few days</td></tr><tr><td>A system</td><td>A few days</td><td>Weeks, and worth it</td></tr></tbody></table>
-        <p class="note">The variable is never the building, it's the iteration. A fixed spec ships quickly. "Build it and we'll see how it feels" takes as long as it takes to feel right, which is usually the correct choice for anything players will touch every day.</p>
-      </div>
-      <div class="glass box">
-        <h3>What it costs</h3>
+      <div class="glass box"><h3>What you get</h3><ul>
+        <li><b>Documentation that isn't an afterthought.</b> Every config option explained, including the ones where the obvious change is the wrong one.</li>
+        <li><b>Config you don't have to fight.</b> Where it makes sense the setup lives in an in-game menu instead of a YAML file. KyronCrates has no config worth opening.</li>
+        <li><b>Built for a live server.</b> Crash-safe, dupe-resistant, and tested against the awkward paths, not just the happy one.</li>
+        <li><b>Straight answers.</b> If something will take longer than I said, you hear it from me first.</li></ul></div>
+      <div class="glass box"><h3>How long it takes</h3>
+        <table><thead><tr><th>Size</th><th>First runnable</th><th>Finished</th></tr></thead><tbody><tr><td>A script</td><td>Same day</td><td>Same day</td></tr><tr><td>A single-purpose plugin</td><td>A day or two</td><td>A few days</td></tr><tr><td>A system</td><td>A few days</td><td>Weeks, and worth it</td></tr></tbody></table>
+        <p class="note">The variable is never the building, it's the iteration. A fixed spec ships quickly. "Build it and we'll see how it feels" takes as long as it takes to feel right, which is usually the correct choice for anything players will touch every day.</p></div>
+      <div class="glass box"><h3>What it costs</h3>
         <p>I quote per job rather than publishing a rate card, because a rate card is wrong for almost every job. Tell me what you want and you get a number before anything starts. No hourly meter running, no bill that grows while you're not looking.</p>
         <table><thead><tr><th>What</th><th>Why it moves the price</th></tr></thead><tbody>
           <tr><td>Size</td><td>One command is an evening. A system with its own database, GUIs and forty commands is not.</td></tr>
@@ -381,25 +404,20 @@
           <tr><td>Interfaces</td><td>An in-game editor is far more work than a config file, and far better to use.</td></tr>
           <tr><td>Hostility</td><td>FFA or anarchy servers need dupe-resistance and crash-safety a private SMP doesn't.</td></tr>
           <tr><td>Iteration</td><td>A fixed spec is cheaper than "build it and we'll see". Both are fine.</td></tr></tbody></table>
-        <p class="note">If an existing free plugin already does what you need, I'll tell you that instead of quoting.</p>
-      </div>
-      <div class="glass box">
-        <h3>Paying</h3>
+        <p class="note">If an existing free plugin already does what you need, I'll tell you that instead of quoting.</p></div>
+      <div class="glass box"><h3>Paying</h3>
         <p>Full payment up front, once we've agreed the scope and the number. Nothing starts before that, and the price doesn't move afterwards unless you ask for something that wasn't in the scope.</p>
         <p>That asks you to trust someone you've probably not worked with, so here's what you can check before you send anything:</p>
-        <ul>
-          <li><b>Download something I made and run it.</b> FFA Stats is free, the source is public, and it works on Paper 1.21 right now.</li>
+        <ul><li><b>Download something I made and run it.</b> FFA Stats is free, the source is public, and it works on Paper 1.21 right now.</li>
           <li><b>Read the source.</b> It's on <a href="https://github.com/Freshy46">GitHub</a>.</li>
           <li><b>Read what a client said</b> after commissioning a combat system. <a href="#reviews">The review is unedited.</a></li>
-          <li><b>Look at the detail on this site.</b> Every project explains how the thing actually works, because I built it and can.</li>
-        </ul>
-      </div>
+          <li><b>Look at the detail on this site.</b> Every project explains how the thing actually works, because I built it and can.</li></ul></div>
     </div>
   </section>
 
   <section id="faq" class="wrap">
     <span class="eyebrow">FAQ</span>
-    <h2 class="h">Asked, answered.</h2>
+    <h2 class="h hrv">Asked, answered.</h2>
     <div class="faq">
       <details><summary>Do I get the source code?</summary><p>Yes, on request. You paid for it. Some clients only ever want the jar and the config, which is fine, but the source is yours if you want it and I won't hold it back as leverage.</p></details>
       <details><summary>What if it breaks after you've delivered it?</summary><p>If it's a bug in what I built, I fix it. That isn't a support contract with a time limit on it. It's just that shipping something broken and walking away isn't delivering. New features, or making it work on a version that came out later, are new work. The line is simple: if it never did what we agreed, that's mine. If you want it to do something else, that's a new job.</p></details>
@@ -412,12 +430,12 @@
 
   <section id="contact" class="wrap">
     <span class="eyebrow">Contact</span>
-    <h2 class="h">Want something built?</h2>
+    <h2 class="h hrv">Want something built?</h2>
     <div class="ct">
       <div class="glass big">
         <p class="lede" style="margin-top:0">DM me on Discord and tell me what you're after. Include your server version, roughly how many players it needs to hold, and what you want it to do.</p>
         <button class="handle copy" type="button" data-copy="fresh46_" aria-label="Copy Discord username fresh46_"><span class="hn">fresh46_</span><span class="hc">Copy</span></button>
-        <div class="hint" id="hint">Discord. The fastest way to reach me about plugin work.</div>
+        <div class="hint2" id="hint2">Discord. The fastest way to reach me about plugin work.</div>
       </div>
       <div>
         <ul class="list"><li><b>Your server software and version.</b></li><li><b>Roughly how many players</b> it needs to hold.</li><li><b>What it should feel like</b> to the person using it. Not a spec.</li></ul>
@@ -434,10 +452,7 @@
 
 <footer><div class="wrap"><span>fresh. Java 21 · Paper 1.21 · Skript · front-end</span><span>Hand-written. No framework.</span></div></footer>
 
-<div class="bar" id="bar" role="group" aria-label="Music player">
-  <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="song" id="song">Superstar · Lupe Fiasco</span>
-  <button id="bPlay">Play</button><button id="bPause" disabled>Pause</button><button id="bStop" disabled>Stop</button>
-</div>
+<dialog id="sheet" aria-label="Project details"><div class="sheet-in" id="sheetin"><div class="sheet-top"><div><small id="sk2"></small><b id="sn"></b></div><button class="pill" id="sclose" type="button">Close</button></div><div class="pb" id="sbody"></div></div></dialog>
 
 <template id="tpl-jarvis"><p class="lede">A voice assistant I built and gave a real interface to. You talk to it, it talks back, and it can actually do things — read and write files, search the web, take notes, work through a study plan or a schedule. Seventy-five tools behind one conversation.</p><p class="stk">Gemini Flash-Lite · speech in / voice out · 75 tools · persistent memory · custom HUD</p> <h4>What it does</h4> <p>It listens, it answers out loud, and it remembers. Speech goes in, the language model decides whether it needs a tool to answer properly, and the reply comes back as synthesised voice as well as on screen. Memory persists across sessions, so it holds context from things you told it days ago rather than starting cold every time.</p> <p>The row along the bottom switches what it's set up to do. Each mode changes what it has access to and how it behaves, rather than just filtering a menu:</p> <div class="tbl"><table> <tbody><tr><th>Mode</th><th>What it's for</th></tr> <tr><td>STUDY</td><td>Working through material — explanations, questioning you back, tracking what you've covered</td></tr> <tr><td>PLANNING</td><td>Schedules, task breakdowns, working out the order things need to happen in</td></tr> <tr><td>SYSTEM</td><td>The machine it's running on — diagnostics, resource use, the state on the side panels</td></tr> <tr><td>WEB</td><td>Searching and pulling in things it doesn't already know</td></tr> <tr><td>FILES</td><td>Reading and writing on disk</td></tr> <tr><td>NOTES</td><td>Capturing things mid-conversation without breaking out of it</td></tr> <tr><td>CHAT</td><td>Plain conversation with no particular job attached</td></tr> <tr><td>SETTINGS</td><td>Voice, model, mode and memory configuration</td></tr> <tr><td>STANDBY</td><td>Drops it to idle without shutting it down</td></tr> </tbody></table></div> <h4>The interface</h4> <p>The interface was as much of the work as the assistant behind it. A voice assistant with no screen gives you nothing to look at while it thinks, and no way to tell the difference between working, waiting and broken. So everything it's doing is on the wall.</p> <p>The sphere in the middle is the assistant itself — thousands of particles that react to what it's doing, so idle, listening, thinking and speaking all look different from across the room. Around it, four groups of live readouts:</p> <div class="tbl"><table> <tbody><tr><th>Panel</th><th>Shows</th></tr> <tr><td>SYSTEM DIAGNOSTICS</td><td>Core load, memory allocation, GPU thermal, uptime</td></tr> <tr><td>NEURAL ACTIVITY</td><td>Synaptic rate, GPU load, VRAM, and whether inference is idle or running</td></tr> <tr><td>VOICE PROCESSING</td><td>Live input waveform, signal strength, and recognition state</td></tr> <tr><td>NETWORK TRAFFIC</td><td>Up and down throughput, packets per second, latency</td></tr> <tr><td>ACTIVE MODULES</td><td>Language model, voice synth, speech input, link, mode, encryption</td></tr> <tr><td>ENVIRONMENT</td><td>Ambient temperature, pressure, location, conditions</td></tr> </tbody></table></div> <p>The status block in the corner is the one that matters day to day — mode, whether the voice is currently speaking, whether memory is on, how many tools are loaded, which model is answering, and round-trip latency. When something feels slow, that block tells you whether it's the model, the network or the speech layer without opening a log.</p> <h4>Decisions</h4> <details> <summary>Why Flash-Lite and not the biggest model available</summary> <div class="body"> <p>It's a voice assistant, so the thing being optimised is the gap between you finishing a sentence and it starting to answer. Past about a second that gap stops feeling like a conversation and starts feeling like a form submission, and no amount of extra answer quality buys that back.</p> <p>Flash-Lite is the cheapest, fastest tier, which is the right default for the overwhelming majority of what gets asked — a question, a reminder, a file, a lookup. The model is exposed in settings rather than hardcoded, so anything that genuinely needs more reasoning can be moved up deliberately instead of everything paying for it all the time.</p> </div> </details> <details> <summary>Seventy-five tools behind one conversation</summary> <div class="body"> <p>The assistant isn't a chat window with a search box bolted on. It has real capability — the filesystem, the web, notes, system state — and the model picks which one it needs rather than the user picking a feature first.</p> <p>That's the whole design bet: you shouldn't have to know which mode a request belongs to before you make it. Modes exist to shape behaviour and narrow the tool surface when you already know what you're doing, not as a menu you have to navigate before you're allowed to ask a question.</p> </div> </details> <details> <summary>Memory that survives the session</summary> <div class="body"> <p>Memory is on by default and persists between runs, which is the difference between an assistant and a search bar. It's a toggle rather than a permanent fixture — it's on the settings panel and the status block always shows whether it's enabled — because an assistant that quietly remembers everything and never tells you is a worse thing to live with than one that forgets.</p> </div> </details></template>
 <template id="tpl-crysgear"><p class="lede">Cores and Aspects for Crysgear SMP. A combat system built around one item you carry, four elements you can put inside it, and the choice of whether to keep that power in your hand or burn it into your gear.</p><p class="stk">Java 21 · Paper 1.21 · 38 classes · custom resource pack · no database</p> <h4>The idea</h4> <p>A player carries a <strong>Core</strong>. The core holds one <strong>Aspect</strong> at a tier from one to three. There are four aspects — Strength, Mirror, Light and Fire — and each one gives you passives that are always on plus abilities you fire by clicking with the core in hand. Higher tiers don't just scale numbers; they unlock new abilities and move the old ones onto different click slots, so a tier 3 player has a genuinely different kit from a tier 1 player.</p> <p>Then there's the second decision. You can <strong>infuse</strong> an aspect into a sword or a piece of armour. When you do, the core goes quiet — you lose the whole ability kit — and the gear takes over with its own passives and, at tier 3, its own ability. It's a real trade rather than an upgrade: burst power in your hand, or something quieter that works while you're holding a weapon.</p> <div class="tbl"><table> <tbody><tr><th>Command</th><th>What it does</th></tr> <tr><td>/cores open</td><td>Open your core and socket or swap the aspect inside it</td></tr> <tr><td>/cores withdraw</td><td>Take the aspect back out</td></tr> <tr><td>/cores infuse armour|sword</td><td>Burn the aspect into what you're wearing or holding</td></tr> <tr><td>/cores cast 1|2|3</td><td>Fire an ability by number, so it can be bound to a key</td></tr> <tr><td>/cores info</td><td>Everything your current aspect does at your current tier</td></tr> <tr><td>/cores cooldown</td><td>What's on cooldown and how long is left</td></tr> <tr><td>/cores items</td><td>The item menu — cores and aspects, op only</td></tr> </tbody></table></div> <p>command/CoresCommand.java · aliases /core, /aspect, /aspects · permissions crysgear.use (default true) and crysgear.items (op)</p> <h4>The four aspects</h4> <p>Everything in these tables is the live data the plugin ships — the same strings <code>/cores info</code> prints in chat, read out of a single catalog class so the chat text, the item lore and the HUD can never disagree with each other.</p> <h5>Strength red</h5> <p>Straight-ahead melee. It's the aspect that removes your weaknesses as much as it adds damage.</p> <div class="tbl"><table> <tbody><tr><th>Ability</th><th>Trigger</th><th>CD</th><th>What it does</th></tr> <tr><td>Brawl T1</td><td>Right click, core in main hand — off hand from T2</td><td>30s</td><td>A ball of unbreakable crimson hyphae 5 blocks across. Lasts 10 seconds, then every block reverts. Anyone stood inside gets Weakness II.</td></tr> <tr><td>Fury T2</td><td>Right click, core in main hand</td><td>60s</td><td>20 seconds of black sparks and a red crown. Each crit you land multiplies your damage by another 1.25x. Taking two hits wipes the stacks.</td></tr> <tr><td>Hunger T3</td><td>Left click air, core in main hand</td><td>120s</td><td>Sharpness VI on that sword for 30 seconds, draining your food bar as it burns.</td></tr> <tr><td>Fear T3</td><td>Left click a target, core in main hand</td><td>50s</td><td>Nausea, Blindness, Slowness I and Weakness I on the target for 10 seconds.</td></tr> <tr><td>Revenge infused</td><td>Right click, infused sword</td><td>45s</td><td>A 30 second window. Land 3 crits without being hit and every swing crits on its own. Being hit, or 5 quiet seconds, drops you back.</td></tr> </tbody></table></div> <p><strong>Passives:</strong> Strength I at all times, II from tier 2. Weakness can't be applied to you; from tier 3 neither can Wither or Poison.<br></br> <strong>Infused:</strong> armour gives a 1 in 10 chance that a hit you take hands the attacker Weakness I for 6s (T2). A tier 3 sword rages you into Strength III at 4 hearts or below.</p> <h5>Mirror yellow</h5> <p>Turns other people's advantages into yours. Copies effects, reflects projectiles, and throws out decoys that look exactly like you.</p> <div class="tbl"><table> <tbody><tr><th>Ability</th><th>Trigger</th><th>CD</th><th>What it does</th></tr> <tr><td>Afterimage T1</td><td>Right click, core in main hand — off hand from T2</td><td>30s</td><td>A decoy takes your place and you turn invisible. It pops in pale yellow when struck, or fades on its own after 5 seconds.</td></tr> <tr><td>Visualize T2</td><td>Right click, core in main hand</td><td>35s</td><td>A 6 block field that follows you for 15 seconds, copying the potion effects of everyone inside it onto you.</td></tr> <tr><td>Shatter T3</td><td>Left click air, core in main hand</td><td>100s</td><td>Five clones batter the target in turn for two hearts each, with knockback, then vanish together.</td></tr> <tr><td>Replicate infused</td><td>Right click, infused sword</td><td>20s</td><td>Land two knockback hits without being hit and you start replicating. Every hit after adds a clone beside your target, up to five, and the whole set strikes with you. Taking a knockback hit breaks the chain.</td></tr> </tbody></table></div> <p><strong>Passives:</strong> 10% chance to copy an attacker's effects onto you for 8s, 20% chance to reflect a projectile back at whoever fired it, and from tier 2 a 20% chance to throw out an afterimage whenever you're hit.<br></br> <strong>Infused:</strong> armour gives a 12% chance that a clone of your attacker turns their own hit back on them (T2).</p> <h5>Light gold</h5> <p>Ranged and disruptive. The only aspect that changes how you fight at distance.</p> <div class="tbl"><table> <tbody><tr><th>Ability</th><th>Trigger</th><th>CD</th><th>What it does</th></tr> <tr><td>Reflection T1</td><td>Right click, core in main hand — off hand from T2</td><td>30s</td><td>Coat yourself in light for 5 seconds. The next hit you take lands on your attacker instead.</td></tr> <tr><td>Bolt T2</td><td>Right click, core in main hand</td><td>45s</td><td>Throw a yellow bolt. Whatever it hits gets struck by lightning for 3 hearts.</td></tr> <tr><td>Beams T3</td><td>Left click air, core in main hand</td><td>80s</td><td>Summon 3 runes that angle wherever you aim. Each left click fires one beam — left, right, then middle — and spends that rune.</td></tr> </tbody></table></div> <p><strong>Passives:</strong> 10% chance to call lightning when you hit with a bow or crossbow, and tridents too from tier 2. Your body gives off torch light. Blindness can't be applied to you from tier 2.<br></br> <strong>Infused:</strong> armour gives a 15% chance an attacker gains yellow glow for 8s plus Nausea and Slowness I — Mining Fatigue I instead at tier 3. A tier 3 sword has a 15% chance to mark a target with 6s of glow and Slowness I.</p> <h5>Fire orange</h5> <p>The one that changes where you can go. Lava stops being terrain and starts being cover.</p> <div class="tbl"><table> <tbody><tr><th>Ability</th><th>Trigger</th><th>CD</th><th>What it does</th></tr> <tr><td>Ember T1</td><td>Right click, core in off hand</td><td>45s</td><td>For 10 seconds anything you land a hit with sets the target alight, with no fire aspect enchant involved.</td></tr> <tr><td>Fry T2</td><td>Right click, core in main hand</td><td>35s</td><td>A 6 block ring that follows you, cooking anyone inside and boiling away water. Fire resistance does not save them.</td></tr> <tr><td>Fireball T3</td><td>Left click air, core in main hand</td><td>100s</td><td>Charges over 60 seconds, growing as it goes. Release any time for 2 hearts and a 3 block crater, up to 6 hearts and 8 blocks at full.</td></tr> </tbody></table></div> <p><strong>Passives:</strong> fire resistance at all times and no lava fog. From tier 2 you swim through lava like water; at tier 3 standing in it gives your hits a 1.10x boost.<br></br> <strong>Infused:</strong> armour regenerates you while you stand in lava. A tier 3 sword carries Fire Aspect II for as long as it stays infused.</p> <h4>How it works</h4> <details> <summary>Adding a fifth aspect takes three lines</summary> <div class="body"> <p>Aspects are registered into an <code>EnumMap&lt;AspectType, AspectHandler&gt;</code> at startup. Every other system in the plugin — the HUD, the cooldown tracker, the core GUI, the item lore builder, <code>/cores info</code>, both tick loops — goes through that registry rather than switching on a type. So a new element is one enum constant, one class implementing <code>AspectHandler</code>, and one <code>register()</code> call. Nothing else has to be told it exists.</p> <pre><code>// onEnable registry.register(new StrengthAspect(...)); registry.register(new MirrorAspect(...)); registry.register(new LightAspect(...)); registry.register(new FireAspect(...));</code></pre> <p>aspect/AspectRegistry.java · aspect/AspectHandler.java · Crysgear.java</p> </div> </details> <details> <summary>There is no database — the item is the save file</summary> <div class="body"> <p>Nothing about a player's aspect is stored server-side. The aspect id, its tier, the stored tier for a withdrawn aspect and the infusion flag all live in the item's own <code>PersistentDataContainer</code>, under namespaced keys registered once at startup.</p> <p>That buys a lot for free. State survives restarts without a save routine. It survives a world transfer or a server move, because it's inside the item file Minecraft already writes. Hand the core to someone else and the power goes with it, which is exactly the behaviour you want on an SMP — cores get looted, traded and fought over as objects, rather than as a row in a table with someone's name on it.</p> <p>The same container drives the visuals. <code>CustomModelData</code> is computed from the aspect type and tier, so the resource pack shows a different model for each of the twelve aspect-and-tier combinations, plus the empty core, without the plugin knowing anything about textures.</p> <pre><code>modelData(tier) = baseModelData + (tier - 1) STRENGTH 8101 MIRROR 8201 LIGHT 8301 FIRE 8401</code></pre> <p>The cost is the obvious one: if an item can be duplicated, the state duplicates with it. That's why every GUI in the plugin works on clones and writes back deliberately, rather than moving the real stack around inside an inventory the player can reach into.</p> <p>item/Keys.java · item/CoreItems.java · aspect/AspectType.java · util/Clones.java</p> </div> </details> <details> <summary>Two tick loops, and why the slow one isn't enough</summary> <div class="body"> <p>Passive effects, infusion sweeps and the cooldown display run every 10 ticks — half a second. That's plenty for reapplying Strength or checking whether someone still has the right armour on, and it keeps the per-player cost low on a full server.</p> <p>Anything that has to track movement gets its own loop at one tick. A charging fireball grows and follows the aim; Light's runes stay angled where the player is looking; Mirror's afterimage has to be in the right place the moment it's struck. At half-second granularity all of those visibly stutter.</p> <p>Both loops resolve the aspect the same way, and both fall back to the <strong>stowed</strong> core rather than the held one. That's deliberate: an ability already in flight has to keep running after you switch to your sword. Putting the core away shouldn't cancel a fireball that's already in the air.</p> <p>Crysgear.java — runTaskTimer at 10L and at 1L</p> </div> </details> <details> <summary>Which aspect is actually active</summary> <div class="body"> <p>At any moment a player might have a core in the main hand, a core in the off hand, an infused sword, infused armour, or several of those at once. Everything that fires an ability, draws the HUD or checks a cooldown asks one method which aspect is live, and gets a single answer.</p> <p>The rule: <strong>infused gear wins</strong>. If an aspect has been burned into gear it has left the core, so the core stops acting entirely and the infused item is the only thing that can. If nothing is infused, the core has to be in one of your two hands. Sitting in your inventory does nothing.</p> <p>The part that took the most care is that the infusion flag lives on the <strong>core</strong>, not on the sword — one authority — and a background sweep keeps the two honest when a player drops the gear, dies, or has it broken. Two independent sources of truth about whether something is infused is exactly the kind of thing that drifts apart on a live server and ends with someone holding the sword bonuses and the full core kit at the same time.</p> <p>core/CoreService.java · listener/InfusionListener.java · infuse/Infusions.java</p> </div> </details> <details> <summary>The resource pack</summary> <div class="body"> <p>Crysgear ships its own pack rather than reusing vanilla items with a rename. It carries a model and texture per aspect per tier, driven off the custom model data above, and a bitmap font used to draw ability icons inline in chat and on the action-bar HUD — so a cooldown readout shows the actual ability glyph instead of a letter.</p> <p>The build script compiles the plugin and zips the pack side by side, so a release is always a matched pair. A jar that ships without its pack shows everyone a stick.</p> <pre><code>build/ Crysgear-1.0.0.jar Crysgear-Resources.zip</code></pre> <p>resourcepack/assets/crysgear/{models,textures,font} · build.sh</p> </div> </details></template>
@@ -454,170 +469,182 @@
 
 <script>
   const ASSET = "https://freshy46.github.io/";
+  const de = document.documentElement, $ = id => document.getElementById(id);
   const rnd0 = (() => { let s = 7; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const params = location.search, SILENT = /[?&]silent\b/.test(params);
   const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const ticks = [];
+  const SC = { y: scrollY, v: 0 };
+  ticks.push((now, dt) => { const ny = SC.y + (scrollY - SC.y) * Math.min(1, dt * 9); SC.v = (ny - SC.y) / Math.max(dt, .001); SC.y = ny; });
 
-  /* ---------- pixel sprites ---------- */
-  const PAL = { k:"#050505", L:"#2e56c9", l:"#7fa8ff", w:"#ffffff", c:"#46e6e6", C:"#1d8f9a", B:"#a9692f", b:"#7b4a21", y:"#ffd23f", Y:"#f0a500", r:"#e03030", R:"#8a1a1a", G:"#4fd13a", H:"#1f7a2a", n:"#e6e6e6", p:"#b04cff", m:"#8b8b8b", g:"#9a9a9a", o:"#ff8a1f", d:"#5a5a5a" };
-  const sprite = rows => {
-    const h = rows.length, w = rows[0].length; let r = "";
-    rows.forEach((row, y) => { let x = 0; while (x < w) { const ch = row[x]; if (ch === "." || !PAL[ch]) { x++; continue; } let x2 = x; while (x2 < w && row[x2] === ch) x2++; r += `<rect x="${x}" y="${y}" width="${x2 - x}" height="1" fill="${PAL[ch]}"/>`; x = x2; } });
-    return `<svg viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges" aria-hidden="true">${r}</svg>`;
-  };
-  const S = {
-    robot: ["....cc......",".....c......",".kkkkkkkkkk.","kLLLLLLLLLLk","kLwwLLLLwwLk","kLwcLLLLwcLk","kLLLLLLLLLLk","kLLkkkkkkLLk","kLLkckckcLLk","kLLLLLLLLLLk",".kkkkkkkkkk.","..kk....kk.."],
-    gem: ["...kkkkkk...","..kcwwcccck.",".kcwcccccCCk","kcccccccccCk","kcccccccCCCk",".kccccccCCk.",".kcccccCCCk.","..kccccCCk..","...kcccCk...","....kccCk...",".....kCk....","......k....."],
-    chest: ["............",".kkkkkkkkkk.","kBBBBBBBBBBk","kBbbbbbbbbBk","kBbbbbbbbbBk","kkkkkyykkkkk","kBBBBYYBBBBk","kBbbbyybbbBk","kBbbbbbbbbBk","kBbbbbbbbbBk","kBBBBBBBBBBk",".kkkkkkkkkk."],
-    shield: [".kkkkkkkkkk.","kllllyyllllk","kllllyyllllk","kyyyyyyyyyyk","kyyyyyyyyyyk","kLLLLyyLLLLk","kLLLLyyLLLLk",".kLLLyyLLLk.","..kLLyyLLk..","...kLyyLk...","....kLLk....",".....kk....."],
-    eye: ["............","............","...kkkkkk...",".kkwwwwwwkk.","kwwwrrrrwwwk","kwwrrkkrrwwk","kwwrrkkrrwwk","kwwwrrrrwwwk",".kkwwwwwwkk.","...kkkkkk...","............","............"],
-    flag: [".kbk........",".kbkkkkkkkk.",".kbrrrrrrrrk",".kbrryyyyrrk",".kbrryyyyrrk",".kbrrrrrrrrk",".kbrrrrrrrk.",".kbkkkkkk...",".kbk........",".kbk........",".kbk........","kkbkk......."],
-    grass: ["kkkkkkkkkkkk","kGGGGGGGGGGk","kGHGGGHGGGHk","kGGHGGGGHGGk","kbGbbbGbbbbk","kbbbbbbbbbbk","kbBbbbbbbBbk","kbbbbBbbbbbk","kbbbbbbbBbbk","kbBbbbbbbbbk","kbbbbbbbbbbk","kkkkkkkkkkkk"],
-    creeper: ["kkkkkkkkkkkk","kGGGGGGGGGGk","kGGGGGGGGGGk","kGkkGGGGkkGk","kGkkGGGGkkGk","kGGGGkkGGGGk","kGGGkkkkGGGk","kGGkkGGkkGGk","kGGGGGGGGGGk","kGGGGGGGGGGk","kHHHHHHHHHHk","kkkkkkkkkkkk"],
-    star: [".....kk.....","....kyyk....","....kyyk....","kkkkkyykkkkk","kyyyyyyyyyyk",".kkyyyyyykk.","..kyyyyyyk..","..kyyyyyyk..",".kyyykkyyyk.",".kyyk..kyyk.",".kkk....kkk.","............"],
-    bars: ["............","............","........GG..","........GG..","....pp..GG..","....pp..GG..","....pp..GG..","cc..pp..GG..","cc..pp..GG..","cc..pp..GG..","kkkkkkkkkkkk","............"],
-    scroll: [".kkkkkkkkkk.","knnnnnnnnnnk","knGGGnnnnnnk","knnnnnnnnnnk","knnbbbbbnnnk","knnnnnnnnnnk","knGGGGGnnnnk","knnnnnnnnnnk","knnnbbbnnnnk","knnnnnnnnnnk","knnnnnnnnnnk",".kkkkkkkkkk."]
-  };
-  const emerald = S.gem.map(r => r.replace(/c/g, "G").replace(/C/g, "H"));
-
-  /* ---------- space: pixel nebula + stars ---------- */
+  /* ---------- pixel nebula (static) ---------- */
   (function nebula() {
-    const c = document.getElementById("neb"), W = 200, H = 112; c.width = W; c.height = H;
+    const c = $("neb"), W = 200, H = 112; c.width = W; c.height = H;
     const x = c.getContext("2d"), img = x.createImageData(W, H); const P = [...Array(512)].map(() => rnd0());
     const lat = (i, j) => P[((i * 73856093) ^ (j * 19349663)) & 511];
     const vn = (a, b) => { const i = Math.floor(a), j = Math.floor(b), fx = a - i, fy = b - j, u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy); const p = lat(i, j), q = lat(i + 1, j), r = lat(i, j + 1), s = lat(i + 1, j + 1); return p + (q - p) * u + (r - p) * v + (p - q - r + s) * u * v; };
     const fbm = (a, b) => { let s = 0, m = .5; for (let o = 0; o < 5; o++) { s += m * vn(a, b); a *= 2; b *= 2; m /= 2; } return s; };
     for (let yy = 0; yy < H; yy++) for (let xx = 0; xx < W; xx++) {
-      const nx = xx / W * 3.4, ny = yy / H * 2;
-      const n = fbm(nx + 1.7, ny + 4.2), m = fbm(nx * 1.3 + 9, ny * 1.3 + 2), t = fbm(nx * .8 + 20, ny * .8 + 7);
-      const dx = (xx - W * .74) / W, dy = (yy - H * .3) / H, core = Math.exp(-(dx * dx * 5 + dy * dy * 11) * 9);
-      const e = Math.max(0, n - .46) * 2.7 + core * 1.5, ro = Math.max(0, m - .5) * 3.1 + core * .5, te = Math.max(0, t - .55) * 1.8;
-      let R = 7 + e * 255 * .55 + ro * 255 * .5 + te * 20, G = 6 + e * 120 * .55 + ro * 55 * .5 + te * 90, B = 11 + e * 50 * .55 + ro * 125 * .5 + te * 130;
-      const d = (rnd0() - .5) * 14; R += d; G += d; B += d;
-      const q = v => Math.max(0, Math.min(255, Math.round(v / 28) * 28));
+      const nx = xx / W * 3.4, ny = yy / H * 2, n = fbm(nx + 1.7, ny + 4.2), m = fbm(nx * 1.3 + 9, ny * 1.3 + 2), t = fbm(nx * .8 + 20, ny * .8 + 7);
+      const dx = (xx - W * .5) / W, dy = (yy - H * .5) / H, core = Math.exp(-(dx * dx * 6 + dy * dy * 12) * 8);
+      const e = Math.max(0, n - .46) * 2.7 + core * 1.2, ro = Math.max(0, m - .5) * 3.1 + core * .4, te = Math.max(0, t - .55) * 1.8;
+      let R = 7 + e * 140 + ro * 128 + te * 20, G = 6 + e * 66 + ro * 28 + te * 90, B = 11 + e * 28 + ro * 62 + te * 130;
+      const d = (rnd0() - .5) * 14; R += d; G += d; B += d; const q = v => clamp(Math.round(v / 28) * 28, 0, 255);
       const k = (yy * W + xx) * 4; img.data[k] = q(R); img.data[k + 1] = q(G); img.data[k + 2] = q(B); img.data[k + 3] = 255;
     }
     x.putImageData(img, 0, 0);
   })();
+
+  /* ---------- twinkling stars over the pixel nebula (the original background) ---------- */
+  const SH = { extra: 0, boost: 0, calm: false };
   (function stars() {
-    const c = document.getElementById("stars"), x = c.getContext("2d"); let W, H, st = [], mx = 0, my = 0, run = false;
+    const c = $("bgfx"), x = c.getContext("2d"); let W, H, st = [], mx = 0, my = 0;
     const tints = ["#ffffff", "#ffffff", "#ffffff", "#ffd7b8", "#ffc4dc"];
     const size = () => { W = c.width = innerWidth; H = c.height = innerHeight; mx = W / 2; my = H / 2;
       st = [...Array(Math.round(W * H / 8500))].map(() => ({ x: Math.random() * W, y: Math.random() * H, s: Math.random() < .07 ? 3 : Math.random() < .4 ? 2 : 1, p: Math.random() * 6.28, sp: .5 + Math.random() * 1.6, d: .2 + Math.random() * .8, c: tints[Math.floor(Math.random() * tints.length)] })); };
     const draw = t => { x.clearRect(0, 0, W, H);
       for (const s of st) { x.globalAlpha = .3 + .7 * (.5 + .5 * Math.sin(t / 1000 * s.sp + s.p)); x.fillStyle = s.c;
-        const ox = (mx - W / 2) * .014 * s.d, oy = (my - H / 2) * .014 * s.d, px = Math.round(s.x + ox), py = Math.round(s.y + oy);
+        const ox = (mx - W / 2) * .014 * s.d, oy = (my - H / 2) * .014 * s.d, px = Math.round(s.x + ox), py = Math.round(((s.y + oy - SC.y * .06 * s.d) % H + H) % H);
         x.fillRect(px, py, s.s, s.s); if (s.s === 3) { x.fillRect(px - 3, py + 1, 9, 1); x.fillRect(px + 1, py - 3, 1, 9); } }
       x.globalAlpha = 1; };
-    const loop = t => { if (!run) return; draw(t); requestAnimationFrame(loop); };
     size(); draw(0); addEventListener("resize", () => { size(); draw(0); });
-    if (!reduce) { run = true; requestAnimationFrame(loop);
-      document.addEventListener("visibilitychange", () => { run = !document.hidden; if (run) requestAnimationFrame(loop); });
-      addEventListener("pointermove", e => { mx = e.clientX; my = e.clientY; }, { passive: true }); }
+    if (!reduce) { addEventListener("pointermove", e => { mx = e.clientX; my = e.clientY; }, { passive: true }); ticks.push(now => draw(now)); }
   })();
+  (function loop() { let last = 0; const f = now => { const dt = Math.min(.05, (now - (last || now)) / 1000), k = dt * 60; last = now; if (!document.hidden) for (const t of ticks) t(now, dt, k); requestAnimationFrame(f); }; requestAnimationFrame(f); })();
 
-  /* ---------- hero: roles typing, marquee ---------- */
-  (function typing() {
-    const rt = document.getElementById("rt"), roles = ["Plugin developer", "Skript tooling", "Discord bots", "Storefronts", "AI tooling", "Texture packs"];
+  /* ---------- sound: starts on its own, or on the first click, key or tap if the browser blocks that ---------- */
+  const au = new Audio("superstar.mp3"); au.loop = true; au.volume = .5; let sndOn = false, wantSnd = true; const sbtn = $("snd");
+  const label = () => { sbtn.textContent = sndOn ? "Sound On" : "Sound Off"; };
+  const evs = ["pointerdown", "keydown", "touchend"];
+  const kick = e => { if (e && e.target && e.target.closest && e.target.closest("#snd")) return; evs.forEach(n => removeEventListener(n, kick, true)); if (wantSnd && !sndOn) startSnd(); };
+  function startSnd() { try { au.currentTime = +sessionStorage.getItem("at") || au.currentTime; } catch (e) {} const p = au.play();
+    if (p && p.then) p.then(() => { sndOn = true; label(); }).catch(() => { sndOn = false; label(); evs.forEach(n => addEventListener(n, kick, true)); }); }
+  sbtn.onclick = () => { evs.forEach(n => removeEventListener(n, kick, true));
+    if (sndOn) { wantSnd = false; sndOn = false; au.pause(); label(); try { sessionStorage.setItem("snd", "0"); } catch (e) {} }
+    else { wantSnd = true; startSnd(); try { sessionStorage.setItem("snd", "1"); } catch (e) {} } };
+  addEventListener("pagehide", () => { try { sessionStorage.setItem("at", au.currentTime); } catch (e) {} });
+  label(); if (!SILENT) { let off = false; try { off = sessionStorage.getItem("snd") === "0"; } catch (e) {} if (off) wantSnd = false; else startSnd(); }
+
+  /* ---------- hero: ghost rows, roles, marquee ---------- */
+  (function typing() { const rt = $("rt"), roles = ["Plugin developer", "Skript tooling", "Discord bots", "Storefronts", "AI tooling", "Texture packs"];
     if (reduce) { rt.textContent = roles[0]; return; } let ri = 0, ci = 0, del = false;
-    (function tick() { const w = roles[ri];
-      rt.textContent = w.slice(0, ci); let wait = del ? 38 : 85;
-      if (!del && ci === w.length) { del = true; wait = 1500; } else if (del && ci === 0) { del = false; ri = (ri + 1) % roles.length; wait = 350; } else ci += del ? -1 : 1;
-      setTimeout(tick, wait); })();
-  })();
-  document.getElementById("mq").innerHTML = [0, 1].map(() => ["Java 21", "Paper API", "Skript", "discord.js", "Stripe", "SQLite / MySQL", "Gemini", "Resource packs", "Crash-safe", "Built to order"].map(t => `<span>${t}</span>`).join("")).join("");
+    (function tick() { const w = roles[ri]; rt.textContent = w.slice(0, ci); let wait = del ? 38 : 85;
+      if (!del && ci === w.length) { del = true; wait = 1500; } else if (del && ci === 0) { del = false; ri = (ri + 1) % roles.length; wait = 350; } else ci += del ? -1 : 1; setTimeout(tick, wait); })(); })();
 
-  /* ---------- skills ---------- */
-  [["{ }", "Java", "Java 21 on Paper 1.21. Crysgear is 38 classes, AegisStaff is 124.", 9],
-   ["API", "Paper API", "Commands, GUIs, custom items, NBT keys, holograms and per-viewer disguises.", 9],
-   [".sk", "Skript", "The glue on a live server: key handouts, staff chat tools, rules.", 1],
-   ["PNG", "Texture packs", "Custom item models and bitmap fonts, built to match the plugin.", 1],
-   ["BOT", "Discord bots", "discord.js v14. AegisStaff feeds staff activity straight to Discord.", 1],
-   ["</>", "Front-end", "Vanilla JS, no framework. A Stripe store built five ways from one data file.", 1],
-   ["AI", "AI tooling", "Gemini speech and tool calling. JARVIS has 75 tools, 9 modes and memory.", 1],
-   ["DB", "Databases", "SQLite or MySQL for what has to survive: punishments and audit logs.", 1]
-  ].forEach(([g, t, d, n]) => {
-    const c = el("div", "glass sk tilt rv"); c.style.setProperty("--w", Math.round(n / 12 * 100) + "%");
-    c.append(el("div", "gl", g), el("h3", null, t), el("p", null, d)); const b = el("div", "bar"); b.append(el("i")); c.append(b, el("div", "lab", "Shipped in " + n + " of 12")); document.getElementById("sk").append(c);
-  });
-
-  /* ---------- projects ---------- */
+  /* ---------- data ---------- */
+  const STAT = { jarvis: ["75", "tools behind it"], crysgear: ["14", "abilities, 4 elements"], kyroncrates: ["17", "classes, in-game editor"], aegisstaff: ["124", "classes, 40+ commands"],
+    freshsus: ["Anti-ESP", "hidden server-side"], civilisation: ["War", "towns, treasuries, alliances"], blockmorph: ["Prop hunt", "plus a free-roam disguise"], morph: ["Per-viewer", "state, so others see a mob"],
+    customperms: ["4", "roles, no dependencies"], ffastats: ["Free", "open source, a few KB"], skripts: ["3", "scripts"], kyronsmp: ["9", "ranks, Stripe checkout"] };
   const P = [
-    { n: "JARVIS", s: "jarvis", cat: "ai", kind: "AI assistant", ic: S.robot, g: "rgba(127,168,255,.3)", img: "assets/img/jarvis.jpg", d: "My own AI assistant. Voice in, voice out, seventy-five tools behind it, and a full diagnostics interface built around it." },
-    { n: "Crysgear", s: "crysgear", cat: "plugin", kind: "Paper plugin", ic: S.gem, g: "rgba(70,230,230,.28)", img: "assets/img/crysgear-items.png", pix: 1, d: "Cores and Aspects. Four elements, three tiers, fourteen abilities, and gear you can infuse them into." },
-    { n: "KyronCrates", s: "kyroncrates", cat: "plugin", kind: "Paper plugin", ic: S.chest, g: "rgba(255,210,63,.25)", d: "Physical crates and keys for an FFA server. Weighted loot, a roulette spin, and an in-game editor that replaces the config file." },
-    { n: "AegisStaff", s: "aegisstaff", cat: "plugin", kind: "Paper plugin", ic: S.shield, g: "rgba(127,168,255,.28)", img: "assets/img/aegis-panel.png", d: "The whole staff side of a server. Punishments that escalate on their own, staff mode, reports, and an audit log that watches the staff too." },
-    { n: "Fresh's Sus", s: "freshsus", cat: "plugin", kind: "Paper plugin", ic: S.eye, g: "rgba(224,48,48,.28)", d: "Catches players tunnelling down to find bases, and hides those bases from ESP clients server-side." },
-    { n: "Civilisation", s: "civilisation", cat: "plugin", kind: "Paper plugin", ic: S.flag, g: "rgba(224,48,48,.25)", d: "Towns, borders, treasuries and war. Players found nations, tax their citizens, sign alliances and fight over territory." },
-    { n: "Block Morph", s: "blockmorph", cat: "plugin", kind: "Paper plugin", ic: S.grass, g: "rgba(79,209,58,.25)", d: "Prop hunt, and a free-roam disguise. Become a solid block, lock yourself in place, and find out if anyone walks into you." },
-    { n: "Morph", s: "morph", cat: "plugin", kind: "Paper plugin", ic: S.creeper, g: "rgba(79,209,58,.28)", d: "Turn into a mob. Everyone else sees a zombie walking around doing exactly what you're doing." },
-    { n: "CustomPerms", s: "customperms", cat: "plugin", kind: "Paper plugin", ic: S.star, g: "rgba(255,210,63,.28)", d: "Ranks and permissions without LuckPerms. Four roles, a coloured star on every name, a config you can read in one sitting." },
-    { n: "FFA Stats", s: "ffastats", cat: "plugin", kind: "Free download", ic: S.bars, g: "rgba(176,76,255,.28)", d: "A live scoreboard of kills, deaths, wins, losses, streaks and K/D. Free, open source, a few kilobytes." },
-    { n: "Skript tooling", s: "skripts", cat: "skript", kind: "Skript", ic: S.scroll, g: "rgba(230,230,230,.18)", d: "The small stuff a live server actually runs on: key handouts, staff chat tools, rules." },
-    { n: "Kyron SMP store", s: "kyronsmp", cat: "web", kind: "Front-end", ic: emerald, g: "rgba(79,209,58,.3)", d: "Nine ranks, Stripe checkout, live player count. Built five times over from one data file so the client could pick a direction." }
+    { n: "JARVIS", s: "jarvis", cat: "ai", kind: "AI assistant", img: "assets/img/jarvis.jpg", d: "My own AI assistant. Voice in, voice out, seventy-five tools behind it, and a full diagnostics interface built around it." },
+    { n: "Crysgear", s: "crysgear", cat: "plugin", kind: "Paper plugin", img: "assets/img/crysgear-items.png", pix: 1, d: "Cores and Aspects. Four elements, three tiers, fourteen abilities, and gear you can infuse them into." },
+    { n: "KyronCrates", s: "kyroncrates", cat: "plugin", kind: "Paper plugin", d: "Physical crates and keys for an FFA server. Weighted loot, a roulette spin, and an in-game editor that replaces the config file." },
+    { n: "AegisStaff", s: "aegisstaff", cat: "plugin", kind: "Paper plugin", img: "assets/img/aegis-panel.png", d: "The whole staff side of a server. Punishments that escalate on their own, staff mode, reports, and an audit log that watches the staff too." },
+    { n: "Fresh's Sus", s: "freshsus", cat: "plugin", kind: "Paper plugin", d: "Catches players tunnelling down to find bases, and hides those bases from ESP clients server-side." },
+    { n: "Civilisation", s: "civilisation", cat: "plugin", kind: "Paper plugin", d: "Towns, borders, treasuries and war. Players found nations, tax their citizens, sign alliances and fight over territory." },
+    { n: "Block Morph", s: "blockmorph", cat: "plugin", kind: "Paper plugin", d: "Prop hunt, and a free-roam disguise. Become a solid block, lock yourself in place, and find out if anyone walks into you." },
+    { n: "Morph", s: "morph", cat: "plugin", kind: "Paper plugin", d: "Turn into a mob. Everyone else sees a zombie walking around doing exactly what you're doing." },
+    { n: "CustomPerms", s: "customperms", cat: "plugin", kind: "Paper plugin", d: "Ranks and permissions without LuckPerms. Four roles, a coloured star on every name, a config you can read in one sitting." },
+    { n: "FFA Stats", s: "ffastats", cat: "plugin", kind: "Free download", d: "A live scoreboard of kills, deaths, wins, losses, streaks and K/D. Free, open source, a few kilobytes." },
+    { n: "Skript tooling", s: "skripts", cat: "skript", kind: "Skript", d: "The small stuff a live server actually runs on: key handouts, staff chat tools, rules." },
+    { n: "Kyron SMP store", s: "kyronsmp", cat: "web", kind: "Front-end", d: "Nine ranks, Stripe checkout, live player count. Built five times over from one data file so the client could pick a direction." }
   ];
-  const wg = document.getElementById("work-grid");
+
+  /* ---------- work: scroll-driven 3D gallery (cards flow past the camera) ---------- */
+  const cam = $("cam"), tun = $("work"), cards = []; tun.style.setProperty("--n", P.length);
+  const sheet = $("sheet");
+  function openSheet(p) { $("sn").textContent = p.n; $("sk2").textContent = p.kind; const b = $("sbody"); b.innerHTML = ""; b.append(document.getElementById("tpl-" + p.s).content.cloneNode(true)); $("sheetin").scrollTop = 0; sheet.showModal(); }
+  $("sclose").onclick = () => sheet.close(); sheet.addEventListener("click", e => { if (e.target === sheet) sheet.close(); });
   P.forEach(p => {
-    const a = el("article", "glass proj rv"); a.dataset.cat = p.cat;
+    const a = el("article", "glass proj pc"); a.dataset.cat = p.cat; p.el = a;
     const bt = el("button", "pt"); bt.type = "button"; bt.setAttribute("aria-expanded", "false");
-    const th = el("span", "thumb"); th.style.setProperty("--g", p.g); th.innerHTML = sprite(p.ic); th.append(el("span", "kd", p.kind));
-    if (p.img) { const im = new Image(); im.alt = p.n + " in game"; im.loading = "lazy"; if (p.pix) im.className = "pix"; im.onload = () => { th.querySelector("svg").style.display = "none"; th.prepend(im); }; im.src = (location.protocol === "file:" || location.hostname === "localhost" ? ASSET : "") + p.img; }
+    const th = el("span", "thumb"); th.append(el("span", "big", STAT[p.s][0]), el("span", "sm", STAT[p.s][1]), el("span", "kd", p.kind));
+    if (p.img) { const im = new Image(); im.alt = p.n + " in game"; im.loading = "lazy"; if (p.pix) im.className = "pix"; im.onload = () => { th.classList.add("has-img"); th.prepend(im); }; im.src = (location.protocol === "file:" || location.hostname === "localhost" ? ASSET : "") + p.img; }
     const bd = el("span", "pbody"); bd.append(el("b", null, p.n), el("span", "d", p.d), el("span", "go", "Open details"));
-    bt.append(th, bd); const pd = el("div", "pdetail"); a.append(bt, pd); wg.append(a);
+    bt.append(th, bd); const pd = el("div", "pdetail"); a.append(bt, pd); cam.append(a); cards.push(a);
     bt.addEventListener("click", () => {
+      if (!de.classList.contains("no-tun")) { openSheet(p); return; }
       const open = !a.classList.contains("open");
-      wg.querySelectorAll(".proj.open").forEach(o => { o.classList.remove("open"); o.querySelector(".pt").setAttribute("aria-expanded", "false"); });
-      if (open) { if (!pd.firstChild) pd.append(el("div", "pb")), pd.firstChild.append(document.getElementById("tpl-" + p.s).content.cloneNode(true));
+      cards.forEach(o => { o.classList.remove("open"); o.querySelector(".pt").setAttribute("aria-expanded", "false"); });
+      if (open) { if (!pd.firstChild) { const pb = el("div", "pb"); pb.append(document.getElementById("tpl-" + p.s).content.cloneNode(true)); pd.append(pb); }
         a.classList.add("open"); bt.setAttribute("aria-expanded", "true"); setTimeout(() => a.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }), 60); }
     });
   });
   document.querySelectorAll(".filters button").forEach(b => b.addEventListener("click", () => {
     document.querySelectorAll(".filters button").forEach(x => x.setAttribute("aria-pressed", x === b));
-    wg.querySelectorAll(".proj").forEach(r => { r.hidden = !(b.dataset.f === "all" || r.dataset.cat === b.dataset.f); if (r.hidden) { r.classList.remove("open"); } });
-  }));
+    cards.forEach(r => { r.hidden = !(b.dataset.f === "all" || r.dataset.cat === b.dataset.f); if (r.hidden) r.classList.remove("open"); }); }));
+  let tunTop = 0, tunH = 0, pp = 0, lastpp = -1, lastIdx = -1;
+  const setMode = () => { const no = innerWidth < 900 || reduce; de.classList.toggle("no-tun", no); de.classList.toggle("no-hs", no); if (typeof hsLayout === "function") hsLayout(); if (no) cards.forEach(c => { c.style.transform = ""; c.style.opacity = ""; c.style.pointerEvents = ""; }); lastpp = -1; layout(); };
+  function layout() { const r = tun.getBoundingClientRect(); tunTop = r.top + scrollY; tunH = tun.offsetHeight - innerHeight; }
+  function fly(p) { const GAP = 1000, cz = p * (cards.length - 1) * GAP + 200, sx = innerWidth < 1100 ? .14 : .22; let idx = 0, best = 1e9;
+    cards.forEach((c, i) => { const z = -i * GAP + cz, x = i === 0 ? 0 : (i % 2 ? 1 : -1) * innerWidth * sx, y = ((i % 3) - 1) * 46;
+      const o = clamp((z + 3000) / 1400, 0, 1) * clamp((520 - z) / 420, 0, 1);
+      c.style.transform = `translate(-50%,-50%) translate3d(${x}px,${y}px,${z}px)`; c.style.opacity = o; c.style.pointerEvents = (o > .6 && z > -450) ? "auto" : "none"; if (Math.abs(z - 150) < best) { best = Math.abs(z - 150); idx = i; } });
+    if (idx !== lastIdx) { lastIdx = idx; $("ti").textContent = String(idx + 1).padStart(2, "0"); $("tt").textContent = P[idx].n; } $("tb").style.transform = `scaleX(${p})`; }
+  ticks.push((now, dt) => { if (de.classList.contains("no-tun") || tunH <= 0) return; const tp = clamp((scrollY - tunTop) / tunH, 0, 1); pp += (tp - pp) * Math.min(1, dt * 7); if (Math.abs(tp - pp) < .0004) pp = tp;
+    if (pp !== lastpp && scrollY > tunTop - innerHeight && scrollY < tunTop + tunH + innerHeight) { fly(pp); lastpp = pp; } });
+  addEventListener("resize", setMode); addEventListener("load", layout); if (window.ResizeObserver) new ResizeObserver(layout).observe(document.body); setMode();
 
-  /* ---------- services ---------- */
-  [[S.chest, "Plugins", "Java on Paper 1.21. Combat systems, loot, claims, staff tools, minigames, economies. Anything that needs to hold up with real players hitting it.", "Java 21 · Paper / Spigot · SQLite / MySQL"],
-   [S.gem, "Mods", "Client and server-side mods where a plugin can't reach. Custom rendering, new mechanics, things that need to change the game rather than sit on top of it.", "Java · custom mechanics"],
-   [S.grass, "Texture packs", "Custom item models, textures and bitmap fonts, built to match a plugin so the custom gear actually looks custom instead of being a renamed stick.", "Custom model data · item models · chat fonts"],
-   [S.robot, "Discord bots", "discord.js v14. Moderation, logging, applications, ticket systems, and bots that talk to your Minecraft server rather than sitting beside it.", "discord.js v14 · slash commands · moderation"]
-  ].forEach(([ic, t, d, m]) => { const c = el("div", "glass svc tilt rv"); const i = el("div", "ic"); i.innerHTML = sprite(ic);
-    const a = el("a", null, "How commissions work →"); a.href = "#process"; c.append(i, el("h3", null, t), el("p", null, d), el("div", "m", m), a); document.getElementById("svc").append(c); });
+  /* ---------- skills + services ---------- */
+  [["{ }", "Java", "Java 21 on Paper 1.21. Crysgear is 38 classes, AegisStaff is 124.", 9], ["API", "Paper API", "Commands, GUIs, custom items, NBT keys, holograms and per-viewer disguises.", 9],
+   [".sk", "Skript", "The glue on a live server: key handouts, staff chat tools, rules.", 1], ["PNG", "Texture packs", "Custom item models and bitmap fonts, built to match the plugin.", 1],
+   ["BOT", "Discord bots", "discord.js v14. AegisStaff feeds staff activity straight to Discord.", 1], ["</>", "Front-end", "Vanilla JS, no framework. A Stripe store built five ways from one data file.", 1],
+   ["AI", "AI tooling", "Gemini speech and tool calling. JARVIS has 75 tools, 9 modes and memory.", 1], ["DB", "Databases", "SQLite or MySQL for what has to survive: punishments and audit logs.", 1]
+  ].forEach(([g, t, d, n]) => { const c = el("div", "glass sk tilt"); c.style.setProperty("--w", Math.round(n / 12 * 100) + "%"); c.append(el("div", "gl", g), el("h3", null, t), el("p", null, d)); const b = el("div", "bar"); b.append(el("i")); c.append(b, el("div", "lab", "Shipped in " + n + " of 12")); $("sk").append(c); });
+  [[null, "Plugins", "Java on Paper 1.21. Combat systems, loot, claims, staff tools, minigames, economies. Anything that needs to hold up with real players hitting it.", "Java 21 · Paper / Spigot · SQLite / MySQL"],
+   [null, "Mods", "Client and server-side mods where a plugin can't reach. Custom rendering, new mechanics, things that need to change the game rather than sit on top of it.", "Java · custom mechanics"],
+   [null, "Texture packs", "Custom item models, textures and bitmap fonts, built to match a plugin so the custom gear actually looks custom instead of being a renamed stick.", "Custom model data · item models · chat fonts"],
+   [null, "Discord bots", "discord.js v14. Moderation, logging, applications, ticket systems, and bots that talk to your Minecraft server rather than sitting beside it.", "discord.js v14 · slash commands · moderation"]
+  ].forEach(([ic, t, d, m], idx) => { const c = el("div", "glass svc"); c.style.setProperty("--i", idx);
+    const mid = el("div"); mid.append(el("h3", null, t), el("div", "m", m)); const rt = el("div"); const a = el("a", null, "How commissions work →"); a.href = "#process"; rt.append(el("p", null, d), a); c.append(mid, rt); $("svc").append(c); });
 
-  /* ---------- behaviour ---------- */
+  /* ---------- behaviour: reveals, counters, tilt, timeline, menu, copy, wipe ---------- */
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
   document.querySelectorAll(".rv").forEach(e => io.observe(e));
+  document.querySelectorAll(".sk, .hrv").forEach(e => io.observe(e));
   document.querySelectorAll("[data-to]").forEach(b => { const to = +b.dataset.to; if (reduce) { b.textContent = to; return; }
     const o = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; o.disconnect(); const t0 = performance.now(); (function s(t) { const p = Math.min((t - t0) / 1200, 1); b.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(s); })(t0); }), { threshold: .6 }); o.observe(b); });
-  if (fine && !reduce) document.querySelectorAll(".tilt").forEach(t => {
-    t.addEventListener("pointermove", e => { const r = t.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5; t.style.transform = `perspective(900px) rotateY(${(px * 9).toFixed(2)}deg) rotateX(${(-py * 9).toFixed(2)}deg) translateY(-3px)`; });
-    t.addEventListener("pointerleave", () => { t.style.transform = ""; }); });
-  const tl = document.getElementById("tl"), fill = document.getElementById("tlfill"), items = [...tl.querySelectorAll(".tl-i")];
-  const tick = () => { const r = tl.getBoundingClientRect(), line = innerHeight * .62; const p = Math.max(0, Math.min(1, (line - r.top) / r.height)); fill.style.height = `calc(${(p * 100).toFixed(1)}% - 16px)`;
-    items.forEach(i => i.classList.toggle("on", i.getBoundingClientRect().top + 30 < line)); };
-  addEventListener("scroll", tick, { passive: true }); addEventListener("resize", tick); tick();
-  const navEl = document.getElementById("nav"), menuBtn = document.getElementById("menuBtn");
-  const setMenu = o => { navEl.dataset.open = o; menuBtn.setAttribute("aria-expanded", o); menuBtn.textContent = o ? "Close" : "Menu"; };
-  menuBtn.addEventListener("click", () => setMenu(navEl.dataset.open !== "true")); document.querySelectorAll("#menuList a").forEach(a => a.addEventListener("click", () => setMenu(false)));
-  document.querySelectorAll(".copy").forEach(b => b.addEventListener("click", () => {
-    const h = document.getElementById("hint"), lab = b.querySelector(".hc") || b, orig = lab.textContent, base = h.textContent;
+  if (fine && !reduce) document.querySelectorAll(".tilt").forEach(t => { t.addEventListener("pointermove", e => { const r = t.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5; t.style.transform = `perspective(900px) rotateY(${(px * 9).toFixed(2)}deg) rotateX(${(-py * 9).toFixed(2)}deg) translateY(-3px)`; }); t.addEventListener("pointerleave", () => { t.style.transform = ""; }); });
+  const tl = $("tl"), fill = $("tlfill"), items = [...tl.querySelectorAll(".tl-i")];
+  const tlTick = () => { const r = tl.getBoundingClientRect(), line = innerHeight * .62, p = clamp((line - r.top) / r.height, 0, 1); fill.style.height = `calc(${(p * 100).toFixed(1)}% - 16px)`; items.forEach(i => i.classList.toggle("on", i.getBoundingClientRect().top + 30 < line)); };
+  addEventListener("scroll", tlTick, { passive: true }); addEventListener("resize", tlTick); tlTick();
+  const navEl = $("nav"), menuBtn = $("menuBtn"); const setMenu = o => { navEl.dataset.open = o; menuBtn.setAttribute("aria-expanded", o); menuBtn.textContent = o ? "Close" : "Menu"; };
+  menuBtn.addEventListener("click", () => setMenu(navEl.dataset.open !== "true"));
+  document.querySelectorAll(".copy").forEach(b => b.addEventListener("click", () => { const h = $("hint2"), lab = b.querySelector(".hc") || b, orig = lab.textContent, base = h.textContent;
     const ok = () => { lab.textContent = "Copied"; h.textContent = "Copied. Add me and say what you're after."; setTimeout(() => { lab.textContent = orig; h.textContent = base; }, 2400); };
     (navigator.clipboard ? navigator.clipboard.writeText(b.dataset.copy).then(ok) : Promise.reject()).catch(() => { h.textContent = "Username: " + b.dataset.copy; }); }));
+  /* ---------- scroll effects ---------- */
+  // 1. hero: the wordmark swells and fades as you leave it, the copy drifts slower
+  (function heroScroll() { if (reduce) return; const nm = $("wordmark"), row = $("heroRow"), cue = document.querySelector(".scrollcue");
+    ticks.push(() => { const p = clamp(SC.y / (innerHeight * .85), 0, 1); if (p === 0 && !nm.style.transform) return;
+      nm.style.transform = `translateY(${(p * 110).toFixed(1)}px) scale(${(1 + p * .28).toFixed(3)})`; nm.style.opacity = (1 - p * .9).toFixed(3);
+      row.style.transform = `translateY(${(p * 50).toFixed(1)}px)`; row.style.opacity = (1 - p * 1.15).toFixed(3); cue.style.opacity = (1 - p * 3).toFixed(3); }); })();
+  // 2. words light up one by one as the paragraph scrolls into the middle of the screen
+  (function scrub() { const list = [...document.querySelectorAll("[data-scrub]")].map(e => { const words = e.textContent.trim().split(/\s+/); e.textContent = ""; return { e, w: words.map(t => { const s = el("span", "sw", t + " "); e.append(s); return s; }) }; });
+    if (reduce) return; ticks.push(() => { const vh = innerHeight; list.forEach(o => { const r = o.e.getBoundingClientRect(); if (r.bottom < -40 || r.top > vh + 40) return;
+      const p = clamp((vh * .86 - r.top) / (vh * .45 + r.height * .5), 0, 1), n = o.w.length; o.w.forEach((s, i) => { s.style.opacity = (.15 + .85 * clamp(p * (n + 5) - i, 0, 1)).toFixed(3); }); }); }); })();
+  // 3. skills: the page stops, the row rides sideways while you scroll
+  var hsTop = 0, hsH = 0, hsDist = 0; const track = $("sk");
+  function hsLayout() { const hs = $("skills"), tr = $("sk"); if (de.classList.contains("no-hs")) { hs.style.height = ""; hsH = 0; tr.style.transform = ""; return; }
+    hsDist = Math.max(0, tr.scrollWidth - innerWidth + 24); hs.style.height = (hsDist + innerHeight + 260) + "px"; hsH = hs.offsetHeight - innerHeight; hsTop = hs.getBoundingClientRect().top + scrollY; }
+  addEventListener("resize", () => { setTimeout(hsLayout, 60); }); addEventListener("load", hsLayout); hsLayout(); setTimeout(hsLayout, 400);
+  ticks.push(() => { if (de.classList.contains("no-hs") || hsH <= 0) return; track.style.transform = `translateX(${(-clamp((SC.y - hsTop) / hsH, 0, 1) * hsDist).toFixed(1)}px)`; });
+  // 4. marquee: speeds up and leans with scroll speed
+  (function marquee() { const m = $("mq"); m.innerHTML = [0, 1].map(() => ["Java 21", "Paper API", "Skript", "discord.js", "Stripe", "SQLite / MySQL", "Gemini", "Resource packs", "Crash-safe", "Built to order"].map(t => `<span>${t}</span>`).join("")).join("");
+    if (reduce) return; m.style.animation = "none"; let x = 0; ticks.push((now, dt) => { x -= (70 + Math.min(Math.abs(SC.v), 4000) * .5) * dt; const h = m.scrollWidth / 2; if (h > 0 && -x >= h) x += h; m.style.transform = `translateX(${x.toFixed(1)}px) skewX(${clamp(-SC.v * .006, -14, 14).toFixed(2)}deg)`; }); })();
+  // 5. services: each card shrinks and dims as the next one slides over it
+  (function stack() { if (reduce) return; const cs = [...document.querySelectorAll(".svc")]; ticks.push(() => { if (innerWidth < 700) { cs.forEach(c => { c.style.transform = ""; c.style.opacity = ""; }); return; }
+    cs.forEach((c, i) => { const nx = cs[i + 1]; if (!nx) return; const top = parseFloat(getComputedStyle(c).top) || 0, f = clamp(1 - (nx.getBoundingClientRect().top - (top + 20)) / c.offsetHeight, 0, 1); c.style.transform = `scale(${(1 - f * .07).toFixed(4)})`; c.style.opacity = (1 - f * .45).toFixed(3); }); }); })();
+  // 6. backdrop: the nebula drifts slower than the page
+  (function parallax() { if (reduce) return; const neb = $("neb"); ticks.push(() => { neb.style.transform = `translateY(${(-SC.y * .05).toFixed(1)}px) scale(1.12)`; }); })();
 
-  /* ---------- music: autostart if allowed, otherwise first click/key/tap ---------- */
-  (() => {
-    const bar = document.getElementById("bar"), song = document.getElementById("song"), np = document.getElementById("np"), npt = document.getElementById("npt");
-    const bPlay = document.getElementById("bPlay"), bPause = document.getElementById("bPause"), bStop = document.getElementById("bStop");
-    const NAME = "Superstar · Lupe Fiasco", audio = new Audio("superstar.mp3"); audio.loop = true; audio.preload = "auto"; let active = false;
-    const ui = pl => { bar.classList.toggle("playing", pl); np.classList.toggle("playing", pl); bPlay.textContent = active && !pl ? "Resume" : "Play"; bPlay.disabled = pl; bPause.disabled = !pl; bStop.disabled = !active; npt.textContent = NAME + (pl ? "" : active ? " (paused)" : ""); };
-    const play = () => audio.play().then(() => { active = true; ui(true); song.textContent = NAME; return true; }).catch(() => { ui(false); return false; });
-    const evs = ["pointerdown", "keydown", "touchend"], kick = () => { evs.forEach(e => removeEventListener(e, kick, true)); if (!active) play(); };
-    if (/[?&]silent\b/.test(location.search)) { ui(false); song.textContent = "Muted for this visit. Press Play."; }
-    else play().then(ok => { if (!ok) { song.textContent = "Click anywhere to start the music"; evs.forEach(e => addEventListener(e, kick, true)); } });
-    bPlay.addEventListener("click", play); bPause.addEventListener("click", () => { audio.pause(); ui(false); });
-    bStop.addEventListener("click", () => { audio.pause(); audio.currentTime = 0; active = false; ui(false); song.textContent = NAME; });
-  })();
+  /* section wipe: the screen sweeps, and the jump happens while it's covered */
+  document.addEventListener("click", e => { const a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a) return; const id = a.getAttribute("href").slice(1), t = id && $(id); if (!t) return; e.preventDefault(); setMenu(false);
+    const jump = () => { if (id === "work") scrollTo({ top: (de.classList.contains("no-tun") ? t.getBoundingClientRect().top + scrollY : tunTop), behavior: "instant" }); else t.scrollIntoView({ behavior: "instant", block: "start" }); history.replaceState(null, "", "#" + id); };
+    if (reduce) { jump(); return; } const w = $("wipe"); w.classList.remove("go"); void w.offsetWidth; w.classList.add("go"); setTimeout(jump, 430); setTimeout(() => w.classList.remove("go"), 900); });
 </script>
 </body>
 </html>
