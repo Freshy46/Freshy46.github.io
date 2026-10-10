@@ -80,6 +80,7 @@
   .cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 28px; }
   .facts { border-top: 1px solid var(--bd); }
   .facts div { display: grid; grid-template-columns: 110px 1fr; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--bd); font-size: 15.5px; }
+  .facts div[hidden] { display: none; }
   .facts dt { color: var(--mute); font-family: var(--mono); font-size: 13px; padding-top: 2px; } .facts dd { font-weight: 600; }
   .scrollcue { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); font: 500 11.5px var(--mono); letter-spacing: .24em; text-transform: uppercase; color: var(--mute); display: flex; flex-direction: column; align-items: center; gap: 10px; }
   .scrollcue::after { content: ""; width: 1px; height: 38px; background: var(--a1); transform-origin: top; animation: cue 1.8s ease-in-out infinite; }
@@ -305,6 +306,7 @@
           <div><dt>Also</dt><dd>Skript · discord.js · Stripe · vanilla JS</dd></div>
           <div><dt>Built</dt><dd>12 projects · one developer</dd></div>
           <div><dt>Reach me</dt><dd>Discord fresh46_</dd></div>
+          <div id="vrow" hidden><dt>Visits</dt><dd id="vc"></dd></div>
         </dl>
       </div>
     </div>
@@ -587,6 +589,20 @@
   ticks.push((now, dt) => { if (de.classList.contains("no-tun") || tunH <= 0) return; const tp = clamp((scrollY - tunTop) / tunH, 0, 1); pp += (tp - pp) * Math.min(1, dt * 7); if (Math.abs(tp - pp) < .0004) pp = tp;
     if (pp !== lastpp && scrollY > tunTop - innerHeight && scrollY < tunTop + tunH + innerHeight) { fly(pp); lastpp = pp; } });
   addEventListener("resize", setMode); addEventListener("load", layout); if (window.ResizeObserver) new ResizeObserver(layout).observe(document.body); setMode();
+
+  /* ---------- real visit counter: counts actual visits, nothing is made up ---------- */
+  function visitCounter(opt) { opt = opt || {}; const row = $("vrow"), out = $("vc"), NS = "freshy46-github-io", KEY = "visits";
+    const local = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:";
+    let skip = false, counted = false;
+    try { if (/[?&]nocount\b/.test(location.search)) localStorage.setItem("nocount", "1"); skip = localStorage.getItem("nocount") === "1"; } catch (e) {}
+    try { counted = sessionStorage.getItem("counted") === "1"; } catch (e) {}
+    const hit = opt.force === true || !(local || SILENT || skip || counted);   // a visit is counted once per browser session
+    fetch("https://abacus.jasoncameron.dev/" + (hit ? "hit" : "get") + "/" + NS + "/" + KEY).then(r => r.ok ? r.json() : Promise.reject()).then(d => {
+      if (!d || typeof d.value !== "number") return; if (hit) { try { sessionStorage.setItem("counted", "1"); } catch (e) {} }
+      row.hidden = false; const to = d.value, fmt = n => n.toLocaleString("en-US");
+      if (reduce || document.hidden) { out.textContent = fmt(to); return; } const t0 = performance.now();
+      (function s(t) { const p = Math.min((t - t0) / 900, 1); out.textContent = fmt(Math.round(to * (1 - Math.pow(1 - p, 3)))); if (p < 1) requestAnimationFrame(s); })(t0); }).catch(() => {}); }
+  visitCounter();
 
   /* ---------- skills + services ---------- */
   [["{ }", "Java", "Java 21 on Paper 1.21. Crysgear is 38 classes, AegisStaff is 124.", 9], ["API", "Paper API", "Commands, GUIs, custom items, NBT keys, holograms and per-viewer disguises.", 9],
