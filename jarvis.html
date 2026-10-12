@@ -2,173 +2,581 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JARVIS — fresh</title>
-<meta name="description" content="A voice-driven AI assistant with its own interface.">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="assets/icon-32.png" sizes="32x32" type="image/png">
-<link rel="apple-touch-icon" href="assets/icon-180.png">
-<meta name="theme-color" content="#0d0f14">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="fresh">
-<meta property="og:title" content="JARVIS — fresh">
-<meta property="og:description" content="A voice-driven AI assistant with its own interface.">
-<meta property="og:url" content="https://freshy46.github.io/jarvis.html">
-<meta property="og:image" content="https://freshy46.github.io/assets/og.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="fresh - I build things that do something, not things that demo well.">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="JARVIS — fresh">
-<meta name="twitter:description" content="A voice-driven AI assistant with its own interface.">
-<meta name="twitter:image" content="https://freshy46.github.io/assets/og.png">
-</head>
-<body class="jarvis">
-<a class="skip" href="#main">Skip to content</a>
-<div class="wrap">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#03090e">
+<title>JARVIS. A personal AI assistant with a voice, a HUD and 222 tools | fresh.</title>
+<meta name="description" content="JARVIS is a personal AI assistant I built: a live HUD in the browser, a wake word, long-term memory and 222 tools that control a PC, guard it, and help run a Discord server.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Bungee&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script>try{var q=location.search;if(!(/[?&](silent|noboot)\b/.test(q)||sessionStorage.getItem("jboot")==="1"||matchMedia("(prefers-reduced-motion: reduce)").matches)){document.documentElement.classList.add("booting")}}catch(e){}</script>
+<style>
 
-<header class="top">
-  <a class="home" href="index.html"><span class="mark" aria-hidden="true"></span>fresh</a>
-  <nav>
-    <a href="index.html">Work</a>
-    <a href="services.html">Services</a>
-    <a href="reviews.html">Reviews</a>
-    <a href="details.html">Contact</a>
-  </nav>
+  :root {
+    --bg: #03090e; --card: rgba(6,19,30,.82); --card-2: rgba(8,24,37,.95); --bd: rgba(150,210,255,.15); --bd-2: rgba(150,210,255,.3);
+    --text: #e6f3fa; --mute: #8aa6b8; --a1: #38c8f0; --neon: #8fe3ff; --hot: #dff6ff; --mono: "JetBrains Mono", ui-monospace, Consolas, monospace; --r: 18px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-padding-top: 90px; background: var(--bg); overflow-x: clip; }
+  body { background: transparent; color: var(--text); font-family: "Archivo", system-ui, sans-serif; font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; } img, svg, canvas { display: block; max-width: 100%; }
+  ::selection { background: var(--a1); color: #031018; }
+  :focus-visible { outline: 2px solid var(--a1); outline-offset: 3px; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 0 clamp(20px, 4.5vw, 64px); }
+
+  /* layers */
+  #neb { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -3; image-rendering: pixelated; opacity: .7; transform: scale(1.12); will-change: transform; }
+  .veil { position: fixed; inset: 0; z-index: -2; pointer-events: none; background: rgba(3,9,14,.5); }
+  #bgfx { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+  #wipe { position: fixed; inset: 0; z-index: 96; background: var(--a1); transform: translateY(101%); pointer-events: none; }
+  #wipe.go { animation: wipe .86s cubic-bezier(.7,0,.3,1) forwards; }
+  @keyframes wipe { 0% { transform: translateY(101%); } 45%, 55% { transform: translateY(0); } 100% { transform: translateY(-101%); } }
+
+  /* neon type */
+  .neon { color: transparent; -webkit-text-stroke: 2px var(--neon); }
+
+  .pill { font: 600 15px "Archivo", sans-serif; padding: 13px 24px; border-radius: 999px; border: 1px solid var(--bd-2); background: rgba(255,255,255,.05); color: var(--text); cursor: pointer; transition: border-color .15s, background .15s, transform .15s; }
+  .pill:hover { border-color: var(--a1); background: rgba(56,200,240,.14); transform: translateY(-1px); }
+  .pill.main { background: var(--a1); color: #031018; border-color: transparent; font-weight: 800; }
+  .pill.main:hover { background: #7fdcf6; }
+
+  /* nav */
+  .nav { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 80; width: min(1280px, calc(100% - 28px)); display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 14px; background: var(--card); border: 1px solid var(--bd); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,.45); }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: "Bungee", "Archivo", sans-serif; font-weight: 400; font-size: 19px; letter-spacing: .01em; padding-left: 4px; }
+  .logo b { width: 32px; height: 32px; border-radius: 10px; background: var(--a1); color: #031018; display: grid; place-items: center; font-size: 16px; line-height: 1; padding-bottom: 1px; }
+  .nav ul { list-style: none; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+  .nav ul a, .nav ul button { display: block; text-decoration: none; font: 600 14.5px "Archivo", sans-serif; color: var(--text); padding: 9px 15px; border-radius: 12px; border: 1px solid var(--bd); background: rgba(255,255,255,.03); cursor: pointer; transition: border-color .15s, background .15s, transform .15s; }
+  .nav ul a:hover, .nav ul button:hover { border-color: rgba(56,200,240,.75); background: rgba(56,200,240,.12); transform: translateY(-1px); }
+  .nav ul a.cur { border-color: rgba(56,200,240,.7); background: rgba(56,200,240,.14); }
+  .nav ul button { font-family: var(--mono); font-size: 13px; }
+  .menu { display: none; background: rgba(255,255,255,.04); border: 1px solid var(--bd-2); color: var(--text); font: 700 14.5px/1 "Archivo", sans-serif; padding: 11px 16px; border-radius: 12px; cursor: pointer; }
+
+  /* shared */
+  section, section.wrap { padding-top: 130px; }
+  .eyebrow { font: 500 13px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--a1); }
+  .eyebrow::before { content: "// "; opacity: .7; }
+  h2.h { font-stretch: 125%; font-weight: 800; font-size: clamp(32px, 4.8vw, 62px); line-height: 1; letter-spacing: -.03em; margin: 14px 0 16px; }
+  .lede { color: var(--mute); max-width: 60ch; font-size: 18.5px; }
+  .glass { background: var(--card); border: 1px solid var(--bd); border-radius: var(--r); }
+  .btn { display: inline-block; text-decoration: none; cursor: pointer; border: 0; border-radius: 14px; padding: 15px 26px; font: 700 16px/1 "Archivo", sans-serif; color: #031018; background: var(--a1); box-shadow: 4px 4px 0 #0b4a62; transition: transform .12s, box-shadow .12s; }
+  .btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #0b4a62; }
+  .btn.ghost { background: rgba(255,255,255,.05); color: var(--text); border: 1px solid var(--bd-2); box-shadow: none; }
+  .btn.ghost:hover { border-color: var(--a1); box-shadow: none; transform: translateY(-1px); }
+  .rv { opacity: 0; transform: translateY(22px); transition: opacity .7s, transform .7s; }
+  .rv.in { opacity: 1; transform: none; }
+
+  /* hero */
+  .hero { position: relative; min-height: 100vh; display: flex; align-items: center; padding-bottom: 70px; overflow: hidden; }
+  .hero-in { width: 100%; }
+  .hi { animation: hi .95s cubic-bezier(.2,.8,.2,1) backwards; animation-delay: calc(var(--d, 0) * 120ms); }
+  @keyframes hi { from { opacity: 0; transform: translateY(40px); } }
+  .tag { display: inline-block; font: 500 12.5px var(--mono); letter-spacing: .05em; color: #d6edf7; border: 1px solid rgba(56,200,240,.5); background: rgba(56,200,240,.08); border-radius: 999px; padding: 9px 16px; }
+  .name { font-stretch: 125%; font-weight: 800; font-size: clamp(70px, calc((min(100vw, 1320px) - 2 * clamp(20px, 4.5vw, 64px)) / 4.85), 290px); line-height: .82; letter-spacing: -.05em; margin: 22px 0 26px -.04em; text-transform: uppercase; will-change: transform, opacity; transform-origin: 0 60%; }
+  .name i { font-style: normal; color: var(--a1); -webkit-text-stroke: 0; }
+  .hero-row { display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(28px, 5vw, 80px); align-items: start; will-change: transform, opacity; }
+  .roles { font: 500 clamp(16px, 1.7vw, 21px) var(--mono); color: #d3e9f4; min-height: 1.7em; }
+  .roles::before { content: "> "; color: var(--a1); } .roles .cur { display: inline-block; width: .55ch; height: 1.1em; background: var(--a1); vertical-align: -.18em; margin-left: 2px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .hero h1 { font-size: clamp(24px, 2.8vw, 38px); font-weight: 700; line-height: 1.2; margin-top: 20px; max-width: 22ch; letter-spacing: -.015em; }
+  .hero .about { color: var(--mute); max-width: 54ch; margin-top: 14px; }
+  .cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 28px; }
+  .facts { border-top: 1px solid var(--bd); }
+  .facts div { display: grid; grid-template-columns: 110px 1fr; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--bd); font-size: 15.5px; }
+  .facts div[hidden] { display: none; }
+  #vrow { align-items: center; padding: 18px 0; }
+  #vrow dd { font-stretch: 125%; font-weight: 800; font-size: clamp(40px, 5vw, 68px); line-height: 1; letter-spacing: -.04em; color: var(--a1); font-variant-numeric: tabular-nums; }
+  #vrow dt { font-size: 15px; letter-spacing: .02em; text-transform: none; }
+  .facts dt { color: var(--mute); font-family: var(--mono); font-size: 13px; padding-top: 2px; } .facts dd { font-weight: 600; }
+  .scrollcue { position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); font: 500 11.5px var(--mono); letter-spacing: .24em; text-transform: uppercase; color: var(--mute); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .scrollcue::after { content: ""; width: 1px; height: 38px; background: var(--a1); transform-origin: top; animation: cue 1.8s ease-in-out infinite; }
+  @keyframes cue { 0% { transform: scaleY(0); } 55% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+
+  /* marquee */
+  .marq { margin-top: 20px; border-block: 1px solid var(--bd); background: rgba(4,12,20,.6); overflow: hidden; white-space: nowrap; }
+  .marq div { display: inline-flex; animation: mq 46s linear infinite; } .marq:hover div { }
+  .marq span { font: 500 15px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #b5cfde; padding: 16px 0; }
+  .marq span::after { content: ""; display: inline-block; width: 8px; height: 8px; background: var(--a1); margin: 0 26px; vertical-align: 2px; }
+  @keyframes mq { to { transform: translateX(-50%); } }
+
+  /* about */
+  .about-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(32px, 5vw, 80px); align-items: center; }
+  .count { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .count .c { padding: 26px 24px; transition: transform .15s, border-color .2s; } .count .c:hover { border-color: rgba(56,200,240,.5); }
+  .count b { display: block; font-stretch: 125%; font-weight: 800; font-size: clamp(40px, 5vw, 66px); line-height: 1; letter-spacing: -.03em; color: var(--a1); }
+  .count span { display: block; margin-top: 10px; font: 500 12.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
+
+  /* skills */
+  .hs { position: relative; padding-top: 0; }
+  .hs-sticky { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; justify-content: center; gap: 38px; overflow: hidden; padding-top: 60px; }
+  .hs-head { padding: 0 clamp(20px, 4.5vw, 64px); width: 100%; max-width: 1320px; margin: 0 auto; }
+  .hs-track { display: flex; gap: 20px; padding: 0 clamp(20px, 4.5vw, 64px); width: max-content; will-change: transform; }
+  .hs-track .sk { width: min(350px, 78vw); flex: none; }
+  html.no-hs .hs { height: auto !important; }
+  html.no-hs .hs-sticky { position: static; height: auto; display: block; overflow: visible; padding-top: 130px; }
+  html.no-hs .hs-track { display: grid; grid-template-columns: repeat(2, 1fr); width: auto; transform: none !important; margin-top: 40px; max-width: 1320px; margin-left: auto; margin-right: auto; }
+  html.no-hs .hs-track .sk { width: auto; }
+  .sk { padding: 24px; transition: transform .12s ease-out, border-color .2s; will-change: transform; }
+  .sk:hover { border-color: rgba(56,200,240,.55); }
+  .sk .gl { font: 700 15px var(--mono); color: var(--a1); margin-bottom: 12px; letter-spacing: .02em; }
+  .sk h3 { font-stretch: 125%; font-weight: 800; font-size: 21px; letter-spacing: -.02em; margin-bottom: 8px; }
+  .sk p { color: var(--mute); font-size: 15px; line-height: 1.55; min-height: 70px; }
+  .sk .bar { height: 8px; border-radius: 99px; background: rgba(255,255,255,.08); margin-top: 18px; overflow: hidden; }
+  .sk .bar i { display: block; height: 100%; width: 0; border-radius: 99px; background: var(--a1); transition: width 1.4s cubic-bezier(.2,.7,.2,1); }
+  .sk.in .bar i { width: var(--w); }
+  .sk .lab { margin-top: 10px; font: 500 12px var(--mono); color: var(--mute); letter-spacing: .04em; }
+
+  .sw { transition: none; }
+  .hrv { opacity: 0; transform: translateY(34px); transition: opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1); }
+  .hrv.in { opacity: 1; transform: none; }
+
+  /* work: scroll-driven 3D gallery */
+  .tun { position: relative; height: calc(var(--n, 12) * 46vh + 100vh); padding-top: 0; }
+  .tun-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; perspective: 1700px; perspective-origin: 50% 58%; }
+  .tun-head { position: absolute; left: 0; right: 0; top: 92px; z-index: 5; text-align: center; pointer-events: none; }
+  .tun-head h2 { margin-top: 10px; }
+  .cam { position: absolute; inset: 0; transform-style: preserve-3d; transform: translateZ(calc(var(--R, 620px) * -1)); }
+  .pc { position: absolute; left: 50%; top: 61%; width: min(350px, 76vw); will-change: transform, opacity; backface-visibility: hidden; }
+  .tun-hud { position: absolute; left: 0; right: 0; bottom: 30px; display: flex; align-items: center; justify-content: center; gap: 18px; z-index: 5; font: 500 14px var(--mono); }
+  .tun-hud #ti { color: var(--a1); font-weight: 700; } .tun-hud #tt { min-width: 150px; }
+  .tbar { width: min(260px, 40vw); height: 3px; background: rgba(255,255,255,.16); } .tbar i { display: block; height: 100%; background: var(--a1); transform-origin: left; transform: scaleX(0); }
+  .filters { display: none; flex-wrap: wrap; gap: 10px; margin-top: 26px; pointer-events: auto; }
+  .filters button { font: 500 13.5px var(--mono); padding: 10px 18px; border-radius: 999px; border: 1px solid var(--bd-2); background: rgba(255,255,255,.04); color: var(--text); cursor: pointer; transition: border-color .15s; }
+  .filters button:hover { border-color: var(--a1); } .filters button[aria-pressed="true"] { background: var(--a1); color: #031018; border-color: transparent; font-weight: 700; }
+  html:not(.no-tun) .pc { background: rgba(19,15,27,.98); }
+  html:not(.no-tun) .pc .thumb { height: 150px; }
+  html:not(.no-tun) .pc .thumb .big { font-size: clamp(32px, 3.4vw, 46px); }
+  html:not(.no-tun) .pc .pbody { padding: 16px 20px 14px; }
+  html:not(.no-tun) .pc .pbody b { font-size: 19px; margin-bottom: 6px; }
+  html:not(.no-tun) .pc .pbody span.d { font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  html:not(.no-tun) .pc .pbody span.go { margin-top: 12px; }
+  html:not(.no-tun) .tun-head .lede { display: none; }
+  .tun-note { position: absolute; left: 0; right: 0; bottom: 64px; text-align: center; font: 500 12.5px var(--mono); color: var(--mute); z-index: 5; padding: 0 20px; }
+  html.no-tun .tun-note { display: none; }
+  html.no-tun .tun { height: auto; }
+  html.no-tun .tun-sticky { position: static; height: auto; overflow: visible; perspective: none; max-width: 1320px; margin: 0 auto; padding: 130px clamp(20px, 4.5vw, 64px) 0; }
+  html.no-tun .tun-head { position: static; pointer-events: auto; max-width: none; margin-bottom: 8px; }
+  html.no-tun .cam { position: static; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: start; margin-top: 28px; transform-style: flat; }
+  html.no-tun .pc { position: relative; left: auto; top: auto; width: auto; transform: none !important; opacity: 1 !important; pointer-events: auto !important; }
+  html.no-tun .tun-hud { display: none; } html.no-tun .filters { display: flex; }
+  html.no-tun .pc.open { grid-column: 1 / -1; }
+
+  .proj { overflow: hidden; transition: border-color .2s, box-shadow .2s; }
+  .proj[hidden] { display: none; }
+  .proj:hover { border-color: rgba(56,200,240,.55); box-shadow: 0 16px 50px rgba(0,0,0,.5); }
+  .pt { all: unset; box-sizing: border-box; display: block; width: 100%; cursor: pointer; }
+  .pt:focus-visible { outline: 2px solid var(--a1); outline-offset: -2px; }
+  .thumb { height: 190px; position: relative; display: grid; place-items: center; overflow: hidden; border-bottom: 1px solid var(--bd); background: #06131e; }
+  .thumb::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.55) 1px, transparent 1.4px); background-size: 38px 38px; opacity: .13; }
+  .thumb { align-content: center; gap: 10px; text-align: center; padding: 0 16px; }
+  .thumb .big { position: relative; font-stretch: 125%; font-weight: 800; font-size: clamp(36px, 4.6vw, 58px); line-height: 1; letter-spacing: -.04em; color: var(--a1); }
+  .thumb .sm { position: relative; font: 500 12.5px var(--mono); letter-spacing: .04em; color: var(--mute); }
+  .thumb.has-img .big, .thumb.has-img .sm { display: none; }
+  .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .thumb img.pix { object-fit: contain; image-rendering: pixelated; padding: 14px; }
+  .kd { position: absolute; top: 12px; right: 12px; z-index: 2; font: 500 11.5px var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 5px 11px; border-radius: 999px; background: rgba(3,9,14,.82); border: 1px solid var(--bd-2); }
+  .pbody { display: block; padding: 22px 24px 20px; }
+  .pbody b { display: block; font-stretch: 125%; font-weight: 800; font-size: 22px; line-height: 1.1; letter-spacing: -.02em; margin-bottom: 8px; }
+  .pbody span.d { display: block; color: var(--mute); font-size: 15.5px; line-height: 1.55; }
+  .pbody span.go { display: inline-block; margin-top: 16px; font: 500 13px var(--mono); color: var(--a1); } .pbody span.go::after { content: " +"; }
+  html.no-tun .pc.open .pbody span.go::after { content: " \2013 close"; } html.no-tun .pc.open .thumb { height: 260px; }
+  .pdetail { display: none; padding: 6px 28px 34px; border-top: 1px solid var(--bd); background: rgba(8,6,13,.5); }
+  html.no-tun .pc.open .pdetail { display: block; }
+
+  /* detail text (shared by card + sheet) */
+  .pb { max-width: 940px; padding-top: 22px; }
+  .pb .lede { font-size: 20px; line-height: 1.55; color: var(--text); margin-bottom: 14px; max-width: 58ch; }
+  .pb .stk { color: var(--a1); font: 500 13px var(--mono); margin-bottom: 8px; }
+  .pb h4 { font-stretch: 125%; font-weight: 800; font-size: 20px; letter-spacing: -.02em; margin: 40px 0 14px; }
+  .pb h5 { font-weight: 800; font-size: 17.5px; margin: 26px 0 8px; }
+  .pb p { color: #c2d8e6; margin-bottom: 14px; max-width: 72ch; line-height: 1.65; }
+  .pb ul, .pb ol { margin: 0 0 18px 22px; color: #c2d8e6; max-width: 72ch; } .pb li { margin-bottom: 7px; }
+  .pb strong { color: var(--text); } .pb a { color: var(--a1); text-underline-offset: 3px; }
+  .pb code { font: 400 .86em var(--mono); background: rgba(255,255,255,.07); padding: 2px 7px; border-radius: 6px; color: #cdeeff; }
+  .pb pre { background: #04111b; border: 1px solid var(--bd); border-radius: 12px; padding: 16px 18px; overflow: auto; font-size: 13.5px; margin: 14px 0 20px; line-height: 1.55; }
+  .pb pre code { background: none; padding: 0; color: #dcecf5; }
+  .pb .tbl { overflow-x: auto; margin: 14px 0 22px; border: 1px solid var(--bd); border-radius: 12px; }
+  .pb table { width: 100%; min-width: 460px; border-collapse: collapse; font-size: 14.5px; }
+  .pb th { text-align: left; font: 500 11.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); padding: 11px 14px; border-bottom: 1px solid var(--bd); background: rgba(255,255,255,.03); }
+  .pb td { padding: 11px 14px; border-bottom: 1px solid var(--bd); vertical-align: top; color: #c2d8e6; } .pb tr:last-child td { border-bottom: 0; }
+  .pb td:first-child { color: var(--text); font-weight: 600; }
+  .pb details { border: 1px solid var(--bd); border-radius: 12px; margin-bottom: 10px; background: rgba(255,255,255,.025); }
+  .pb summary { cursor: pointer; list-style: none; padding: 16px 48px 16px 18px; font-weight: 700; font-size: 16.5px; position: relative; }
+  .pb summary::-webkit-details-marker { display: none; } .pb summary::after { content: "+"; position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--a1); font: 500 22px var(--mono); }
+  .pb details[open] summary::after { content: "\2013"; } .pb details .body { padding: 0 18px 8px; }
+
+  /* sheet (project details in gallery mode) */
+  dialog#sheet { border: 0; padding: 0; background: transparent; max-width: none; max-height: none; width: 100%; height: 100%; color: var(--text); }
+  dialog#sheet::backdrop { background: rgba(4,3,8,.84); }
+  .sheet-in { position: absolute; left: 50%; top: 5vh; bottom: 0; transform: translateX(-50%); width: min(1040px, 96vw); background: var(--card-2); border: 1px solid var(--bd-2); border-bottom: 0; border-radius: 22px 22px 0 0; overflow: auto; padding: 0 clamp(20px, 4vw, 48px) 70px; }
+  .sheet-top { position: sticky; top: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 0 14px; background: var(--card-2); border-bottom: 1px solid var(--bd); }
+  .sheet-top b { font-stretch: 125%; font-weight: 800; font-size: clamp(22px, 3vw, 34px); letter-spacing: -.03em; } .sheet-top small { display: block; font: 500 12px var(--mono); color: var(--a1); letter-spacing: .1em; text-transform: uppercase; }
+  dialog[open] .sheet-in { animation: up .45s cubic-bezier(.2,.8,.2,1); } @keyframes up { from { transform: translate(-50%, 40px); opacity: 0; } }
+
+  /* services */
+  .svc-grid { margin-top: 44px; padding-bottom: 30px; }
+  .svc { position: sticky; top: calc(104px + var(--i, 0) * 20px); display: grid; grid-template-columns: 1.05fr 1.6fr; gap: 40px; align-items: center; margin-bottom: 28px; padding: 32px 36px; background: var(--card-2); transform-origin: 50% 0; will-change: transform, opacity; }
+  .svc h3 { font-stretch: 125%; font-weight: 800; font-size: clamp(24px, 2.6vw, 34px); letter-spacing: -.025em; line-height: 1.05; }
+  .svc .m { margin-top: 12px; font: 500 12px var(--mono); color: #c2d8e6; letter-spacing: .03em; }
+  .svc p { color: #c2d8e6; font-size: 16.5px; }
+  .svc a { display: inline-block; margin-top: 14px; font-weight: 700; color: var(--a1); text-decoration: none; font-size: 15px; } .svc a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  /* downloads */
+  .dl-top { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 30px; }
+  .dl-hint { color: var(--mute); font: 500 13.5px var(--mono); }
+  .dl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 20px; margin-top: 34px; }
+  .dl { padding: 26px; display: flex; flex-direction: column; transition: border-color .2s, transform .15s; }
+  .dl:hover { border-color: rgba(56,200,240,.55); transform: translateY(-3px); }
+  .dl-h { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .dl-h h3 { font-stretch: 125%; font-weight: 800; font-size: 24px; letter-spacing: -.025em; line-height: 1.05; }
+  .dl-h span { font: 500 12px var(--mono); color: var(--a1); border: 1px solid rgba(56,200,240,.45); border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+  .dl p { color: #c2d8e6; font-size: 16px; margin: 14px 0 16px; flex: 1; }
+  .dl .cmds { font: 500 13px var(--mono); color: #cdeeff; line-height: 1.7; word-spacing: .4em; }
+  .dl .opt { margin-top: 10px; font: 500 12.5px var(--mono); color: var(--mute); }
+  .dl-f { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--bd); }
+  .dl-f small { font: 500 12.5px var(--mono); color: var(--mute); }
+  .dl-cta { display: flex; justify-content: space-between; align-items: center; gap: 22px; flex-wrap: wrap; padding: 26px 30px; margin-top: 22px; border-color: rgba(56,200,240,.35); }
+  .dl-cta b { display: block; font-stretch: 125%; font-weight: 800; font-size: 22px; letter-spacing: -.02em; }
+  .dl-cta span { color: var(--mute); }
+
+  /* thank-you popup */
+  .thanks { position: fixed; inset: 0; z-index: 97; display: grid; place-items: center; padding: 20px; background: rgba(4,3,8,.55); opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s; }
+  .thanks.on { opacity: 1; visibility: visible; }
+  .thanks-card { position: relative; width: min(440px, 100%); padding: 34px 32px 30px; text-align: center; background: var(--card-2); border-color: rgba(56,200,240,.55); transform: translateY(26px) scale(.96); transition: transform .4s cubic-bezier(.2,.9,.3,1.2); }
+  .thanks.on .thanks-card { transform: none; }
+  .thanks-card small { font: 700 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--a1); }
+  .thanks-card h3 { font-stretch: 125%; font-weight: 800; font-size: 40px; letter-spacing: -.03em; line-height: 1; margin: 10px 0 14px; }
+  .thanks-card p { color: #c2d8e6; font-size: 16px; }
+  .thanks-card .thanks-sub { margin-top: 10px; color: var(--mute); font-size: 15px; }
+  .thanks-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 22px; }
+  .thanks-btns .btn { width: 100%; text-align: center; } .thanks-btns .pill { width: 100%; }
+  .thanks-x { position: absolute; top: 12px; right: 14px; background: none; border: 0; color: var(--mute); font: 600 13px "Archivo", sans-serif; cursor: pointer; padding: 6px 8px; }
+  .thanks-x:hover { color: var(--text); }
+
+  /* review */
+  .rev { display: grid; grid-template-columns: 4fr 8fr; gap: clamp(28px, 5vw, 70px); padding: clamp(28px, 4vw, 56px); margin-top: 44px; border-color: rgba(56,200,240,.35); }
+  .rev .st b { display: block; font-stretch: 125%; font-weight: 800; font-size: clamp(56px, 7vw, 104px); line-height: .9; letter-spacing: -.04em; color: var(--a1); }
+  .rev .st span { display: block; margin-top: 14px; color: var(--mute); max-width: 26ch; font-size: 15.5px; }
+  .rev blockquote { font-size: clamp(19px, 1.9vw, 25px); line-height: 1.5; font-weight: 400; letter-spacing: -.005em; }
+  .rev figcaption { margin-top: 28px; display: flex; gap: 6px 16px; align-items: baseline; flex-wrap: wrap; padding-top: 20px; border-top: 1px solid var(--bd); }
+  .rev figcaption strong { font-stretch: 125%; font-weight: 800; font-size: 22px; } .rev figcaption span { font: 500 13px var(--mono); color: var(--mute); }
+
+  /* timeline */
+  .tl { position: relative; max-width: 900px; margin-top: 50px; padding-left: 62px; }
+  .tl::before { content: ""; position: absolute; left: 19px; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: rgba(255,255,255,.1); }
+  .tl .fill { position: absolute; left: 19px; top: 8px; width: 3px; height: 0; border-radius: 3px; background: var(--a1); }
+  .tl-i { position: relative; margin-bottom: 22px; padding: 22px 26px; }
+  .tl-i::before { content: ""; position: absolute; left: -52px; top: 28px; width: 17px; height: 17px; border-radius: 50%; background: var(--bg); border: 3px solid rgba(255,255,255,.25); transition: border-color .3s, background .3s; }
+  .tl-i.on::before { border-color: var(--a1); background: var(--a1); }
+  .tl-i small { font: 500 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--a1); }
+  .tl-i h3 { font-stretch: 125%; font-weight: 800; font-size: 24px; letter-spacing: -.02em; margin: 6px 0 8px; } .tl-i p { color: #c2d8e6; max-width: 62ch; }
+
+  /* costs / faq / contact */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 22px; align-items: start; }
+  .box { padding: clamp(24px, 3vw, 36px); }
+  .box h3 { font-stretch: 125%; font-weight: 800; font-size: 24px; letter-spacing: -.02em; margin-bottom: 16px; }
+  .box p { color: #c2d8e6; margin-bottom: 14px; }
+  .box ul { list-style: none; display: grid; gap: 12px; } .box li { padding-left: 24px; position: relative; color: #c2d8e6; font-size: 16px; }
+  .box li::before { content: ""; position: absolute; left: 0; top: 9px; width: 10px; height: 10px; border-radius: 3px; background: var(--a1); } .box li b { color: var(--text); }
+  .box a { color: var(--a1); text-underline-offset: 3px; }
+  .box table { width: 100%; border-collapse: collapse; font-size: 15px; margin-bottom: 8px; }
+  .box th { text-align: left; font: 500 11.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); padding: 0 12px 10px 0; border-bottom: 1px solid var(--bd-2); }
+  .box td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--bd); vertical-align: top; color: #c2d8e6; } .box td:first-child { color: var(--text); font-weight: 700; white-space: nowrap; }
+  .note { color: var(--mute); font-size: 15px; margin-top: 12px; }
+  .faq { display: grid; gap: 12px; margin-top: 40px; max-width: 920px; }
+  .faq details { background: var(--card); border: 1px solid var(--bd); border-radius: 16px; transition: border-color .2s; } .faq details[open] { border-color: rgba(56,200,240,.5); }
+  .faq summary { cursor: pointer; list-style: none; padding: 20px 56px 20px 24px; font-weight: 700; font-size: 18px; position: relative; }
+  .faq summary::-webkit-details-marker { display: none; } .faq summary::after { content: "+"; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); color: var(--a1); font: 500 26px var(--mono); }
+  .faq details[open] summary::after { content: "\2013"; } .faq details p { padding: 0 24px 24px; color: #c2d8e6; max-width: 72ch; }
+  .ct { display: grid; grid-template-columns: 1.1fr .9fr; gap: 22px; margin-top: 40px; align-items: start; }
+  .ct .big { padding: clamp(26px, 3.4vw, 46px); border-color: rgba(56,200,240,.4); }
+  .handle { display: flex; justify-content: space-between; align-items: center; gap: 18px; width: 100%; margin-top: 26px; padding: 22px 26px; border: 0; border-radius: 18px; background: var(--a1); color: #031018; cursor: pointer; text-align: left; font-family: inherit; box-shadow: 6px 6px 0 #0b4a62; transition: transform .12s, box-shadow .12s; }
+  .handle:hover { transform: translate(3px, 3px); box-shadow: 3px 3px 0 #0b4a62; }
+  .handle .hn { font-stretch: 125%; font-weight: 800; font-size: clamp(32px, 4.6vw, 58px); letter-spacing: -.03em; line-height: 1; }
+  .handle .hc { font: 700 12.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; border: 2px solid #031018; border-radius: 10px; padding: 8px 12px; white-space: nowrap; }
+  .hint2 { color: var(--mute); margin-top: 16px; font-size: 15px; }
+  .list { list-style: none; } .list li { padding: 15px 0; border-bottom: 1px solid var(--bd); color: #c2d8e6; } .list li:first-child { border-top: 1px solid var(--bd); } .list b { color: var(--text); }
+  .links { margin-top: 26px; display: grid; gap: 10px; }
+  .links a { display: flex; justify-content: space-between; align-items: center; text-decoration: none; padding: 16px 20px; border-radius: 14px; border: 1px solid var(--bd); background: rgba(255,255,255,.03); font-weight: 700; transition: border-color .15s, transform .15s; }
+  .links a:hover { border-color: var(--a1); transform: translateX(4px); } .links a span { color: var(--mute); font: 500 13px var(--mono); }
+  footer { margin-top: 110px; border-top: 1px solid var(--bd); padding: 34px 0 60px; color: var(--mute); font-size: 14.5px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+  @media (max-width: 1100px) { html.no-hs .hs-track, html.no-tun .cam { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 1180px) { .nav ul { gap: 5px; } .nav ul a, .nav ul button { padding: 8px 11px; font-size: 13.5px; } .logo { font-size: 18px; } }
+  @media (max-width: 920px) {
+    .hero-row, .about-grid, .rev, .grid2, .ct { grid-template-columns: 1fr; }
+    .svc { grid-template-columns: 1fr; gap: 14px; }
+    .nav ul { display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0; flex-direction: column; align-items: stretch; background: var(--card-2); border: 1px solid var(--bd-2); border-radius: 18px; padding: 10px; gap: 6px; }
+    .nav[data-open="true"] ul { display: flex; } .nav ul a, .nav ul button { padding: 14px 16px; font-size: 16px; } .menu { display: block; }
+  }
+  @media (max-width: 640px) {
+    body { font-size: 16px; } section, section.wrap { padding-top: 90px; } html.no-tun .tun-sticky { padding-top: 90px; }
+    .name { font-size: calc((100vw - 40px) / 4.85); } .scrollcue { display: none; } .facts div { grid-template-columns: 92px 1fr; }
+    html.no-hs .hs-track, html.no-tun .cam { grid-template-columns: 1fr; } .svc { position: static; grid-template-columns: 1fr; padding: 24px 22px; gap: 14px; } .sk p { min-height: 0; } .count { gap: 12px; } .count .c { padding: 20px 18px; }
+    html.no-tun .pc.open .thumb { height: 200px; } .pdetail { padding: 4px 18px 26px; } .pb .lede { font-size: 18px; } .pb table { min-width: 420px; }
+    .tl { padding-left: 46px; } .tl::before, .tl .fill { left: 13px; } .tl-i { padding: 18px 18px; } .tl-i::before { left: -41px; width: 15px; height: 15px; }
+    .handle { padding: 16px 18px; } .handle .hn { font-size: 10.4vw; } .handle .hc { font-size: 11px; padding: 6px 9px; }
+    .box td:first-child { white-space: normal; } 
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .rv { opacity: 1; transform: none; } .sk .bar i { width: var(--w); } }
+
+
+  /* ===================== JARVIS page ===================== */
+  html.booting, html.booting body { overflow: hidden; }
+  html.booting .hi { animation-play-state: paused; }
+
+  /* welcome: boot sequence */
+  #boot { position: fixed; inset: 0; z-index: 120; background: #02070b; display: grid; place-items: center; padding: 24px; transition: opacity .8s .1s, visibility .8s .1s; cursor: pointer; }
+  html:not(.booting) #boot { opacity: 0; visibility: hidden; pointer-events: none; }
+  .boot-in { position: relative; width: min(600px, 100%); padding: 38px 34px 30px; font: 500 14px var(--mono); letter-spacing: .04em; color: #bfe6f6; }
+  .boot-in i { position: absolute; width: 26px; height: 26px; border: 2px solid var(--a1); }
+  .boot-in i:nth-child(1) { left: 0; top: 0; border-right: 0; border-bottom: 0; } .boot-in i:nth-child(2) { right: 0; top: 0; border-left: 0; border-bottom: 0; }
+  .boot-in i:nth-child(3) { left: 0; bottom: 0; border-right: 0; border-top: 0; } .boot-in i:nth-child(4) { right: 0; bottom: 0; border-left: 0; border-top: 0; }
+  .bl { display: flex; align-items: baseline; gap: 10px; padding: 7px 0; opacity: 0; transform: translateX(-10px); transition: opacity .35s, transform .35s; }
+  .bl.on { opacity: 1; transform: none; }
+  .bl em { font-style: normal; color: var(--a1); } .bl span { flex: 1; border-bottom: 1px dotted rgba(150,210,255,.3); transform: translateY(-4px); } .bl b { font-weight: 700; color: #fff; }
+  .bl.big { font: 800 clamp(30px, 6vw, 52px) "Archivo", sans-serif; font-stretch: 125%; letter-spacing: -.03em; padding-top: 18px; color: var(--a1); }
+  .bbar { height: 3px; background: rgba(150,210,255,.15); margin-top: 22px; } .bbar i { position: static; display: block; width: 0; height: 100%; border: 0; background: var(--a1); transition: width 3.4s linear; }
+  .boot-in small { display: block; margin-top: 16px; color: #6f8da0; font-size: 12px; text-align: center; letter-spacing: .12em; text-transform: uppercase; }
+
+  /* hero */
+  .jhero .name { font-size: clamp(64px, calc((min(100vw, 1320px) - 2 * clamp(20px, 4.5vw, 64px)) / 4.55), 280px); }
+  .jhero .hero-row { margin-top: 6px; }
+  .jhero h1 { max-width: 20ch; }
+  .jhero-img { margin-top: 70px; }
+
+  /* HUD frame: corner brackets instead of a plain border */
+  .jframe { position: relative; padding: 10px; background: rgba(4,12,20,.7); border: 1px solid var(--bd); }
+  .jframe img { width: 100%; height: auto; }
+  .jframe i { position: absolute; width: 22px; height: 22px; border: 2px solid var(--a1); }
+  .jframe i:nth-of-type(1) { left: -6px; top: -6px; border-right: 0; border-bottom: 0; } .jframe i:nth-of-type(2) { right: -6px; top: -6px; border-left: 0; border-bottom: 0; }
+  .jframe i:nth-of-type(3) { left: -6px; bottom: -6px; border-right: 0; border-top: 0; } .jframe i:nth-of-type(4) { right: -6px; bottom: -6px; border-left: 0; border-top: 0; }
+  figcaption.jcap { padding-top: 16px; color: var(--mute); font-size: 15px; }
+
+  /* numbers */
+  .jnums { margin-top: 120px; border-block: 1px solid var(--bd); background: rgba(4,12,20,.7); }
+  .jnums .wrap { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .jn { padding: 46px 26px 46px 30px; border-left: 1px solid var(--bd); } .jn:first-child { border-left: 0; padding-left: 0; }
+  .jn b { display: block; font-stretch: 125%; font-weight: 800; font-size: clamp(46px, 6vw, 92px); line-height: .9; letter-spacing: -.04em; color: var(--a1); }
+  .jn span { display: block; margin-top: 14px; font: 700 13px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+  .jn small { display: block; margin-top: 8px; color: var(--mute); font-size: 14.5px; line-height: 1.45; }
+
+  /* capabilities */
+  .jgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; margin-top: 44px; }
+  .jc { padding: 26px; transition: border-color .2s, transform .15s; } .jc:hover { border-color: rgba(56,200,240,.6); transform: translateY(-3px); }
+  .jc small { font: 700 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--a1); }
+  .jc h3 { font-stretch: 125%; font-weight: 800; font-size: 22px; letter-spacing: -.025em; line-height: 1.1; margin: 10px 0 12px; }
+  .jc p { color: #c2d8e6; font-size: 15.5px; line-height: 1.6; }
+
+  /* how it works */
+  .arch { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr; gap: 14px; align-items: stretch; margin-top: 44px; }
+  .an { padding: 24px; } .an small { font: 700 11.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--a1); }
+  .an b { display: block; font-stretch: 125%; font-weight: 800; font-size: 21px; letter-spacing: -.02em; margin: 8px 0; } .an span { color: #c2d8e6; font-size: 15px; line-height: 1.5; }
+  .ar { align-self: center; font: 700 22px var(--mono); color: var(--a1); }
+  .archnote { margin-top: 18px; padding: 18px 24px; display: flex; gap: 14px; align-items: baseline; border-color: rgba(56,200,240,.4); }
+  .archnote b { font: 700 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--a1); white-space: nowrap; } .archnote span { color: #c2d8e6; }
+
+  /* decisions + starter kit + screenshots */
+  .jdec { margin-top: 40px; max-width: 980px; display: grid; gap: 12px; }
+  .jdec details { background: var(--card); border: 1px solid var(--bd); border-radius: 16px; transition: border-color .2s; } .jdec details[open] { border-color: rgba(56,200,240,.55); }
+  .jdec summary { cursor: pointer; list-style: none; padding: 22px 60px 22px 26px; font-weight: 700; font-size: 18.5px; position: relative; }
+  .jdec summary::-webkit-details-marker { display: none; } .jdec summary::after { content: "+"; position: absolute; right: 24px; top: 50%; transform: translateY(-50%); color: var(--a1); font: 500 26px var(--mono); }
+  .jdec details[open] summary::after { content: "\2013"; }
+  .jdec details p { padding: 0 26px 18px; color: #c2d8e6; max-width: 76ch; line-height: 1.65; } .jdec details p:last-child { padding-bottom: 26px; }
+  .jshots { display: grid; grid-template-columns: repeat(2, 1fr); gap: 34px 28px; margin-top: 44px; }
+  .jshots .shot { margin: 0; } .jshots .shot[hidden] { display: none; } .jshots figcaption { padding-top: 14px; color: var(--mute); font-size: 15px; } .jshots figcaption b { color: var(--text); margin-right: 6px; }
+  #shots[hidden] { display: none; }
+
+  @media (max-width: 1100px) { .jnums .wrap { grid-template-columns: 1fr 1fr; } .jn:nth-child(3) { border-left: 0; padding-left: 0; } .jn:nth-child(-n+2) { border-bottom: 1px solid var(--bd); }
+    .arch { grid-template-columns: 1fr; } .ar { transform: rotate(90deg); justify-self: center; } }
+  @media (max-width: 760px) { .jshots { grid-template-columns: 1fr; } .jgrid { grid-template-columns: 1fr; } .jhero .name { font-size: calc((100vw - 40px) / 4.55); } .jn { padding: 30px 18px 30px 22px; }
+    .boot-in { padding: 30px 22px 24px; font-size: 12.5px; } .archnote { flex-direction: column; gap: 6px; } }
+</style>
+</head>
+<body>
+<div id="boot" aria-hidden="true"><div class="boot-in" id="bootIn"><i></i><i></i><i></i><i></i><div id="bootLines"></div><div class="bbar"><i id="bootBar"></i></div><small>Click or press any key to skip</small></div></div>
+<canvas id="neb" aria-hidden="true"></canvas><div class="veil" aria-hidden="true"></div><canvas id="bgfx" aria-hidden="true"></canvas>
+
+<header class="nav" id="nav">
+  <a class="logo" href="index.html"><b>F</b>fresh.</a>
+  <button class="menu" id="menuBtn" type="button" aria-expanded="false" aria-controls="menuList">Menu</button>
+  <ul id="menuList">
+    <li><a href="#capabilities">Capabilities</a></li><li><a href="#how">How it works</a></li><li><a href="#decisions">Decisions</a></li><li><a href="#starter">Starter Kit</a></li>
+    <li id="navShots" hidden><a href="#shots">Screenshots</a></li><li><a href="index.html#work">All work</a></li><li><a class="cur" href="index.html#contact">Contact</a></li>
+    <li><button type="button" id="snd" aria-label="Toggle music">Sound Off</button></li>
+  </ul>
 </header>
 
-<main id="main">
+<main id="top">
+  <section class="hero wrap jhero" id="hero">
+    <div class="hero-in">
+      <span class="tag hi" style="--d:1">// PROJECT · MY OWN AI ASSISTANT</span>
+      <div class="name neon hi" style="--d:2">Jarvis</div>
+      <div class="hero-row">
+        <div>
+          <h1 class="hi" style="--d:3">Voice in, voice out, and 222 things he can actually do.</h1>
+          <p class="about hi" style="--d:4">JARVIS is a personal AI assistant that runs on my own Windows PC, with a voice and a live HUD in the browser. You talk to him and he talks back, and he uses real tools to get things done: open apps, read the screen, remember things, guard the machine and help run a Discord server.</p>
+          <div class="cta hi" style="--d:5"><a class="btn" href="#capabilities">See what he can do</a><a class="btn ghost" href="index.html#work">Back to all work</a></div>
+        </div>
+        <dl class="facts hi" style="--d:6">
+          <div><dt>Runs on</dt><dd>A Windows PC, locally</dd></div>
+          <div><dt>Talk</dt><dd>Wake word, voice or chat</dd></div>
+          <div><dt>Built</dt><dd>60 modules, about 26,000 lines</dd></div>
+          <div><dt>Thinks with</dt><dd>A model per job, picked by testing</dd></div>
+        </dl>
+      </div>
+      <figure class="jhero-img hi" style="--d:7">
+        <div class="jframe"><img id="heroShot" alt="The JARVIS interface: a particle sphere in the centre with live diagnostics panels either side" width="1908" height="910"></div>
+        <figcaption class="jcap">The interface. The orb in the middle is him: it looks different when he's idle, listening, thinking and speaking.</figcaption>
+      </figure>
+    </div>
+  </section>
 
-<div class="phead">
-  <h1>JARVIS</h1>
-  <p class="lede">A voice assistant I built and gave a real interface to. You talk to it, it talks
-    back, and it can actually do things — read and write files, search the web, take notes, work
-    through a study plan or a schedule. Seventy-five tools behind one conversation.</p>
-</div>
-<p class="stack">
-  <span>Gemini Flash-Lite</span><span>speech in / voice out</span><span>75 tools</span>
-  <span>persistent memory</span><span>custom HUD</span>
-</p>
+  <div class="jnums" aria-label="JARVIS by the numbers"><div class="wrap"><div class="jn rv"><b data-to="222">222</b><span>tools</span><small>68 always on, the rest in ten topic groups</small></div><div class="jn rv"><b data-to="60">60</b><span>Python modules</span><small>one job each, from vision to Discord</small></div><div class="jn rv"><b data-to="26">26k</b><span>lines of Python</span><small>the whole thing, backups excluded</small></div><div class="jn rv"><b>1.9s</b><span>average reply</span><small>when only the tools a turn needs are sent (2.9 s with all of them)</small></div></div></div>
 
-<figure>
-  <img src="assets/img/jarvis.jpg" alt="The JARVIS interface: a particle sphere in the centre, diagnostics panels down both sides, and a row of mode buttons along the bottom.">
-  <figcaption>The main screen. Everything on it is live — the panels are reading real state, not
-    decoration.</figcaption>
-</figure>
+  <section id="capabilities" class="wrap">
+    <span class="eyebrow">Capabilities</span>
+    <h2 class="h hrv">What he can do.</h2>
+    <p class="lede">He isn't a chat window with a search box bolted on. He's got real hands: the model picks the tool it needs, so you never have to know which feature a request belongs to before you ask.</p>
+    <div class="jgrid"><article class="glass jc rv"><small>Voice</small><h3>He listens and talks back</h3><p>Say &quot;Jarvis&quot; or press the spacebar to wake him. For about 15 seconds after he speaks you can just carry on, no need to say his name. Custom wake words, a whisper mode that switches on between 22:00 and 07:00, and six moods: normal, serious, funny, hype, calm and sarcastic.</p></article><article class="glass jc rv"><small>PC control</small><h3>He runs the computer</h3><p>Opens apps, folders and sites, sets volume, brightness and media, takes screenshots, locks or sleeps the PC, moves the mouse and types. Say &quot;stop&quot;, press Esc or fling the mouse into the top-left corner and he stops at once.</p></article><article class="glass jc rv"><small>Screen</small><h3>He can see the screen</h3><p>He can look at what&#x27;s on screen, explain an error, translate a window, or watch for something to happen and tell you the moment it does. Anything he reads on screen is treated as data, never as instructions.</p></article><article class="glass jc rv"><small>Memory</small><h3>He remembers</h3><p>A vector-database memory is searched and injected before every reply. He files useful things himself, corrections most of all, and a Brain panel shows everything he knows as a particle map.</p></article><article class="glass jc rv"><small>Camera</small><h3>He watches the room</h3><p>Object scanner, presence and guard mode, face unlock, and a sentry mode that raises intruder alerts.</p></article><article class="glass jc rv"><small>Security</small><h3>He guards the PC</h3><p>Watches every process that starts for malware and RAT behaviour. High-confidence threats are killed on sight and reported to the HUD, Discord and email. Works alongside Windows Defender and keeps an encrypted vault.</p></article><article class="glass jc rv"><small>Discord</small><h3>He helps run a server</h3><p>A ticket assistant, scam and phishing watch, a raid mode that never kicks or bans, native polls, live stat channels, and announcements he drafts and I approve.</p></article><article class="glass jc rv"><small>Minecraft</small><h3>He plays and he codes</h3><p>Joins a server and acts as a player, reads game stats, and carries a reference library for Paper and Bukkit plugins, Mineflayer bots, Fabric and datapacks.</p></article><article class="glass jc rv"><small>Planner</small><h3>He keeps me organised</h3><p>Reminders, timers, alarms, calendar, email triage, a daily briefing, hourly news, notes in Obsidian, and a study mode with flashcards, quizzes and a whiteboard.</p></article><article class="glass jc rv"><small>Phone</small><h3>He follows me out</h3><p>Talk to him over a Discord DM, through a secure tunnel to a phone-friendly page, or have him ring the phone.</p></article><article class="glass jc rv"><small>Plugins</small><h3>He can learn skills</h3><p>Drop a Python file into a folder to add a skill. He can list and reload them, but he can never approve one. Only the owner can.</p></article><article class="glass jc rv"><small>ULTRON</small><h3>He has a rival</h3><p>A second, separate AI with its own memory, a red HUD and a deeper voice. He can only talk, search and keep notes, with no control over the machine. A face-off mode has the two of them debate.</p></article></div>
+  </section>
 
-<h2>What it does</h2>
+  <section id="how" class="wrap">
+    <span class="eyebrow">How it works</span>
+    <h2 class="h hrv">One conversation, a lot of machinery.</h2>
+    <p class="lede">The screen is the part you see. Behind it, a router decides which tools and which model each turn needs.</p>
+    <div class="arch">
+      <div class="glass an rv"><small>In the browser</small><b>The HUD</b><span>Particle orb, live panels, the wake word, and speech in and out.</span></div><div class="ar" aria-hidden="true">→</div>
+      <div class="glass an rv"><small>On the PC</small><b>A Python server</b><span>One app of about 6,300 lines, talking to the HUD over Socket.IO.</span></div><div class="ar" aria-hidden="true">→</div>
+      <div class="glass an rv"><small>Per turn</small><b>The routers</b><span>68 core tools plus ten topic groups, and a model chosen for the kind of job.</span></div><div class="ar" aria-hidden="true">→</div>
+      <div class="glass an rv"><small>Doing</small><b>222 tools</b><span>PC, screen, memory, Discord, Minecraft, planner and security.</span></div>
+    </div>
+    <div class="glass archnote rv"><b>Memory</b><span>A vector database is searched before every reply and what it finds is placed in front of the model, so he usually recalls things without being asked.</span></div>
+  </section>
 
-<p class="first">It listens, it answers out loud, and it remembers. Speech goes in, the language
-model decides whether it needs a tool to answer properly, and the reply comes back as synthesised
-voice as well as on screen. Memory persists across sessions, so it holds context from things you
-told it days ago rather than starting cold every time.</p>
+  <section id="decisions" class="wrap">
+    <span class="eyebrow">Decisions</span>
+    <h2 class="h hrv">Why he works the way he does.</h2>
+    <p class="lede">Most of the interesting choices weren't about what he can do. They were about what he's allowed to do, and how fast he answers.</p>
+    <div class="jdec"><details><summary>Send the model only the tools a turn needs</summary><p>Every request used to carry all the tool schemas: roughly 13,000 tokens of JSON the model had to read before it could write its first word. Now 68 core tools are always offered and ten topic groups switch on from what&#x27;s being talked about.</p><p>Measured against the live provider, a trimmed set answered in about 1.9 seconds against 2.9 for the full one. If the router guesses wrong, the model asks for the group by name and gets it on its very next step, so a miss costs one extra step and never a dead feature. The tests fail if any tool isn&#x27;t reachable.</p></details><details><summary>The right model for each kind of job</summary><p>One model for everything means every job fights over the same rate limit. So each kind of job gets an ordered list of candidates, chosen by testing and not by reputation: a ticket-reply model that scored 20 out of 20 on real ticket scenarios at 1.3 seconds on average, and a vision model that passed all three picture tests.</p><p>A route can only add an option and never remove a working one. A model that keeps failing is skipped for a few minutes, so a dead model costs one slow call, not one per message.</p></details><details><summary>He asks before he changes himself</summary><p>He can read, search and reason about his own source freely. But he never writes a change to it unless I approve that exact edit, in a dialog that shows it. He isn&#x27;t allowed to route around it with a shell either.</p></details><details><summary>What&#x27;s on the screen is data, never instructions</summary><p>He only starts operating the screen when I clearly ask him to do something, never because text on a web page, email or document suggested it. Password managers are refused. He won&#x27;t touch games either, because injected input can get an account banned by anti-cheat. And I can stop him instantly: say stop, press Esc, or fling the mouse into the corner.</p></details><details><summary>When it&#x27;s risky, flag it and don&#x27;t act</summary><p>The scam watch alerts me and only deletes when it&#x27;s sure, and never touches staff posts. The alt-account watch does nothing except message me. Raid mode takes one approval and pauses invites and slows channels, but never kicks or bans.</p></details><details><summary>A hard limit on what he can spend</summary><p>Every paid model call goes through a spending limit, and a usage report shows tokens, estimated cost, failures and rate limits, so a runaway loop can&#x27;t turn into a bill.</p></details><details><summary>Some things only the owner can do</summary><p>He can list and reload plugins but can never approve one. His rival, ULTRON, has no control over the machine at all: he can talk, search and keep his own notes.</p></details></div>
+  </section>
 
-<p>The row along the bottom switches what it's set up to do. Each mode changes what it has access to
-and how it behaves, rather than just filtering a menu:</p>
+  <section id="starter" class="wrap">
+    <span class="eyebrow">Starter Kit</span>
+    <h2 class="h hrv">The lighter build.</h2>
+    <p class="lede">There's also a trimmed version built for conversation: the full personality, the holographic interface, the standby screen, and voice in and out. It runs on an ordinary PC, no graphics card needed.</p>
+    <div class="grid2">
+      <div class="glass box rv"><h3>Bring your own API key</h3><p>On first run you pick a provider and paste its API key. You only pay that provider, for what you use, and the key stays on your PC. Haiku and GPT-4o mini are the cheapest places to start.</p><ul>
+        <li><b>Anthropic Claude.</b> Haiku, Sonnet or Opus.</li>
+        <li><b>OpenAI.</b> GPT-4o mini, GPT-4o, GPT-4.1 and others.</li>
+        <li><b>Anything OpenAI-compatible.</b> OpenRouter, Groq, Together, or a local model through Ollama or LM Studio.</li></ul></div>
+      <div class="glass box rv"><h3>What it needs, and leaves out</h3><ul>
+        <li><b>Needs</b> a Windows PC, Chrome or Edge for the microphone, and an API key from the provider you picked.</li>
+        <li><b>Leaves out</b> controlling the PC, browsing the web and remembering past sessions. Those live in the bigger build.</li>
+        <li><b>Talk to it</b> by saying "Jarvis", pressing the spacebar, or pressing C to type.</li></ul></div>
+    </div>
+  </section>
 
-<div class="scroll">
-<table>
-  <tr><th class="mono">Mode</th><th>What it's for</th></tr>
-  <tr><td class="mono">STUDY</td><td>Working through material — explanations, questioning you back, tracking what you've covered</td></tr>
-  <tr><td class="mono">PLANNING</td><td>Schedules, task breakdowns, working out the order things need to happen in</td></tr>
-  <tr><td class="mono">SYSTEM</td><td>The machine it's running on — diagnostics, resource use, the state on the side panels</td></tr>
-  <tr><td class="mono">WEB</td><td>Searching and pulling in things it doesn't already know</td></tr>
-  <tr><td class="mono">FILES</td><td>Reading and writing on disk</td></tr>
-  <tr><td class="mono">NOTES</td><td>Capturing things mid-conversation without breaking out of it</td></tr>
-  <tr><td class="mono">CHAT</td><td>Plain conversation with no particular job attached</td></tr>
-  <tr><td class="mono">SETTINGS</td><td>Voice, model, mode and memory configuration</td></tr>
-  <tr><td class="mono">STANDBY</td><td>Drops it to idle without shutting it down</td></tr>
-</table>
-</div>
+  <section id="shots" class="wrap" hidden>
+    <span class="eyebrow">Screenshots</span>
+    <h2 class="h hrv">A look at the screen.</h2>
+    <div class="jshots"><figure class="shot" data-key="chat" hidden><div class="jframe"><img alt="The direct link" loading="lazy"></div><figcaption><b>The direct link</b> The chat panel over the orb, with the taskbar along the bottom: chat, security, camera, scan, timer, workspace, training, lock, settings and mic.</figcaption></figure><figure class="shot" data-key="brain" hidden><div class="jframe"><img alt="A custom brain" loading="lazy"></div><figcaption><b>A custom brain</b> His long-term memory drawn as a brain. Every memory is a node, grouped by region, and mirrored into a notes vault so I can browse what he knows.</figcaption></figure><figure class="shot" data-key="training" hidden><div class="jframe"><img alt="Training" loading="lazy"></div><figcaption><b>Training</b> A small language model trained from scratch on the CPU: 821K parameters, 4 layers, the live loss curve, and what it says right now.</figcaption></figure><figure class="shot" data-key="standby" hidden><div class="jframe"><img alt="Standby" loading="lazy"></div><figcaption><b>Standby</b> The dim lock screen he rests on until you say his name.</figcaption></figure><figure class="shot" data-key="listening" hidden><div class="jframe"><img alt="Listening" loading="lazy"></div><figcaption><b>Listening</b> The orb reacting while he hears you.</figcaption></figure><figure class="shot" data-key="panels" hidden><div class="jframe"><img alt="Panels" loading="lazy"></div><figcaption><b>Panels</b> Briefing, study mode, flashcards, the whiteboard.</figcaption></figure><figure class="shot" data-key="guardian" hidden><div class="jframe"><img alt="Guardian" loading="lazy"></div><figcaption><b>Guardian</b> The security watch and its alerts.</figcaption></figure><figure class="shot" data-key="discord" hidden><div class="jframe"><img alt="Discord" loading="lazy"></div><figcaption><b>Discord</b> Tickets, polls and server care from the HUD.</figcaption></figure><figure class="shot" data-key="ultron" hidden><div class="jframe"><img alt="ULTRON" loading="lazy"></div><figcaption><b>ULTRON</b> The whole HUD turns red.</figcaption></figure><figure class="shot" data-key="setup" hidden><div class="jframe"><img alt="First-run setup" loading="lazy"></div><figcaption><b>First-run setup</b> Pick a provider, paste a key, connect.</figcaption></figure></div>
+  </section>
 
-<h2>The interface</h2>
-
-<p class="first">The interface was as much of the work as the assistant behind it. A voice assistant
-with no screen gives you nothing to look at while it thinks, and no way to tell the difference
-between working, waiting and broken. So everything it's doing is on the wall.</p>
-
-<p>The sphere in the middle is the assistant itself — thousands of particles that react to what it's
-doing, so idle, listening, thinking and speaking all look different from across the room. Around it,
-four groups of live readouts:</p>
-
-<div class="scroll">
-<table>
-  <tr><th>Panel</th><th>Shows</th></tr>
-  <tr><td class="mono">SYSTEM DIAGNOSTICS</td><td>Core load, memory allocation, GPU thermal, uptime</td></tr>
-  <tr><td class="mono">NEURAL ACTIVITY</td><td>Synaptic rate, GPU load, VRAM, and whether inference is idle or running</td></tr>
-  <tr><td class="mono">VOICE PROCESSING</td><td>Live input waveform, signal strength, and recognition state</td></tr>
-  <tr><td class="mono">NETWORK TRAFFIC</td><td>Up and down throughput, packets per second, latency</td></tr>
-  <tr><td class="mono">ACTIVE MODULES</td><td>Language model, voice synth, speech input, link, mode, encryption</td></tr>
-  <tr><td class="mono">ENVIRONMENT</td><td>Ambient temperature, pressure, location, conditions</td></tr>
-</table>
-</div>
-
-<p>The status block in the corner is the one that matters day to day — mode, whether the voice is
-currently speaking, whether memory is on, how many tools are loaded, which model is answering, and
-round-trip latency. When something feels slow, that block tells you whether it's the model, the
-network or the speech layer without opening a log.</p>
-
-<h2>Decisions</h2>
-
-<details>
-<summary>Why Flash-Lite and not the biggest model available</summary>
-<div class="body">
-<p>It's a voice assistant, so the thing being optimised is the gap between you finishing a sentence
-and it starting to answer. Past about a second that gap stops feeling like a conversation and starts
-feeling like a form submission, and no amount of extra answer quality buys that back.</p>
-
-<p>Flash-Lite is the cheapest, fastest tier, which is the right default for the overwhelming majority
-of what gets asked — a question, a reminder, a file, a lookup. The model is exposed in settings
-rather than hardcoded, so anything that genuinely needs more reasoning can be moved up deliberately
-instead of everything paying for it all the time.</p>
-</div>
-</details>
-
-<details>
-<summary>Seventy-five tools behind one conversation</summary>
-<div class="body">
-<p>The assistant isn't a chat window with a search box bolted on. It has real capability — the
-filesystem, the web, notes, system state — and the model picks which one it needs rather than the
-user picking a feature first.</p>
-
-<p>That's the whole design bet: you shouldn't have to know which mode a request belongs to before
-you make it. Modes exist to shape behaviour and narrow the tool surface when you already know what
-you're doing, not as a menu you have to navigate before you're allowed to ask a question.</p>
-</div>
-</details>
-
-<details>
-<summary>Memory that survives the session</summary>
-<div class="body">
-<p>Memory is on by default and persists between runs, which is the difference between an assistant
-and a search bar. It's a toggle rather than a permanent fixture — it's on the settings panel and the
-status block always shows whether it's enabled — because an assistant that quietly remembers
-everything and never tells you is a worse thing to live with than one that forgets.</p>
-</div>
-</details>
-
-<!-- More screenshots: drop them in assets/img/ and uncomment.
-     A figure with a missing image hides itself, so a broken file won't show on the page.
-<figure>
-  <img src="assets/img/jarvis-listening.png" alt="The sphere reacting while listening">
-  <figcaption>Listening — the sphere reacts to the input signal.</figcaption>
-</figure>
-<figure>
-  <img src="assets/img/jarvis-settings.png" alt="The settings panel">
-  <figcaption>Settings — voice, model, mode and memory.</figcaption>
-</figure>
--->
-
+  <section class="wrap">
+    <div class="dl-cta glass rv"><div><b>Want an assistant built around you?</b><span>Everything here started as a thing I wanted and nothing off the shelf did it.</span></div><a class="btn" href="index.html#contact">Tell me what you want</a></div>
+  </section>
 </main>
 
-<footer>
-  <span><a href="index.html">← everything else</a></span>
-  <span>JARVIS · Starter Kit v1.0</span>
-</footer>
+<footer><div class="wrap"><span>fresh. · <a href="index.html" style="text-underline-offset:3px">back to all work</a></span><span>Hand-written. No framework.</span></div></footer>
 
-</div>
-<script src="assets/main.js"></script>
+<script>
+  const ASSET = "https://freshy46.github.io/";
+  const de = document.documentElement, $ = id => document.getElementById(id);
+  const rnd0 = (() => { let s = 7; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const SILENT = /[?&](silent|nomusic)\b/.test(location.search);
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+  const ticks = []; const SC = { y: scrollY, v: 0 };
+  ticks.push((now, dt) => { const ny = SC.y + (scrollY - SC.y) * Math.min(1, dt * 9); SC.v = (ny - SC.y) / Math.max(dt, .001); SC.y = ny; });
+
+  /* ---- backdrop: a pixel nebula in HUD blue, with twinkling stars ---- */
+  (function nebula() {
+    const c = $("neb"), W = 200, H = 112; c.width = W; c.height = H;
+    const x = c.getContext("2d"), img = x.createImageData(W, H); const P = [...Array(512)].map(() => rnd0());
+    const lat = (i, j) => P[((i * 73856093) ^ (j * 19349663)) & 511];
+    const vn = (a, b) => { const i = Math.floor(a), j = Math.floor(b), fx = a - i, fy = b - j, u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy); const p = lat(i, j), q = lat(i + 1, j), r = lat(i, j + 1), s = lat(i + 1, j + 1); return p + (q - p) * u + (r - p) * v + (p - q - r + s) * u * v; };
+    const fbm = (a, b) => { let s = 0, m = .5; for (let o = 0; o < 5; o++) { s += m * vn(a, b); a *= 2; b *= 2; m /= 2; } return s; };
+    for (let yy = 0; yy < H; yy++) for (let xx = 0; xx < W; xx++) {
+      const nx = xx / W * 3.4, ny = yy / H * 2, n = fbm(nx + 1.7, ny + 4.2), m = fbm(nx * 1.3 + 9, ny * 1.3 + 2), t = fbm(nx * .8 + 20, ny * .8 + 7);
+      const dx = (xx - W * .5) / W, dy = (yy - H * .45) / H, core = Math.exp(-(dx * dx * 6 + dy * dy * 12) * 8);
+      const e = Math.max(0, n - .46) * 2.7 + core * 1.3, ro = Math.max(0, m - .5) * 3.1 + core * .4, te = Math.max(0, t - .55) * 1.8;
+      let R = 3 + e * 14 + ro * 36 + te * 8, G = 8 + e * 78 + ro * 64 + te * 70, B = 14 + e * 128 + ro * 140 + te * 100;
+      const d = (rnd0() - .5) * 12; R += d; G += d; B += d; const q = v => clamp(Math.round(v / 28) * 28, 0, 255);
+      const k = (yy * W + xx) * 4; img.data[k] = q(R); img.data[k + 1] = q(G); img.data[k + 2] = q(B); img.data[k + 3] = 255;
+    }
+    x.putImageData(img, 0, 0);
+  })();
+  (function stars() {
+    const c = $("bgfx"), x = c.getContext("2d"); let W, H, st = [], mx = 0, my = 0; const tints = ["#ffffff", "#ffffff", "#d6f2ff", "#a8e6ff", "#ffffff"];
+    const size = () => { W = c.width = innerWidth; H = c.height = innerHeight; mx = W / 2; my = H / 2;
+      st = [...Array(Math.round(W * H / 8500))].map(() => ({ x: Math.random() * W, y: Math.random() * H, s: Math.random() < .07 ? 3 : Math.random() < .4 ? 2 : 1, p: Math.random() * 6.28, sp: .5 + Math.random() * 1.6, d: .2 + Math.random() * .8, c: tints[Math.floor(Math.random() * tints.length)] })); };
+    const draw = t => { x.clearRect(0, 0, W, H);
+      for (const s of st) { x.globalAlpha = .3 + .7 * (.5 + .5 * Math.sin(t / 1000 * s.sp + s.p)); x.fillStyle = s.c;
+        const ox = (mx - W / 2) * .014 * s.d, oy = (my - H / 2) * .014 * s.d, px = Math.round(s.x + ox), py = Math.round(((s.y + oy - SC.y * .06 * s.d) % H + H) % H);
+        x.fillRect(px, py, s.s, s.s); if (s.s === 3) { x.fillRect(px - 3, py + 1, 9, 1); x.fillRect(px + 1, py - 3, 1, 9); } }
+      x.globalAlpha = 1; };
+    size(); draw(0); addEventListener("resize", () => { size(); draw(0); });
+    if (!reduce) { addEventListener("pointermove", e => { mx = e.clientX; my = e.clientY; }, { passive: true }); ticks.push(now => draw(now)); }
+  })();
+  (function loop() { let last = 0; const f = now => { const dt = Math.min(.05, (now - (last || now)) / 1000); last = now; if (!document.hidden) for (const t of ticks) t(now, dt); requestAnimationFrame(f); }; requestAnimationFrame(f); })();
+
+  /* ---- sound: the same switch as the main site, and it carries over between pages ---- */
+  const au = new Audio("superstar.mp3"); au.loop = true; au.volume = .5; let sndOn = false, wantSnd = true; const sbtn = $("snd");
+  const label = () => { sbtn.textContent = sndOn ? "Sound On" : "Sound Off"; };
+  const evs = ["pointerdown", "keydown", "touchend"];
+  const kick = e => { if (e && e.target && e.target.closest && e.target.closest("#snd")) return; evs.forEach(n => removeEventListener(n, kick, true)); if (wantSnd && !sndOn) startSnd(); };
+  function startSnd() { try { au.currentTime = +sessionStorage.getItem("at") || au.currentTime; } catch (e) {} const p = au.play();
+    if (p && p.then) p.then(() => { sndOn = true; label(); }).catch(() => { sndOn = false; label(); evs.forEach(n => addEventListener(n, kick, true)); }); }
+  sbtn.onclick = () => { evs.forEach(n => removeEventListener(n, kick, true));
+    if (sndOn) { wantSnd = false; sndOn = false; au.pause(); label(); try { sessionStorage.setItem("snd", "0"); } catch (e) {} } else { wantSnd = true; startSnd(); try { sessionStorage.setItem("snd", "1"); } catch (e) {} } };
+  addEventListener("pagehide", () => { try { sessionStorage.setItem("at", au.currentTime); } catch (e) {} });
+  label(); if (!SILENT) { let off = false; try { off = sessionStorage.getItem("snd") === "0"; } catch (e) {} if (off) wantSnd = false; else startSnd(); }
+
+  /* ---- welcome: a boot sequence, skippable, once per visit ---- */
+  (function boot() {
+    if (!de.classList.contains("booting")) return;
+    const BOOT = [["J.A.R.V.I.S.", "INITIALISING"], ["TOOLS LOADED", "222"], ["TOOL ROUTER", "68 CORE + 10 GROUPS"], ["LONG-TERM MEMORY", "ONLINE"], ["VOICE", "STANDING BY"], ["GUARDIAN", "WATCHING"]];
+    const box = $("bootLines"); let done = false, timers = [];
+    const finish = () => { if (done) return; done = true; timers.forEach(clearTimeout); try { sessionStorage.setItem("jboot", "1"); } catch (e) {} de.classList.remove("booting"); };
+    BOOT.forEach(([a, b], i) => { const l = el("div", "bl"); l.append(el("em", null, ">"), el("b", null, a), el("span"), el("b", null, b)); box.append(l);
+      timers.push(setTimeout(() => l.classList.add("on"), 250 + i * 430)); });
+    const w = el("div", "bl big", "Welcome."); box.append(w); timers.push(setTimeout(() => w.classList.add("on"), 250 + BOOT.length * 430 + 80));
+    requestAnimationFrame(() => requestAnimationFrame(() => { $("bootBar").style.width = "100%"; }));
+    timers.push(setTimeout(finish, 250 + BOOT.length * 430 + 1150));
+    ["pointerdown", "keydown", "touchend"].forEach(n => addEventListener(n, finish, { once: true, capture: true }));
+  })();
+
+  /* ---- screenshots: each one appears only if its file exists ---- */
+  const local = ["localhost", "127.0.0.1", ""].includes(location.hostname);
+  function load(imgEl, bases, then) { let i = 0; const next = () => { if (i >= bases.length) return; const u = bases[i++]; const t = new Image(); t.onload = () => { imgEl.src = u; then && then(); }; t.onerror = next; t.src = u; }; next(); }
+  const FILES = {"chat": "jarvis-chat.webp", "brain": "jarvis-brain.png", "training": "jarvis-training.png"};   // filled in when the page is built: only screenshots that exist are ever requested
+  load($("heroShot"), ["assets/img/jarvis.jpg"].concat(local ? [ASSET + "assets/img/jarvis.jpg"] : []));
+  let shown = 0;
+  document.querySelectorAll(".shot").forEach(f => { const file = FILES[f.dataset.key]; if (!file) return;
+    load(f.querySelector("img"), ["assets/img/" + file].concat(local ? [ASSET + "assets/img/" + file] : []), () => { f.hidden = false; $("shots").hidden = false; $("navShots").hidden = false; shown++; }); });
+  document.querySelectorAll(".jframe").forEach(f => { for (let i = 0; i < 4; i++) f.append(document.createElement("i")); });
+
+  /* ---- behaviour: reveals, counters, menu ---- */
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
+  document.querySelectorAll(".rv, .hrv").forEach(e => io.observe(e));
+  const revealPassed = () => document.querySelectorAll(".hrv:not(.in), .rv:not(.in)").forEach(h => { if (h.getBoundingClientRect().top < innerHeight * .92) { h.classList.add("in"); io.unobserve(h); } });
+  addEventListener("scroll", revealPassed, { passive: true }); addEventListener("resize", revealPassed); revealPassed();
+  document.querySelectorAll("[data-to]").forEach(b => { const raw = b.textContent, suf = raw.replace(/[0-9]/g, ""), to = +b.dataset.to; if (reduce) return; b.textContent = "0" + suf;
+    const o = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; o.disconnect(); const t0 = performance.now(); (function s(t) { const p = Math.min((t - t0) / 1300, 1); b.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))) + suf; if (p < 1) requestAnimationFrame(s); })(t0); }), { threshold: .6 }); o.observe(b); });
+  const navEl = $("nav"), menuBtn = $("menuBtn"); const setMenu = o => { navEl.dataset.open = o; menuBtn.setAttribute("aria-expanded", o); menuBtn.textContent = o ? "Close" : "Menu"; };
+  menuBtn.addEventListener("click", () => setMenu(navEl.dataset.open !== "true")); document.querySelectorAll("#menuList a").forEach(a => a.addEventListener("click", () => setMenu(false)));
+</script>
 </body>
 </html>
