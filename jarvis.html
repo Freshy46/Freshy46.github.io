@@ -557,7 +557,7 @@
   /* ---- screenshots: each one appears only if its file exists ---- */
   const local = ["localhost", "127.0.0.1", ""].includes(location.hostname);
   function load(imgEl, bases, then) { let i = 0; const next = () => { if (i >= bases.length) return; const u = bases[i++]; const t = new Image(); t.onload = () => { imgEl.src = u; then && then(); }; t.onerror = next; t.src = u; }; next(); }
-  const FILES = {"freshy": "jarvis-freshy.png", "starter": "jarvis-starter.webp", "chat": "jarvis-chat.webp", "brain": "jarvis-brain.png", "training": "jarvis-training.png"};   // filled in when the page is built: only screenshots that exist are ever requested
+  const FILES = {"freshy": "jarvis-freshy.png?v=2234a339", "starter": "jarvis-starter.webp?v=f0b2ed6b", "chat": "jarvis-chat.webp?v=7ddc25e9", "brain": "jarvis-brain.png?v=48f5b1b8", "training": "jarvis-training.png?v=cc07a077"};   // filled in when the page is built: only screenshots that exist are ever requested
   const items = [...document.querySelectorAll(".jt")];
   const renumber = () => { let n = 0; items.forEach(f => { if (!f.hidden) f.querySelector("small").textContent = "Stage " + (++n); }); };
   items.forEach(f => { const file = FILES[f.dataset.key]; if (!file) return;
