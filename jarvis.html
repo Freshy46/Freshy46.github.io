@@ -343,7 +343,7 @@
   .jhero .name { font-size: clamp(64px, calc((min(100vw, 1320px) - 2 * clamp(20px, 4.5vw, 64px)) / 4.55), 280px); }
   .jhero .hero-row { margin-top: 6px; }
   .jhero h1 { max-width: 20ch; }
-  .jhero-img { margin-top: 70px; }
+  .jtl { max-width: 1080px; } .jt { padding: 26px 28px 30px; } .jt[hidden] { display: none; } .jt .jframe { margin-top: 22px; } .jt p { max-width: 72ch; }
 
   /* HUD frame: corner brackets instead of a plain border */
   .jframe { position: relative; padding: 10px; background: rgba(4,12,20,.7); border: 1px solid var(--bd); }
@@ -383,13 +383,11 @@
   .jdec summary::-webkit-details-marker { display: none; } .jdec summary::after { content: "+"; position: absolute; right: 24px; top: 50%; transform: translateY(-50%); color: var(--a1); font: 500 26px var(--mono); }
   .jdec details[open] summary::after { content: "\2013"; }
   .jdec details p { padding: 0 26px 18px; color: #c2d8e6; max-width: 76ch; line-height: 1.65; } .jdec details p:last-child { padding-bottom: 26px; }
-  .jshots { display: grid; grid-template-columns: repeat(2, 1fr); gap: 34px 28px; margin-top: 44px; }
-  .jshots .shot { margin: 0; } .jshots .shot[hidden] { display: none; } .jshots figcaption { padding-top: 14px; color: var(--mute); font-size: 15px; } .jshots figcaption b { color: var(--text); margin-right: 6px; }
-  #shots[hidden] { display: none; }
+  #timeline[hidden] { display: none; }
 
   @media (max-width: 1100px) { .jnums .wrap { grid-template-columns: 1fr 1fr; } .jn:nth-child(3) { border-left: 0; padding-left: 0; } .jn:nth-child(-n+2) { border-bottom: 1px solid var(--bd); }
     .arch { grid-template-columns: 1fr; } .ar { transform: rotate(90deg); justify-self: center; } }
-  @media (max-width: 760px) { .jshots { grid-template-columns: 1fr; } .jgrid { grid-template-columns: 1fr; } .jhero .name { font-size: calc((100vw - 40px) / 4.55); } .jn { padding: 30px 18px 30px 22px; }
+  @media (max-width: 760px) { .jgrid { grid-template-columns: 1fr; } .jhero .name { font-size: calc((100vw - 40px) / 4.55); } .jn { padding: 30px 18px 30px 22px; }
     .boot-in { padding: 30px 22px 24px; font-size: 12.5px; } .archnote { flex-direction: column; gap: 6px; } }
 </style>
 </head>
@@ -401,8 +399,8 @@
   <a class="logo" href="index.html"><b>F</b>fresh.</a>
   <button class="menu" id="menuBtn" type="button" aria-expanded="false" aria-controls="menuList">Menu</button>
   <ul id="menuList">
-    <li><a href="#capabilities">Capabilities</a></li><li><a href="#how">How it works</a></li><li><a href="#decisions">Decisions</a></li><li><a href="#starter">Starter Kit</a></li>
-    <li id="navShots" hidden><a href="#shots">Screenshots</a></li><li><a href="index.html#work">All work</a></li><li><a class="cur" href="index.html#contact">Contact</a></li>
+    <li id="navShots" hidden><a href="#timeline">Timeline</a></li><li><a href="#capabilities">Capabilities</a></li><li><a href="#how">How it works</a></li><li><a href="#decisions">Decisions</a></li><li><a href="#starter">Starter Kit</a></li>
+    <li><a href="index.html#work">All work</a></li><li><a class="cur" href="index.html#contact">Contact</a></li>
     <li><button type="button" id="snd" aria-label="Toggle music">Sound Off</button></li>
   </ul>
 </header>
@@ -425,11 +423,14 @@
           <div><dt>Thinks with</dt><dd>A model per job, picked by testing</dd></div>
         </dl>
       </div>
-      <figure class="jhero-img hi" style="--d:7">
-        <div class="jframe"><img id="heroShot" alt="The JARVIS interface: a particle sphere in the centre with live diagnostics panels either side" width="1908" height="910"></div>
-        <figcaption class="jcap">The interface. The orb in the middle is him: it looks different when he's idle, listening, thinking and speaking.</figcaption>
-      </figure>
     </div>
+  </section>
+
+  <section id="timeline" class="wrap" hidden>
+    <span class="eyebrow">Timeline</span>
+    <h2 class="h hrv">How he's changed.</h2>
+    <p class="lede">From a green desktop app to a blue HUD, then a memory you can see and a model he trains himself. The line follows you down the page.</p>
+    <div class="tl jtl" id="tl"><div class="fill" id="tlfill"></div><div class="glass tl-i jt" data-key="freshy" hidden><small>Stage</small><h3>Freshy AI</h3><p>The green one. A desktop app with launcher buttons for Chrome, Discord, Spotify, Steam and Claude, tabs for chat, notes, calendar and tracking, moods and ambient sounds, and a node-graph orb that animates while it speaks.</p><div class="jframe"><img alt="Freshy AI" loading="lazy"></div></div><div class="glass tl-i jt" data-key="starter" hidden><small>Stage</small><h3>The Starter Kit</h3><p>The blue holographic interface. A particle orb in the middle, live panels either side for diagnostics, neural activity, voice processing, network, modules and environment, and a mode bar along the bottom. This is an older build: its status block reads 75 tools, and the full build now has 222.</p><div class="jframe"><img alt="The Starter Kit" loading="lazy"></div></div><div class="glass tl-i jt" data-key="chat" hidden><small>Stage</small><h3>The direct link</h3><p>The chat panel over the orb, with the taskbar along the bottom: chat, security, camera, scan, timer, workspace, training, lock, settings and mic.</p><div class="jframe"><img alt="The direct link" loading="lazy"></div></div><div class="glass tl-i jt" data-key="brain" hidden><small>Stage</small><h3>A custom brain</h3><p>His long-term memory drawn as a brain. Every memory is a node, grouped by region, and mirrored into a notes vault so I can browse what he knows.</p><div class="jframe"><img alt="A custom brain" loading="lazy"></div></div><div class="glass tl-i jt" data-key="training" hidden><small>Stage</small><h3>Training</h3><p>A small language model trained from scratch on the CPU: 821K parameters, 4 layers, the live loss curve, and what it says right now.</p><div class="jframe"><img alt="Training" loading="lazy"></div></div><div class="glass tl-i jt" data-key="standby" hidden><small>Stage</small><h3>Standby</h3><p>The dim lock screen he rests on until you say his name.</p><div class="jframe"><img alt="Standby" loading="lazy"></div></div><div class="glass tl-i jt" data-key="listening" hidden><small>Stage</small><h3>Listening</h3><p>The orb reacting while he hears you.</p><div class="jframe"><img alt="Listening" loading="lazy"></div></div><div class="glass tl-i jt" data-key="panels" hidden><small>Stage</small><h3>Panels</h3><p>Briefing, study mode, flashcards, the whiteboard.</p><div class="jframe"><img alt="Panels" loading="lazy"></div></div><div class="glass tl-i jt" data-key="guardian" hidden><small>Stage</small><h3>Guardian</h3><p>The security watch and its alerts.</p><div class="jframe"><img alt="Guardian" loading="lazy"></div></div><div class="glass tl-i jt" data-key="discord" hidden><small>Stage</small><h3>Discord</h3><p>Tickets, polls and server care from the HUD.</p><div class="jframe"><img alt="Discord" loading="lazy"></div></div><div class="glass tl-i jt" data-key="ultron" hidden><small>Stage</small><h3>ULTRON</h3><p>The whole HUD turns red.</p><div class="jframe"><img alt="ULTRON" loading="lazy"></div></div><div class="glass tl-i jt" data-key="setup" hidden><small>Stage</small><h3>First-run setup</h3><p>Pick a provider, paste a key, connect.</p><div class="jframe"><img alt="First-run setup" loading="lazy"></div></div></div>
   </section>
 
   <div class="jnums" aria-label="JARVIS by the numbers"><div class="wrap"><div class="jn rv"><b data-to="222">222</b><span>tools</span><small>68 always on, the rest in ten topic groups</small></div><div class="jn rv"><b data-to="60">60</b><span>Python modules</span><small>one job each, from vision to Discord</small></div><div class="jn rv"><b data-to="26">26k</b><span>lines of Python</span><small>the whole thing, backups excluded</small></div><div class="jn rv"><b>1.9s</b><span>average reply</span><small>when only the tools a turn needs are sent (2.9 s with all of them)</small></div></div></div>
@@ -477,11 +478,6 @@
     </div>
   </section>
 
-  <section id="shots" class="wrap" hidden>
-    <span class="eyebrow">Screenshots</span>
-    <h2 class="h hrv">A look at the screen.</h2>
-    <div class="jshots"><figure class="shot" data-key="chat" hidden><div class="jframe"><img alt="The direct link" loading="lazy"></div><figcaption><b>The direct link</b> The chat panel over the orb, with the taskbar along the bottom: chat, security, camera, scan, timer, workspace, training, lock, settings and mic.</figcaption></figure><figure class="shot" data-key="brain" hidden><div class="jframe"><img alt="A custom brain" loading="lazy"></div><figcaption><b>A custom brain</b> His long-term memory drawn as a brain. Every memory is a node, grouped by region, and mirrored into a notes vault so I can browse what he knows.</figcaption></figure><figure class="shot" data-key="training" hidden><div class="jframe"><img alt="Training" loading="lazy"></div><figcaption><b>Training</b> A small language model trained from scratch on the CPU: 821K parameters, 4 layers, the live loss curve, and what it says right now.</figcaption></figure><figure class="shot" data-key="standby" hidden><div class="jframe"><img alt="Standby" loading="lazy"></div><figcaption><b>Standby</b> The dim lock screen he rests on until you say his name.</figcaption></figure><figure class="shot" data-key="listening" hidden><div class="jframe"><img alt="Listening" loading="lazy"></div><figcaption><b>Listening</b> The orb reacting while he hears you.</figcaption></figure><figure class="shot" data-key="panels" hidden><div class="jframe"><img alt="Panels" loading="lazy"></div><figcaption><b>Panels</b> Briefing, study mode, flashcards, the whiteboard.</figcaption></figure><figure class="shot" data-key="guardian" hidden><div class="jframe"><img alt="Guardian" loading="lazy"></div><figcaption><b>Guardian</b> The security watch and its alerts.</figcaption></figure><figure class="shot" data-key="discord" hidden><div class="jframe"><img alt="Discord" loading="lazy"></div><figcaption><b>Discord</b> Tickets, polls and server care from the HUD.</figcaption></figure><figure class="shot" data-key="ultron" hidden><div class="jframe"><img alt="ULTRON" loading="lazy"></div><figcaption><b>ULTRON</b> The whole HUD turns red.</figcaption></figure><figure class="shot" data-key="setup" hidden><div class="jframe"><img alt="First-run setup" loading="lazy"></div><figcaption><b>First-run setup</b> Pick a provider, paste a key, connect.</figcaption></figure></div>
-  </section>
 
   <section class="wrap">
     <div class="dl-cta glass rv"><div><b>Want an assistant built around you?</b><span>Everything here started as a thing I wanted and nothing off the shelf did it.</span></div><a class="btn" href="index.html#contact">Tell me what you want</a></div>
@@ -561,11 +557,15 @@
   /* ---- screenshots: each one appears only if its file exists ---- */
   const local = ["localhost", "127.0.0.1", ""].includes(location.hostname);
   function load(imgEl, bases, then) { let i = 0; const next = () => { if (i >= bases.length) return; const u = bases[i++]; const t = new Image(); t.onload = () => { imgEl.src = u; then && then(); }; t.onerror = next; t.src = u; }; next(); }
-  const FILES = {"chat": "jarvis-chat.webp", "brain": "jarvis-brain.png", "training": "jarvis-training.png"};   // filled in when the page is built: only screenshots that exist are ever requested
-  load($("heroShot"), ["assets/img/jarvis.jpg"].concat(local ? [ASSET + "assets/img/jarvis.jpg"] : []));
-  let shown = 0;
-  document.querySelectorAll(".shot").forEach(f => { const file = FILES[f.dataset.key]; if (!file) return;
-    load(f.querySelector("img"), ["assets/img/" + file].concat(local ? [ASSET + "assets/img/" + file] : []), () => { f.hidden = false; $("shots").hidden = false; $("navShots").hidden = false; shown++; }); });
+  const FILES = {"freshy": "jarvis-freshy.png", "starter": "jarvis-starter.webp", "chat": "jarvis-chat.webp", "brain": "jarvis-brain.png", "training": "jarvis-training.png"};   // filled in when the page is built: only screenshots that exist are ever requested
+  const items = [...document.querySelectorAll(".jt")];
+  const renumber = () => { let n = 0; items.forEach(f => { if (!f.hidden) f.querySelector("small").textContent = "Stage " + (++n); }); };
+  items.forEach(f => { const file = FILES[f.dataset.key]; if (!file) return;
+    load(f.querySelector("img"), ["assets/img/" + file].concat(local ? [ASSET + "assets/img/" + file] : []), () => { f.hidden = false; $("timeline").hidden = false; $("navShots").hidden = false; renumber(); }); });
+  const tl = $("tl"), tlfill = $("tlfill");
+  const tlTick = () => { const r = tl.getBoundingClientRect(), line = innerHeight * .62, p = clamp((line - r.top) / r.height, 0, 1); tlfill.style.height = `calc(${(p * 100).toFixed(1)}% - 16px)`;
+    items.forEach(i => { if (!i.hidden) i.classList.toggle("on", i.getBoundingClientRect().top + 30 < line); }); };
+  addEventListener("scroll", tlTick, { passive: true }); addEventListener("resize", tlTick); tlTick();
   document.querySelectorAll(".jframe").forEach(f => { for (let i = 0; i < 4; i++) f.append(document.createElement("i")); });
 
   /* ---- behaviour: reveals, counters, menu ---- */
